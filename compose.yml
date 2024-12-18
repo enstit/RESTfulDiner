@@ -1,0 +1,11 @@
+services:
+
+  app:
+    build:
+      context: .
+    ports:
+      - 5007:5000
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - ./app:/usr/src/app
+    restart: unless-stopped
