@@ -12,8 +12,7 @@ from models._types import AllergenType
 if __name__ == "__main__":
 
     engine = create_engine(
-        "postgresql://postgres:postgres@srv-ud01:5432/postgres",
-        connect_args={"options": "-csearch_path=sagrevolution"},
+        "postgresql://sagrevolution:sagrevolution@srv-ud01:5432/postgres",
         echo=False,
     )
 

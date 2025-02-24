@@ -8,7 +8,7 @@ WORKDIR /tmp/
 
 RUN apt update && apt install -y python3-dev cmake libblas3 liblapack3 liblapack-dev libblas-dev
 
-ADD docker/requirements.txt .
+ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
 WORKDIR /usr/src/app/
