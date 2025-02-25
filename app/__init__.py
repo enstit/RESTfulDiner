@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from app.config import Config
 from app.database import db
-from app.routes import initialize_routes
+from app.resources import initialize_routes
 
 
 def create_app():
@@ -11,9 +11,6 @@ def create_app():
 
     # Initialize plugins
     db.init_app(app)
-
-    # Print the list of tables in the database
-    print(f"🔥 Tables: {db.metadata.tables.keys()}")
 
     api = Api(
         app, prefix="/api/v1", catch_all_404s=True, serve_challenge_on_401=True

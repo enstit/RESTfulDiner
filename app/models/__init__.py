@@ -4,7 +4,7 @@ from sqlalchemy import MetaData
 metadata = MetaData()
 
 
-from ._base import BaseModel
+from ._base import BaseModel as Diner
 
 from .delivery_station import DeliveryStation
 from .department import Department
