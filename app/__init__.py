@@ -1,10 +1,8 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from app.config import Config
-
-# Initialize extensions
-db = SQLAlchemy()
+from app.database import db
+from app.routes import initialize_routes
 
 
 def create_app():
@@ -14,15 +12,16 @@ def create_app():
     # Initialize plugins
     db.init_app(app)
 
+    # Print the list of tables in the database
+    print(f"🔥 Tables: {db.metadata.tables.keys()}")
+
     api = Api(
         app, prefix="/api/v1", catch_all_404s=True, serve_challenge_on_401=True
     )
-    # api.init_app(app)
+    api.init_app(app)
 
-    # Manually register the resource
-    from app.resources.item import ItemResource
-
-    api.add_resource(ItemResource, "/item", "/item/<int:item_id>")
+    # Initialize routes
+    initialize_routes(api)
 
     with app.app_context():
         db.create_all()

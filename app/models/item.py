@@ -22,6 +22,7 @@ class Item(BaseModel):
     )
     description: Mapped[Optional[str]] = mapped_column(
         cd.TEXT,
+        nullable=True,
         comment="Description of the item",
     )
     department__id: Mapped[UUIDType] = mapped_column(
@@ -66,15 +67,15 @@ class Item(BaseModel):
         default=True,
         comment="Whether the item is visible or not",
     )
-    allergens: Mapped[List[AllergenType]] = mapped_column(
-        ARRAY(cd.CHOICE(AllergenType)),
-        nullable=True,
-        default=None,
-        comment=(
-            "List of allergens associated with the item: possible values are "
-            + ", ".join([allergen.desc for allergen in AllergenType])
-        ),
-    )
+    # allergens: Mapped[List[AllergenType]] = mapped_column(
+    #     ARRAY(cd.CHOICE(AllergenType)),
+    #     nullable=True,
+    #     default=None,
+    #     comment=(
+    #         "List of allergens associated with the item: possible values are "
+    #         + ", ".join([allergen.desc for allergen in AllergenType])
+    #     ),
+    # )
 
     department = relationship("Department", back_populates="items")
     departments_orders_items = relationship(

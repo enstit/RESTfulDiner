@@ -9,4 +9,3 @@ class Config:
         # "postgresql://sagrevolution:sagrevolution@srv-ud01:5432/postgres",
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = True

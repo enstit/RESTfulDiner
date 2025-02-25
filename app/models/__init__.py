@@ -1,4 +1,8 @@
 # models/__init__.py
+from sqlalchemy import MetaData
+
+metadata = MetaData()
+
 
 from ._base import BaseModel
 

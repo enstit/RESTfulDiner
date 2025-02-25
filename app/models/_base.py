@@ -2,7 +2,7 @@ import re
 
 from pprint import pformat
 
-from sqlalchemy import MetaData
+from . import metadata
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import declared_attr
 from sqlalchemy.orm import Mapped
@@ -19,7 +19,7 @@ class BaseModel(DeclarativeBase):
 
     __abstract__ = True
 
-    # metadata = MetaData(schema="sagrevolution")
+    metadata = metadata
 
     id: Mapped[UUIDType] = mapped_column(
         cd.ID,
@@ -37,8 +37,6 @@ class BaseModel(DeclarativeBase):
     def __repr__(self):
         """Return a string representation of the model instance, specifying the
         class name and the primary keys of the model instance."""
-
-        return pformat(self.to_dict(), sort_dicts=False)
         return (
             f"{self.__class__.__name__}("
             f"""{

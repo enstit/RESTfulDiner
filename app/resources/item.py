@@ -1,5 +1,7 @@
 from flask_restful import Resource, reqparse
-from app.models import Item, db
+from app.models.item import Item
+from app.dto.item import ItemDTO
+from app.database import db
 
 
 class ItemResource(Resource):
@@ -9,9 +11,9 @@ class ItemResource(Resource):
     )
 
     def get(self, item_id):
-        item = Item.query.get(item_id)
+        item = db.session.query(Item).get(item_id)
         if item:
-            return {"id": item.id, "name": item.name}, 200
+            return ItemDTO.from_model(item), 200
         return {"message": "Item not found"}, 404
 
     def post(self):
@@ -19,4 +21,4 @@ class ItemResource(Resource):
         new_item = Item(name=data["name"])
         db.session.add(new_item)
         db.session.commit()
-        return {"id": new_item.id, "name": new_item.name}, 201
+        return ItemDTO.from_model(new_item), 201
