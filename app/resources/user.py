@@ -1,8 +1,13 @@
-from email.policy import default
-from flask_restful import Resource, reqparse
-from app.models.user import User, UserRoleType
-from app.dto.user import UserDTO
+# app/resources/user.py
+
+from flask_restful import Resource
+from flask_restful import reqparse
+from flask_restful import request
+
 from app.database import db
+from app.dto.user import UserDTO
+from app.models.user import User
+from app.models.user import UserRoleType
 
 
 class UserResource(Resource):
@@ -22,7 +27,9 @@ class UserResource(Resource):
         help="Role of the user in the system",
     )
 
-    def get(self, id: str | None = None, username: str | None = None):
+    def get(self):
+        id = request.args.get("id")
+        username = request.args.get("username")
         if id or username:
             user = (
                 db.session.query(User)

@@ -1,31 +1,33 @@
+# app/resources/__init__.py
+
 from app.resources.department import DepartmentResource
 from app.resources.item import ItemResource
-from app.resources.user import UserResource
 from app.resources.printer import PrinterResource
+from app.resources.user import UserResource
 
 
 def initialize_routes(api):
     api.add_resource(
         DepartmentResource,
-        "/department",
-        "/department/<string:id>",
-        "/department/name=<string:name>",
+        "/departments",
+        "/departments/<string:id>",
+        "/departments/name=<string:name>",
     )
     api.add_resource(
         ItemResource,
-        "/item",
-        "/item/<string:id>",
-        "/item/name=<string:name>",
+        "/items",
+        "/items/<string:id>",
+        "/items/name=<string:name>",
     )
     api.add_resource(
         UserResource,
-        "/user",
-        "/user/<string:id>",
-        "/user/username=<string:username>",
+        "/users",
+        "/users/<string:id>",
+        "/users/username=<string:username>",
     )
     api.add_resource(
         PrinterResource,
-        "/printer",
-        "/printer/<string:id>",
-        "/printer/name=<string:name>",
+        "/printers",
+        "/printers/<string:id>",
+        "/printers/name=<string:name>",
     )

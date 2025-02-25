@@ -1,12 +1,16 @@
+# app/models/department.py
+
 from typing import Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from sqlalchemy_utils import UUIDType
 
-from ._base import BaseModel
-from ._types import ColumnsDomains as cd
+from app.models._base import BaseModel
+from app.models._types import ColumnsDomains as cd
 
 
 class Department(BaseModel):

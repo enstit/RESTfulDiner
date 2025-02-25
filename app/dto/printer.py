@@ -1,6 +1,7 @@
 # app/dto/printer.py
 
 from typing import List
+
 from app.models.printer import Printer
 
 

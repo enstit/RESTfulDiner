@@ -1,10 +1,15 @@
+# app/models/_base.py
+
 import re
+
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import declared_attr
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy_utils import UUIDType
+
 from uuid import uuid1 as uuid
+
 from app.models import metadata
 from app.models._types import ColumnsDomains as cd
 
@@ -12,7 +17,6 @@ from app.models._types import ColumnsDomains as cd
 class BaseModel(DeclarativeBase):
 
     __abstract__ = True
-
     metadata = metadata
 
     id: Mapped[UUIDType] = mapped_column(

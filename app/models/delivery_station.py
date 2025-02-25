@@ -1,7 +1,11 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+# app/models/delivery_station.py
 
-from ._base import BaseModel
-from ._types import ColumnsDomains as cd
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+
+from app.models._base import BaseModel
+from app.models._types import ColumnsDomains as cd
 
 
 class DeliveryStation(BaseModel):

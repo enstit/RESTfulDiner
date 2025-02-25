@@ -1,6 +1,7 @@
-# app/dto/department.py
+# app/dto/user.py
 
 from typing import List
+
 from app.models.user import User
 
 

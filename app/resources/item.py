@@ -1,10 +1,14 @@
-from flask_restful import Resource, reqparse
+# app/resources/item.py
+
+from flask_restful import Resource
+from flask_restful import reqparse
+
+from app.database import db
+from app.dto.item import ItemDTO
 from app.models.department import Department
 from app.models.item import Item
 from app.models.item import MenuSectionType
 from app.models.item import OrderStatusType
-from app.dto.item import ItemDTO
-from app.database import db
 
 
 class ItemResource(Resource):
@@ -55,7 +59,7 @@ class ItemResource(Resource):
         help="Initial status of the food item",
     )
 
-    def get(self, id: str | None = None, name: str | None = None):
+    def get(self, *, id: str | None = None, name: str | None = None):
         if id or name:
             item = (
                 db.session.query(Item)

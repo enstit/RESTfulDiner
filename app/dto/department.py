@@ -1,6 +1,7 @@
 # app/dto/department.py
 
 from typing import List
+
 from app.models.department import Department
 
 

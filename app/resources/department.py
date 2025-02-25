@@ -1,4 +1,7 @@
-from flask_restful import Resource, reqparse
+# app/resources/department.py
+
+from flask_restful import Resource
+from flask_restful import reqparse
 from app.models.department import Department
 from app.dto.department import DepartmentDTO
 from app.database import db
@@ -10,7 +13,7 @@ class DepartmentResource(Resource):
         "name", type=str, required=True, help="Name of the department"
     )
 
-    def get(self, id: str | None = None, name: str | None = None):
+    def get(self, *, id: str | None = None, name: str | None = None):
         if id or name:
             department = (
                 db.session.query(Department)

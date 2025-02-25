@@ -1,7 +1,11 @@
-from flask_restful import Resource, reqparse
-from app.models.printer import Printer
-from app.dto.printer import PrinterDTO
+# app/resources/printer.py
+
+from flask_restful import Resource
+from flask_restful import reqparse
+
 from app.database import db
+from app.dto.printer import PrinterDTO
+from app.models.printer import Printer
 
 
 class PrinterResource(Resource):
@@ -22,7 +26,7 @@ class PrinterResource(Resource):
         help="IP address of the printer",
     )
 
-    def get(self, id: str | None = None, name: str | None = None):
+    def get(self, *, id: str | None = None, name: str | None = None):
         if id or name:
             printer = (
                 db.session.query(Printer)

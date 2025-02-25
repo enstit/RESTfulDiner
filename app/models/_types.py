@@ -1,3 +1,5 @@
+# app/models/_types.py
+
 from dataclasses import dataclass
 from enum import Enum
 
@@ -5,18 +7,17 @@ import base64
 from io import BytesIO
 from PIL import Image
 
-from sqlalchemy import (
-    Boolean,
-    DateTime,
-    Integer,
-    LargeBinary,
-    Numeric,
-    SmallInteger,
-    String,
-    Text,
-)
+from sqlalchemy import Boolean
+from sqlalchemy import DateTime
+from sqlalchemy import Integer
+from sqlalchemy import LargeBinary
+from sqlalchemy import Numeric
+from sqlalchemy import SmallInteger
+from sqlalchemy import String
+from sqlalchemy import Text
 from sqlalchemy.types import SmallInteger as SmallIntegerType
 from sqlalchemy.types import TypeDecorator
+
 from sqlalchemy_utils import UUIDType
 from sqlalchemy_utils import PasswordType
 from sqlalchemy_utils import IPAddressType

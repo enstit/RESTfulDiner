@@ -1,17 +1,18 @@
-# models/__init__.py
+# app/models/__init__.py
+
 from sqlalchemy import MetaData
 
 metadata = MetaData()
 
 
-from ._base import BaseModel as Diner
+from app.models._base import BaseModel as Diner
 
-from .delivery_station import DeliveryStation
-from .department import Department
-from .department_order import DepartmentOrder
-from .department_order_item import DepartmentOrderItem
-from .item import Item
-from .kiosk import Kiosk
-from .order import Order
-from .printer import Printer
-from .user import User
+from app.models.delivery_station import DeliveryStation
+from app.models.department import Department
+from app.models.department_order import DepartmentOrder
+from app.models.department_order_item import DepartmentOrderItem
+from app.models.item import Item
+from app.models.kiosk import Kiosk
+from app.models.order import Order
+from app.models.printer import Printer
+from app.models.user import User
