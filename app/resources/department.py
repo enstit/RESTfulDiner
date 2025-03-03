@@ -2,9 +2,10 @@
 
 from flask_restful import Resource
 from flask_restful import reqparse
+
+from app.extensions import db
 from app.models.department import Department
 from app.dto.department import DepartmentDTO
-from app.database import db
 
 
 class DepartmentResource(Resource):

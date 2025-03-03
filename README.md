@@ -16,7 +16,7 @@ Data[^1]-compliant repository to host data about food orders at a restaurant.
 
 ### POST operations
 ```bash
-curl -X POST http://127.0.0.1:5000/api/v1/users -H "Content-Type: application/json" -d '{"username": "John", "password": "test", "role": "OPERATOR"}'
+curl -X POST http://127.0.0.1:5000/api/v1/login -H "Content-Type: application/json" -d '{"username": "John", "password": "test"}'
 ```
 
 ```bash
@@ -24,23 +24,23 @@ curl -X POST http://127.0.0.1:5000/api/v1/printers -H "Content-Type: application
 ```
 
 ```bash
-curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Type: application/json" -d '{"name": "Cucina"}'
+curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Type: application/json" -d '{"name": "Kitchen"}'
 ```
 
 ```bash
-curl -X POST http://127.0.0.1:5000/api/v1/items -H "Content-Type: application/json" -d '{"name": "Spaghetti Bolognese", "description": "Best Italian Spaghetti ever", "department": "Cucina", "menu_section": "FIRST_COURSES", "price": 12.50, "initial_status": "COMPLETED"}'
+curl -X POST http://127.0.0.1:5000/api/v1/items -H "Content-Type: application/json" -d '{"name": "Spaghetti Bolognese", "description": "Best Italian Spaghetti ever", "department": "Kitchen", "menu_section": "FIRST_COURSES", "price": 12.50, "initial_status": "COMPLETED"}'
 ```
 
 ### GET operations
 ```bash
-curl -X GET http://127.0.0.1:5000/api/v1/users/username=John
 curl -X GET http://127.0.0.1:5000/api/v1/printers/name=Printer%2001
 curl -X GET http://127.0.0.1:5000/api/v1/departments/name=Cucina
 curl -X GET http://127.0.0.1:5000/api/v1/items/name=Spaghetti%20Bolognese
 ```
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE)
+file for details.
 
 
 [^1]: Berners-Lee, T., "Linked Data", *w3.org*, 2006. [https://www.w3.org/DesignIssues/LinkedData.html](https://www.w3.org/DesignIssues/LinkedData.html).

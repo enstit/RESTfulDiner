@@ -3,7 +3,7 @@
 from flask_restful import Resource
 from flask_restful import reqparse
 
-from app.database import db
+from app.extensions import db
 from app.dto.item import ItemDTO
 from app.models.department import Department
 from app.models.item import Item

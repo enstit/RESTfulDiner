@@ -2,20 +2,21 @@
 
 from typing import List
 
+from app.config import Config
 from app.models.user import User
 
 
 class UserDTO:
     def __init__(self, user: User):
+        self.id = Config.APP_URL + "/api/v1/users/" + str(user.id)
         self.username = user.username
         self.role = user.role
-        self.url = user.url
 
     def to_dict(self):
         return {
+            "id": self.id,
             "username": self.username,
             "role": self.role.name,
-            "url": self.url,
         }
 
     @staticmethod

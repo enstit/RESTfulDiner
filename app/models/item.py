@@ -67,15 +67,15 @@ class Item(BaseModel):
         default=True,
         comment="Whether the item is visible or not",
     )
-    # allergens: Mapped[List[AllergenType]] = mapped_column(
-    #     ARRAY(cd.CHOICE(AllergenType)),
-    #     nullable=True,
-    #     default=None,
-    #     comment=(
-    #         "List of allergens associated with the item: possible values are "
-    #         + ", ".join([allergen.desc for allergen in AllergenType])
-    #     ),
-    # )
+    allergens: Mapped[List[AllergenType]] = mapped_column(
+        ARRAY(cd.CHOICE(AllergenType)),
+        nullable=True,
+        default=None,
+        comment=(
+            "List of allergens associated with the item: possible values are "
+            + ", ".join([allergen.desc for allergen in AllergenType])
+        ),
+    )
 
     department = relationship("Department", back_populates="items")
     departments_orders_items = relationship(

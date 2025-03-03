@@ -10,3 +10,4 @@ class Config:
         "postgresql://sagrevolution:sagrevolution@srv-ud01:5432/postgres",
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "token")
