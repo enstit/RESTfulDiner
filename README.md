@@ -30,3 +30,9 @@ curl -X GET http://127.0.0.1:5000/api/v1/printers/name=Printer%2001
 curl -X GET http://127.0.0.1:5000/api/v1/departments/name=Cucina
 curl -X GET http://127.0.0.1:5000/api/v1/items/name=Spaghetti%20Bolognese
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+
+[^1]: Berners-Lee, T., "Linked Data", *w3.org*, 2006. [https://www.w3.org/DesignIssues/LinkedData.html](https://www.w3.org/DesignIssues/LinkedData.html).
