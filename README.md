@@ -2,7 +2,15 @@
   <h1 align="center">🛼 RESTful Diner</h2>
 </div>
 
-In this project...
+> [!NOTE]
+> This repository is part of the final exam for the *Advanced Data Management
+> And Curation* course held by professors Andrea Bignamini, Marco Molinaro,
+> Marco Frailis and Stefano Cozzini at
+> [University of Trieste](https://www.units.it/en) in the 2024-2025 academic
+> year.
+
+In this project, we are going to build a RESTful APIs service to host an Open
+Data[^1]-compliant repository to host data about food orders at a restaurant.
 
 ## Usage
 
