@@ -7,15 +7,15 @@ from app.models.user import User
 
 class UserDTO:
     def __init__(self, user: User):
-        self.id = str(user.id)
         self.username = user.username
         self.role = user.role
+        self.url = user.url
 
     def to_dict(self):
         return {
-            "id": self.id,
             "username": self.username,
             "role": self.role.name,
+            "url": self.url,
         }
 
     @staticmethod

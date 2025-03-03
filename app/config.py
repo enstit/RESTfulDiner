@@ -3,6 +3,7 @@ import os
 
 
 class Config:
+    APP_URL = "https://diner.enricostefanel.it"
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
         "sqlite:///:memory:",

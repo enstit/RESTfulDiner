@@ -7,11 +7,11 @@ from app.models.department import Department
 
 class DepartmentDTO:
     def __init__(self, department: Department):
-        self.id = str(department.id)
         self.name = department.name
+        self.url = department.url
 
     def to_dict(self) -> dict:
-        return {"id": self.id, "name": self.name}
+        return {"name": self.name, "url": self.url}
 
     @staticmethod
     def from_model(department: Department) -> dict:

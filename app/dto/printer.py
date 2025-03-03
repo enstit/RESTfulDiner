@@ -7,15 +7,15 @@ from app.models.printer import Printer
 
 class PrinterDTO:
     def __init__(self, printer: Printer):
-        self.id = str(printer.id)
         self.name = printer.name
         self.ip_address = printer.ip_address
+        self.url = printer.url
 
     def to_dict(self) -> dict:
         return {
-            "id": self.id,
             "name": self.name,
             "ip_address": self.ip_address,
+            "url": self.url,
         }
 
     @staticmethod

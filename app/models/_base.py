@@ -6,10 +6,12 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import declared_attr
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_utils import UUIDType
 
 from uuid import uuid1 as uuid
 
+from app.config import Config
 from app.models import metadata
 from app.models._types import ColumnsDomains as cd
 
@@ -25,6 +27,16 @@ class BaseModel(DeclarativeBase):
         primary_key=True,
         comment="Unique row identifier.",
     )
+
+    @hybrid_property
+    def url(self):
+        return (
+            Config.APP_URL
+            + "/api/v1/"
+            + self.__tablename__
+            + "s/"
+            + str(self.id)
+        )
 
     # Automatically set the table name to the snake_case version of the
     # ClassName
