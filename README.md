@@ -14,11 +14,25 @@ Data[^1]-compliant repository to host data about food orders at a restaurant.
 
 ## Usage
 
-### POST operations
+### Authentication
+
+To interact with the APIs, the first step is to login into the system with a
+valid user (we can use the user `John` with password `password`):
 ```bash
 curl -X POST http://127.0.0.1:5000/api/v1/login -H "Content-Type: application/json" -d '{"username": "John", "password": "test"}'
-```
 
+{"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0MTA3Nzc3NCwianRpIjoiZWY0MzQzZDQtZGQwYS00ZTA0LTlkYjQtZGI2MGZhNDBkNjcxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImMxYTk5OGNlLWY4MTYtMTFlZi04Yjc1LTAyNDJhYzE1MDAwMiIsIm5iZiI6MTc0MTA3Nzc3NCwiY3NyZiI6ImFjODdkZjcxLWYzMDQtNDE4Ni05NWQxLWQwM2FhOTY0YmE0ZSIsImV4cCI6MTc0MTA3ODY3NH0.SXFig78k2T4tq35lLA8inu4hDD8ZXVbQ9K_i4OeZj-I"}
+```
+This should return an object with an `access_token` as above, to be used for all
+the next operations with the system.
+
+> [!IMPORTANT]
+> At the current state of development, authentication is not being implemented
+> on the APIs endpoints. This has to be implemented in future releases.
+
+### Insertions
+
+To insert a new printer in the system:
 ```bash
 curl -X POST http://127.0.0.1:5000/api/v1/printers -H "Content-Type: application/json" -d '{"name": "Printer 01", "mac_address": "00-B0-D0-63-C2-26", "ip_address": "10.0.0.1"}'
 ```
