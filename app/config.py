@@ -3,11 +3,7 @@ import os
 
 
 class Config:
-    APP_URL = "https://diner.enricostefanel.it"
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        # "sqlite:///:memory:",
-        "postgresql://sagrevolution:sagrevolution@srv-ud01:5432/postgres",
-    )
+    APP_URL = os.getenv("APP_URL", "http://localhost:5000")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///:memory:")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "token")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "secret")

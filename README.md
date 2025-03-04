@@ -17,9 +17,9 @@ Data[^1]-compliant repository to host data about food orders at a restaurant.
 ### Authentication
 
 To interact with the APIs, the first step is to login into the system with a
-valid user (we can use the user `John` with password `password`):
+valid user (we can use the user `test` with password `test`):
 ```bash
-curl -X POST http://127.0.0.1:5000/api/v1/login -H "Content-Type: application/json" -d '{"username": "John", "password": "test"}'
+curl -X POST http://127.0.0.1:5000/api/v1/login -H "Content-Type: application/json" -d '{"username": "test", "password": "test"}'
 
 {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc0MTA3Nzc3NCwianRpIjoiZWY0MzQzZDQtZGQwYS00ZTA0LTlkYjQtZGI2MGZhNDBkNjcxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImMxYTk5OGNlLWY4MTYtMTFlZi04Yjc1LTAyNDJhYzE1MDAwMiIsIm5iZiI6MTc0MTA3Nzc3NCwiY3NyZiI6ImFjODdkZjcxLWYzMDQtNDE4Ni05NWQxLWQwM2FhOTY0YmE0ZSIsImV4cCI6MTc0MTA3ODY3NH0.SXFig78k2T4tq35lLA8inu4hDD8ZXVbQ9K_i4OeZj-I"}
 ```

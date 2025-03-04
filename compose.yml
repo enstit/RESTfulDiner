@@ -5,6 +5,10 @@ services:
       context: .
     ports:
       - 5000:5000
+    environment:
+      - APP_URL=https://diner.enricostefanel.it
+      - DATABASE_URL=postgresql://sagrevolution:sagrevolution@srv-ud01:5432/postgres
+      - JWT_SECRET_KEY=8F1WQrw92LsbaC3FSLEAjNSNdrsjUb3Du9FVdWhtUQqQaM9zWuJGysE84KNbwQE
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - ./app:/usr/src/app
