@@ -8,7 +8,7 @@ from app.models.user import User
 
 class UserDTO:
     def __init__(self, user: User):
-        self.id = Config.APP_URL + "/api/v1/users/" + str(user.id)
+        self.id = str(user.id)
         self.username = user.username
         self.role = user.role
 

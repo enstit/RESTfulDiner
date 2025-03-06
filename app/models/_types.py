@@ -153,6 +153,13 @@ class TypeDescriptionMixin:
     def __repr__(self):
         return self.desc
 
+    @classmethod
+    def from_dict(cls, value: dict) -> "TypeDescriptionMixin":
+        for member in cls:
+            if member.code == value.get("code"):
+                return member
+        return None
+
 
 class UserRoleType(TypeDescriptionMixin, Enum):
     ADMIN = 1, "Administrator"  # Administrator

@@ -26,11 +26,11 @@ class PrinterResource(Resource):
         help="IP address of the printer",
     )
 
-    def get(self, *, id: str | None = None, name: str | None = None):
-        if id or name:
+    def get(self, *, _id: str | None = None, name: str | None = None):
+        if _id or name:
             printer = (
                 db.session.query(Printer)
-                .where(Printer.id == id if id else Printer.name == name)
+                .where(Printer.id == _id if _id else Printer.name == name)
                 .one_or_none()
             )
             if printer:

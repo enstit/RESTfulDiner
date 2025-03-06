@@ -3,13 +3,23 @@ services:
   app:
     build:
       context: .
+    depends_on:
+      - database
     ports:
       - 5000:5000
     environment:
-      - APP_URL=https://diner.enricostefanel.it
-      - DATABASE_URL=postgresql://sagrevolution:sagrevolution@srv-ud01:5432/postgres
+      - APP_URL=http://localhost:5000
+      - DATABASE_URL=postgresql://user:password@database:5432/postgres
       - JWT_SECRET_KEY=8F1WQrw92LsbaC3FSLEAjNSNdrsjUb3Du9FVdWhtUQqQaM9zWuJGysE84KNbwQE
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - ./app:/usr/src/app
     restart: unless-stopped
+
+  database:
+    image: postgres:13
+    hostname: database
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres

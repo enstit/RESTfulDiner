@@ -1,4 +1,4 @@
-### app/config.py (Configuration settings)
+### app/config.py
 import os
 
 

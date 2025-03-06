@@ -3,11 +3,7 @@
 from flask_restful import Resource
 from flask_restful import reqparse
 
-from flask_jwt_extended import (
-    create_access_token,
-    jwt_required,
-    get_jwt_identity,
-)
+from flask_jwt_extended import create_access_token
 
 from app.extensions import db
 from app.dto.user import UserDTO
@@ -32,11 +28,11 @@ class UserResource(Resource):
         help="Role of the user in the system",
     )
 
-    def get(self, *, id: str | None = None, username: str | None = None):
-        if id or username:
+    def get(self, *, _id: str | None = None, username: str | None = None):
+        if _id or username:
             user = (
                 db.session.query(User)
-                .where(User.id == id if id else User.username == username)
+                .where(User.id == _id if _id else User.username == username)
                 .one_or_none()
             )
             if user:
@@ -84,12 +80,7 @@ class LoginResource(Resource):
         if not user:
             return {"message": "Invalid credentials"}, 401
 
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(
+            identity=user.id, additional_claims={"role": user.role}
+        )
         return {"access_token": access_token}, 200
-
-
-class ProtectedResource(Resource):
-    @jwt_required()
-    def get(self):
-        user_id = get_jwt_identity()
-        return {"message": f"Hello, user {user_id}"}, 200

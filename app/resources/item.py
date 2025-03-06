@@ -59,11 +59,11 @@ class ItemResource(Resource):
         help="Initial status of the food item",
     )
 
-    def get(self, *, id: str | None = None, name: str | None = None):
-        if id or name:
+    def get(self, *, _id: str | None = None, name: str | None = None):
+        if _id or name:
             item = (
                 db.session.query(Item)
-                .where(Item.id == id if id else Item.name == name)
+                .where(Item.id == _id if _id else Item.name == name)
                 .one_or_none()
             )
             if item:

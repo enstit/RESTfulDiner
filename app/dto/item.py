@@ -7,6 +7,7 @@ from app.models.item import Item
 
 class ItemDTO:
     def __init__(self, item: Item):
+        self.id = item.id
         self.name = item.name
         self.description = item.description
         self.department = item.department
@@ -15,19 +16,18 @@ class ItemDTO:
         self.deposit = item.deposit
         self.availability = item.availability
         self.initial_status = item.initial_status
-        self.url = item.url
 
     def to_dict(self) -> dict:
         return {
+            "id": self.id,
             "name": self.name,
             "description": self.description,
-            "department": self.department.name,
+            "department": self.department.id,
             "menu_section": self.menu_section.name,
             "price": self.price,
             "deposit": self.deposit,
             "availability": self.availability,
             "initial_status": self.initial_status.name,
-            "url": self.url,
         }
 
     @staticmethod

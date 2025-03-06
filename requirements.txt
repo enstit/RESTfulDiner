@@ -4,4 +4,5 @@ SQLAlchemy-Utils==0.41.2
 passlib==1.7.4
 Pillow==11.1.0
 flask-jwt-extended==4.7.1
-psycopg2==2.9.10
+psycopg2-binary==2.9.10
+rdflib==7.1.3
