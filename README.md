@@ -41,7 +41,7 @@ Let's start by inserting a new Department in the database:
 ```bash
 foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Cuisine"}'
 
-{"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Cuisine", "printer": null}
+{"self": "http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003", "name": "Cuisine", "printer": null}
 ```
 
 #### `GET` operations
@@ -50,7 +50,7 @@ Now, if we recover all the Departments from the database, the newly inserted
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments
 
-[{"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Cuisine", "printer": null}]
+[{"self": "http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003", "name": "Cuisine", "printer": null}]
 ```
 
 #### `PUT` operations
@@ -59,9 +59,9 @@ everyone. Better to change the Department name to a more universal `Kitchen`.
 In order to do that, we simply need to use a **PUT** operation:
 
 ```bash
-foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/1a99585a-fa94-11ef-949e-0242ac120003 -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Kitchen"}'
+foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003 -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Kitchen"}'
 
-{"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Kitchen", "printer": null}
+{"self": "http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003", "name": "Kitchen", "printer": null}
 ```
 
 #### `PATCH` operations
@@ -70,14 +70,20 @@ by providing the whole representation of it, so if the department had a printer
 associated, the command above would have overwritten it.
 If we take a look at the printers in the system (with a **GET**
 request at `http://127.0.0.1:5000/api/v1/printers`) we will see that there is a
-`KitchenPrinter` with id `6ab08ed0-fb2f-11ef-96b4-0242ac120003` that really
-sounds to be the printer associated with the Department we just created. Here's
-where the **PATCH** operation comes in our hand:
+`KitchenPrinter` with id `d2dc99fa-fb42-11ef-929e-0242ac120003` that really
+sounds to be the printer associated with the Department we just created.
+```bash
+foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
+
+[{"self": "http://127.0.0.1:5000/api/v1/printers/d2dc99fa-fb42-11ef-929e-0242ac120003", "name": "KitchenPrinter", "mac_address": "32:1c:35:93:4e:07", "ip_address": "10.172.54.145"}]
+```
+
+Here's where the **PATCH** operation comes in our hand:
 
 ```bash
-foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/7924ec72-fb2f-11ef-8f2c-0242ac120003 -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"printer_id": "6ab08ed0-fb2f-11ef-96b4-0242ac120003"}'
+foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003 -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"printer_id": "d2dc99fa-fb42-11ef-929e-0242ac120003"}'
 
-{"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Kitchen", "printer": "6ab08ed0-fb2f-11ef-96b4-0242ac120003"}
+{"self": "http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003", "name": "Kitchen", "printer": "http://127.0.0.1:5000/api/v1/printers/d2dc99fa-fb42-11ef-929e-0242ac120003"}
 ```
 
 And as you can see, the department has been updated with printer link.

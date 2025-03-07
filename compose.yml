@@ -8,7 +8,8 @@ services:
     ports:
       - 5000:5000
     environment:
-      - APP_URL=http://localhost:5000
+      - APP_URL=http://127.0.0.1:5000
+      - API_URI=/api/v1
       - DATABASE_URL=postgresql://user:password@database:5432/postgres
       - JWT_SECRET_KEY=8F1WQrw92LsbaC3FSLEAjNSNdrsjUb3Du9FVdWhtUQqQaM9zWuJGysE84KNbwQE
     volumes:

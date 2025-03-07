@@ -2,6 +2,7 @@
 
 from typing import List
 
+from app.config import Config
 from app.models.department import Department
 
 
@@ -9,12 +10,18 @@ class DepartmentDTO:
     def __init__(self, department: Department):
         self.id = str(department.id)
         self.name = department.name
-        self.printer = (
-            str(department.printer.id) if department.printer else None
-        )
+        self.printer = department.printer if department.printer else None
 
     def to_dict(self) -> dict:
-        return {"id": self.id, "name": self.name, "printer": self.printer}
+        return {
+            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.id}",
+            "name": self.name,
+            "printer": (
+                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer.id}"
+                if self.printer
+                else None
+            ),
+        }
 
     @staticmethod
     def from_model(department: Department) -> dict:

@@ -2,6 +2,7 @@
 
 from typing import List
 
+from app.config import Config
 from app.models.item import Item
 
 
@@ -19,10 +20,14 @@ class ItemDTO:
 
     def to_dict(self) -> dict:
         return {
-            "id": self.id,
+            "self": f"{Config.APP_URL}{Config.API_URI}/items/{self.id}",
             "name": self.name,
             "description": self.description,
-            "department": self.department.id,
+            "department": (
+                f"{Config.APP_URL}{Config.API_URI}/departments/{self.id}"
+                if self.department
+                else None
+            ),
             "menu_section": self.menu_section.name,
             "price": self.price,
             "deposit": self.deposit,

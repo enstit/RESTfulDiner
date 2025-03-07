@@ -2,6 +2,7 @@
 
 from typing import List
 
+from app.config import Config
 from app.models.printer import Printer
 
 
@@ -14,7 +15,7 @@ class PrinterDTO:
 
     def to_dict(self) -> dict:
         return {
-            "id": self.id,
+            "self": f"{Config.APP_URL}{Config.API_URI}/printers/{self.id}",
             "name": self.name,
             "mac_address": self.mac_address,
             "ip_address": self.ip_address,
