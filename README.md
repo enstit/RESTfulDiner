@@ -41,7 +41,29 @@ Let's start by inserting a new Department in the database:
 ```bash
 foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Cuisine"}'
 
-{"@context": {"schema": "https://schema.org/", "self": "@id", "type": "@type", "name": "schema:name", "printer": {"@id": "schema:isRelatedTo", "@type": "@id"}, "license": {"@id": "schema:license", "@type": "@id"}}, "license": "https://creativecommons.org/licenses/by/4.0/", "data": {"self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003", "type": "schema:Organization", "name": "Cuisine", "printer": null}}
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "self": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "printer": {
+            "@id": "schema:isRelatedTo",
+            "@type": "@id"
+        },
+        "license": {
+            "@id": "schema:license",
+            "@type": "@id"
+        }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "data": {
+        "self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
+        "type": "schema:Organization",
+        "name": "Cuisine",
+        "printer": null
+    }
+}
 ```
 
 #### `GET` operations
@@ -50,7 +72,31 @@ Now, if we recover all the Departments from the database, the newly inserted
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments
 
-{"@context": {"schema": "https://schema.org/", "self": "@id", "type": "@type", "name": "schema:name", "printer": {"@id": "schema:isRelatedTo", "@type": "@id"}, "license": {"@id": "schema:license", "@type": "@id"}}, "license": "https://creativecommons.org/licenses/by/4.0/", "data": [{"self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003", "type": "schema:Organization", "name": "Cuisine", "printer": null}]}
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "self": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "printer": {
+            "@id": "schema:isRelatedTo",
+            "@type": "@id"
+        },
+        "license": {
+            "@id": "schema:license",
+            "@type": "@id"
+        }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "data": [
+        {
+            "self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
+            "type": "schema:Organization",
+            "name": "Cuisine",
+            "printer": null
+        }
+    ]
+}
 ```
 
 #### `PUT` operations
@@ -61,7 +107,29 @@ In order to do that, we simply need to use a **PUT** operation:
 ```bash
 foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003 -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Kitchen"}'
 
-{"@context": {"schema": "https://schema.org/", "self": "@id", "type": "@type", "name": "schema:name", "printer": {"@id": "schema:isRelatedTo", "@type": "@id"}, "license": {"@id": "schema:license", "@type": "@id"}}, "license": "https://creativecommons.org/licenses/by/4.0/", "data": {"self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003", "type": "schema:Organization", "name": "Kitchen", "printer": null}}
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "self": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "printer": {
+            "@id": "schema:isRelatedTo",
+            "@type": "@id"
+        },
+        "license": {
+            "@id": "schema:license",
+            "@type": "@id"
+        }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "data": {
+        "self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
+        "type": "schema:Organization",
+        "name": "Kitchen",
+        "printer": null
+    }
+}
 ```
 
 #### `PATCH` operations
@@ -75,7 +143,30 @@ sounds to be the printer associated with the Department we just created.
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
 
-{"@context": {"schema": "https://schema.org/", "self": "@id", "type": "@type", "name": "schema:name", "mac_address": "schema:macAddress", "ip_address": "schema:ipAddress", "license": {"@id": "schema:license", "@type": "@id"}}, "license": "https://creativecommons.org/licenses/by/4.0/", "data": [{"self": "http://127.0.0.1:5000/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003", "type": "Printer", "name": "KitchenPrinter", "mac_address": "32:1c:35:93:4e:07", "ip_address": "10.172.54.145"}]}
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "self": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "mac_address": "schema:macAddress",
+        "ip_address": "schema:ipAddress",
+        "license": {
+            "@id": "schema:license",
+            "@type": "@id"
+        }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "data": [
+        {
+            "self": "http://127.0.0.1:5000/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003",
+            "type": "Printer",
+            "name": "KitchenPrinter",
+            "mac_address": "32:1c:35:93:4e:07",
+            "ip_address": "10.172.54.145"
+        }
+    ]
+}
 ```
 
 Here's where the **PATCH** operation comes in our hand:
@@ -83,7 +174,29 @@ Here's where the **PATCH** operation comes in our hand:
 ```bash
 foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-11ef-afda-0242ac120003 -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"printer_id": "d2dc99fa-fb42-11ef-929e-0242ac120003"}'
 
-{"@context": {"schema": "https://schema.org/", "self": "@id", "type": "@type", "name": "schema:name", "printer": {"@id": "schema:isRelatedTo", "@type": "@id"}, "license": {"@id": "schema:license", "@type": "@id"}}, "license": "https://creativecommons.org/licenses/by/4.0/", "data": {"self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003", "type": "schema:Organization", "name": "Kitchen", "printer": "http://127.0.0.1:5000/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"}}
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "self": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "printer": {
+            "@id": "schema:isRelatedTo",
+            "@type": "@id"
+        },
+        "license": {
+            "@id": "schema:license",
+            "@type": "@id"
+        }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "data": {
+        "self": "http://127.0.0.1:5000/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
+        "type": "schema:Organization",
+        "name": "Kitchen",
+        "printer": "http://127.0.0.1:5000/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"
+    }
+}
 ```
 
 And as you can see, the department has been updated with printer link.
