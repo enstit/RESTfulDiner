@@ -40,7 +40,7 @@ class ItemDTO:
     def to_dict(self) -> dict:
         return {
             "self": f"{Config.APP_URL}{Config.API_URI}/items/{self.id}",
-            "type": "schema:Organization",
+            "type": "schema:Product",
             "name": self.name,
             "description": self.description,
             "department": (
@@ -57,8 +57,18 @@ class ItemDTO:
 
     @staticmethod
     def from_model(item: Item) -> dict:
-        return ItemDTO(item).to_dict() if item else None
+        return (
+            {
+                **ItemDTO.CONTEXT,
+                "data": ItemDTO(item).to_dict(),
+            }
+            if item
+            else None
+        )
 
     @staticmethod
-    def from_model_list(items: List[Item]) -> list:
-        return [ItemDTO(item).to_dict() for item in items]
+    def from_model_list(items: List[Item]) -> dict:
+        return {
+            **ItemDTO.CONTEXT,
+            "data": [ItemDTO(item).to_dict() for item in items],
+        }

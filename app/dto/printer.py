@@ -48,7 +48,7 @@ class PrinterDTO:
         )
 
     @staticmethod
-    def from_model_list(printers: List[Printer]) -> list:
+    def from_model_list(printers: List[Printer]) -> dict:
         return {
             **PrinterDTO.CONTEXT,
             "data": [PrinterDTO(printer).to_dict() for printer in printers],
