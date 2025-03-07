@@ -44,7 +44,7 @@ class ItemDTO:
             "name": self.name,
             "description": self.description,
             "department": (
-                f"{Config.APP_URL}{Config.API_URI}/departments/{self.id}"
+                f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.id}"
                 if self.department
                 else None
             ),

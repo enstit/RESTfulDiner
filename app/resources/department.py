@@ -13,12 +13,8 @@ from app.resources.auth import ProtectedResource
 
 class DepartmentResource(ProtectedResource):
     parser = reqparse.RequestParser()
-    parser.add_argument("name", type=str, help="Name of the department")
-    parser.add_argument(
-        "printer_id",
-        type=str,
-        help="ID of the printer associated with the department, if any",
-    )
+    parser.add_argument("name", type=str)
+    parser.add_argument("printer_id", type=str)
 
     def get(
         self, *, _id: str | None = None, name: str | None = None

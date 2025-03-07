@@ -12,21 +12,9 @@ from app.resources.auth import ProtectedResource
 
 class PrinterResource(ProtectedResource):
     parser = reqparse.RequestParser()
-    parser.add_argument(
-        "name", type=str, required=True, help="Name of the printer"
-    )
-    parser.add_argument(
-        "mac_address",
-        type=str,
-        required=True,
-        help="MAC address of the printer",
-    )
-    parser.add_argument(
-        "ip_address",
-        type=str,
-        required=True,
-        help="IP address of the printer",
-    )
+    parser.add_argument("name", type=str)
+    parser.add_argument("mac_address", type=str)
+    parser.add_argument("ip_address", type=str)
 
     def get(
         self, *, _id: str | None = None, name: str | None = None

@@ -12,12 +12,8 @@ from app.resources.auth import ProtectedResource
 
 class DeliveryStationResource(ProtectedResource):
     parser = reqparse.RequestParser()
-    parser.add_argument("name", type=str, help="Name of the DeliveryStation")
-    parser.add_argument(
-        "active_flag",
-        type=bool,
-        help="Flag indicating if the station is active",
-    )
+    parser.add_argument("name", type=str)
+    parser.add_argument("active_flag", type=bool)
 
     def get(
         self, *, _id: str | None = None, name: str | None = None

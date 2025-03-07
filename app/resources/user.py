@@ -15,20 +15,9 @@ from app.models.user import UserRoleType
 
 class UserResource(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument(
-        "username", type=str, required=True, help="Username of the user"
-    )
-    parser.add_argument(
-        "password", type=str, required=True, help="Password for the user"
-    )
-    parser.add_argument(
-        "role",
-        type=str,
-        required=False,
-        choices=[role.name for role in UserRoleType],
-        default=UserRoleType.OPERATOR.name,
-        help="Role of the user in the system",
-    )
+    parser.add_argument("username", type=str)
+    parser.add_argument("password", type=str)
+    parser.add_argument("role", type=str, default=UserRoleType.OPERATOR.name)
 
     def get(
         self, *, _id: str | None = None, username: str | None = None
