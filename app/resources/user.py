@@ -1,5 +1,7 @@
 # app/resources/user.py
 
+from typing import Union
+
 from flask_restful import Resource
 from flask_restful import reqparse
 
@@ -28,7 +30,9 @@ class UserResource(Resource):
         help="Role of the user in the system",
     )
 
-    def get(self, *, _id: str | None = None, username: str | None = None):
+    def get(
+        self, *, _id: str | None = None, username: str | None = None
+    ) -> Union[dict | list[dict], int]:
         if _id or username:
             user = (
                 db.session.query(User)
@@ -41,7 +45,7 @@ class UserResource(Resource):
         users = db.session.query(User).all()
         return UserDTO.from_model_list(users), 200
 
-    def post(self):
+    def post(self) -> tuple[dict, int]:
         data = UserResource.parser.parse_args()
         new_user = User(
             username=data["username"],
@@ -53,7 +57,7 @@ class UserResource(Resource):
         return UserDTO.from_model(new_user), 201
 
     @staticmethod
-    def authenticate(username, password):
+    def authenticate(username: str, password: str) -> User | None:
         user = (
             db.session.query(User)
             .where(User.username == username)

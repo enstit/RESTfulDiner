@@ -1,14 +1,16 @@
 # app/resources/printer.py
 
-from flask_restful import Resource
+from typing import Union
+
 from flask_restful import reqparse
 
 from app.extensions import db
 from app.dto.printer import PrinterDTO
 from app.models.printer import Printer
+from app.resources.auth import ProtectedResource
 
 
-class PrinterResource(Resource):
+class PrinterResource(ProtectedResource):
     parser = reqparse.RequestParser()
     parser.add_argument(
         "name", type=str, required=True, help="Name of the printer"
@@ -26,7 +28,9 @@ class PrinterResource(Resource):
         help="IP address of the printer",
     )
 
-    def get(self, *, _id: str | None = None, name: str | None = None):
+    def get(
+        self, *, _id: str | None = None, name: str | None = None
+    ) -> Union[dict | list[dict], int]:
         if _id or name:
             printer = (
                 db.session.query(Printer)
@@ -40,6 +44,9 @@ class PrinterResource(Resource):
         return PrinterDTO.from_model_list(printers), 200
 
     def post(self):
+        msg, code = super().authenticate(admin_only=True)
+        if code != 200:
+            return msg, code
         data = PrinterResource.parser.parse_args()
         new_printer = Printer(
             name=data["name"],

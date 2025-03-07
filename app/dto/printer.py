@@ -7,14 +7,16 @@ from app.models.printer import Printer
 
 class PrinterDTO:
     def __init__(self, printer: Printer):
-        self.id = printer.id
+        self.id = str(printer.id)
         self.name = printer.name
+        self.mac_address = printer.mac_address
         self.ip_address = str(printer.ip_address)
 
     def to_dict(self) -> dict:
         return {
             "id": self.id,
             "name": self.name,
+            "mac_address": self.mac_address,
             "ip_address": self.ip_address,
         }
 

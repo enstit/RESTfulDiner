@@ -9,9 +9,12 @@ class DepartmentDTO:
     def __init__(self, department: Department):
         self.id = str(department.id)
         self.name = department.name
+        self.printer = (
+            str(department.printer.id) if department.printer else None
+        )
 
     def to_dict(self) -> dict:
-        return {"id": self.id, "name": self.name}
+        return {"id": self.id, "name": self.name, "printer": self.printer}
 
     @staticmethod
     def from_model(department: Department) -> dict:
