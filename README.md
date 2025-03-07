@@ -36,6 +36,7 @@ the operations of **POST** type with the system.
 
 ### System querying
 
+#### `POST` operations
 Let's start by inserting a new Department in the database:
 ```bash
 foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Cuisine"}'
@@ -43,14 +44,16 @@ foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Typ
 {"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Cuisine", "printer": null}
 ```
 
+#### `GET` operations
 Now, if we recover all the Departments from the database, the newly inserted
 `Cuisine` should be present. Let's verify it with:
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments
 
-[{"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Cuisine", "printer": null}, {"id": "2ed2ad8a-fa94-11ef-84db-0242ac120003", "name": "Beverage", "printer": null}]
+[{"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Cuisine", "printer": null}]
 ```
 
+#### `PUT` operations
 Mmmh, the term `Cuisine` comes from the French and can not be understand by
 everyone. Better to change the Department name to a more universal `Kitchen`.
 In order to do that, we simply need to use a **PUT** operation:
@@ -61,7 +64,11 @@ foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/1a99585a-fa94-11
 {"id": "1a99585a-fa94-11ef-949e-0242ac120003", "name": "Kitchen", "printer": null}
 ```
 
-Better now. But if we take a look at the printers in the system (with a **GET**
+#### `PATCH` operations
+Better now. But the **PUT** operation is useful when we want to modify an object
+by providing the whole representation of it, so if the department had a printer
+associated, the command above would have overwritten it.
+If we take a look at the printers in the system (with a **GET**
 request at `http://127.0.0.1:5000/api/v1/printers`) we will see that there is a
 `KitchenPrinter` with id `6ab08ed0-fb2f-11ef-96b4-0242ac120003` that really
 sounds to be the printer associated with the Department we just created. Here's
