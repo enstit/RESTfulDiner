@@ -7,6 +7,25 @@ from app.models.item import Item
 
 
 class ItemDTO:
+
+    CONTEXT = {
+        "@context": {
+            "schema": "https://schema.org/",
+            "self": "@id",
+            "type": "@type",
+            "name": "schema:name",
+            "description": "schema:description",
+            "department": {"@id": "schema:isRelatedTo", "@type": "@id"},
+            "menu_section": "schema:category",
+            "price": "schema:price",
+            "deposit": "schema:price",
+            "availability": "schema:inventoryLevel",
+            "initial_status": "schema:itemCondition",
+            "license": {"@id": "schema:license", "@type": "@id"},
+        },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+    }
+
     def __init__(self, item: Item):
         self.id = item.id
         self.name = item.name
@@ -21,6 +40,7 @@ class ItemDTO:
     def to_dict(self) -> dict:
         return {
             "self": f"{Config.APP_URL}{Config.API_URI}/items/{self.id}",
+            "type": "schema:Organization",
             "name": self.name,
             "description": self.description,
             "department": (

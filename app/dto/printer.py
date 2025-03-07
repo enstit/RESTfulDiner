@@ -7,6 +7,20 @@ from app.models.printer import Printer
 
 
 class PrinterDTO:
+
+    CONTEXT = {
+        "@context": {
+            "schema": "https://schema.org/",
+            "self": "@id",
+            "type": "@type",
+            "name": "schema:name",
+            "mac_address": "schema:macAddress",
+            "ip_address": "schema:ipAddress",
+            "license": {"@id": "schema:license", "@type": "@id"},
+        },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+    }
+
     def __init__(self, printer: Printer):
         self.id = str(printer.id)
         self.name = printer.name
@@ -16,6 +30,7 @@ class PrinterDTO:
     def to_dict(self) -> dict:
         return {
             "self": f"{Config.APP_URL}{Config.API_URI}/printers/{self.id}",
+            "type": "Printer",
             "name": self.name,
             "mac_address": self.mac_address,
             "ip_address": self.ip_address,
@@ -23,8 +38,18 @@ class PrinterDTO:
 
     @staticmethod
     def from_model(printer: Printer) -> dict:
-        return PrinterDTO(printer).to_dict() if printer else None
+        return (
+            {
+                **PrinterDTO.CONTEXT,
+                "data": PrinterDTO(printer).to_dict(),
+            }
+            if printer
+            else None
+        )
 
     @staticmethod
     def from_model_list(printers: List[Printer]) -> list:
-        return [PrinterDTO(printer).to_dict() for printer in printers]
+        return {
+            **PrinterDTO.CONTEXT,
+            "data": [PrinterDTO(printer).to_dict() for printer in printers],
+        }
