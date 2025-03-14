@@ -5,6 +5,7 @@ from app.resources.department import DepartmentResource
 from app.resources.item import ItemResource
 from app.resources.printer import PrinterResource
 from app.resources.user import LoginResource
+from app.resources.order import OrderResource
 
 
 def initialize_routes(api):
@@ -29,6 +30,7 @@ def initialize_routes(api):
         "/items/<string:_id>",
         "/items/name=<string:name>",
     )
+    api.add_resource(OrderResource, "/orders", "/orders/<string:_id>")
     api.add_resource(
         PrinterResource,
         "/printers",
