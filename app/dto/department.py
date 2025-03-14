@@ -1,5 +1,6 @@
 # app/dto/department.py
 
+
 from typing import List
 
 from app.config import Config
@@ -39,14 +40,12 @@ class DepartmentDTO:
 
     @staticmethod
     def from_model(department: Department) -> dict:
-        return (
-            {
-                **DepartmentDTO.CONTEXT,
-                "data": DepartmentDTO(department).to_dict(),
-            }
-            if department
-            else None
-        )
+        return {
+            **DepartmentDTO.CONTEXT,
+            "data": (
+                DepartmentDTO(department).to_dict() if department else None
+            ),
+        }
 
     @staticmethod
     def from_model_list(departments: List[Department]) -> list:

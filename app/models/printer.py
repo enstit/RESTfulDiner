@@ -1,9 +1,12 @@
+# app/models/printer.py
+
+
 from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ._types import ColumnsDomains as cd
-from ._base import BaseModel
+from app.models._types import ColumnsDomains as cd
+from app.models._base import BaseModel
 
 
 class Printer(BaseModel):

@@ -1,8 +1,11 @@
+# app/models/user.py
+
+
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ._base import BaseModel
-from ._types import ColumnsDomains as cd
-from ._types import UserRoleType
+from app.models._base import BaseModel
+from app.models._types import ColumnsDomains as cd
+from app.models._types import UserRoleType
 
 
 class User(BaseModel):

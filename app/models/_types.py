@@ -1,5 +1,6 @@
 # app/models/_types.py
 
+
 from dataclasses import dataclass
 from enum import Enum
 
@@ -139,6 +140,7 @@ class ColumnsDomains:
     CHOICE = EnumType  # Enumerated value
     INT = Integer  # Integer number
     DECIMAL = Numeric(16, 8, asdecimal=False)  # Decimal number
+    MONEY = Numeric(8, 4, asdecimal=False)  # Money amount, in EUR
     SIZE = SmallInteger  # Size, length or count expressed as number of items
     DATA = LargeBinary  # Binary type to save unstructured data
     IMG = PNGImageType  # Binary type to save PNG image data

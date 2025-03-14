@@ -1,5 +1,6 @@
 # app/dto/printer.py
 
+
 from typing import List
 
 from app.config import Config
@@ -38,14 +39,10 @@ class PrinterDTO:
 
     @staticmethod
     def from_model(printer: Printer) -> dict:
-        return (
-            {
-                **PrinterDTO.CONTEXT,
-                "data": PrinterDTO(printer).to_dict(),
-            }
-            if printer
-            else None
-        )
+        return {
+            **PrinterDTO.CONTEXT,
+            "data": PrinterDTO(printer).to_dict() if printer else None,
+        }
 
     @staticmethod
     def from_model_list(printers: List[Printer]) -> dict:

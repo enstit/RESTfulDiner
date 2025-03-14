@@ -1,5 +1,6 @@
 # app/models/department.py
 
+
 from typing import Optional
 
 from sqlalchemy import ForeignKey

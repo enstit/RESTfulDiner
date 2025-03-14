@@ -1,3 +1,6 @@
+# app/models/order.py
+
+
 from typing import Optional
 from datetime import datetime
 
@@ -8,9 +11,9 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from sqlalchemy_utils import UUIDType
 
-from ._base import BaseModel
-from ._types import ColumnsDomains as cd
-from ._types import PaymentMethodType
+from app.models._base import BaseModel
+from app.models._types import ColumnsDomains as cd
+from app.models._types import PaymentMethodType
 
 
 class Order(BaseModel):
@@ -38,7 +41,7 @@ class Order(BaseModel):
         ),
     )
     total_paid: Mapped[float] = mapped_column(
-        cd.DECIMAL,
+        cd.MONEY,
         nullable=True,
         comment="Total amount paid, in euros",
     )
@@ -56,14 +59,23 @@ class Order(BaseModel):
     )
 
     @hybrid_property
-    def total_price(self):
+    def total_price(self) -> float:
+        """Return the total price of the order, in the system currency"""
         return sum(
-            [
-                department_order.total_price
-                for department_order in self.departments_orders
-            ]
+            department_order.total_price
+            for department_order in self.departments_orders
         )
 
     @hybrid_property
-    def total_charge(self):
-        return self.total_paid - self.total_price
+    def total_charge(self) -> Optional[float]:
+        """Return the total charge of the order, if the order has a total paid
+        amount, in the system currency"""
+        return self.total_paid - self.total_price if self.total_paid else None
+
+    @hybrid_property
+    def order_departments(self) -> list["Department"]:
+        """Return the list of departments associated with the order"""
+        return [
+            department_order.department
+            for department_order in self.departments_orders
+        ]

@@ -1,4 +1,6 @@
-### run.py
+### app.py
+
+
 from . import create_app
 
 app = create_app()

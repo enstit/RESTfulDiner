@@ -1,5 +1,6 @@
 # app/dto/kiosk.py
 
+
 from typing import List
 
 from app.config import Config
@@ -39,14 +40,10 @@ class KioskDTO:
 
     @staticmethod
     def from_model(kiosk: Kiosk) -> dict:
-        return (
-            {
-                **KioskDTO.CONTEXT,
-                "data": KioskDTO(kiosk).to_dict(),
-            }
-            if kiosk
-            else None
-        )
+        return {
+            **KioskDTO.CONTEXT,
+            "data": KioskDTO(kiosk).to_dict() if kiosk else None,
+        }
 
     @staticmethod
     def from_model_list(kiosks: List[Kiosk]) -> dict:

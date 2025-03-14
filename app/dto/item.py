@@ -1,5 +1,6 @@
 # app/dto/item.py
 
+
 from typing import List
 
 from app.config import Config
@@ -49,22 +50,18 @@ class ItemDTO:
                 else None
             ),
             "menu_section": self.menu_section.name,
-            "price": self.price,
-            "deposit": self.deposit,
+            "price": round(self.price, 2),
+            "deposit": round(self.deposit, 2) if self.deposit else None,
             "availability": self.availability,
             "initial_status": self.initial_status.name,
         }
 
     @staticmethod
     def from_model(item: Item) -> dict:
-        return (
-            {
-                **ItemDTO.CONTEXT,
-                "data": ItemDTO(item).to_dict(),
-            }
-            if item
-            else None
-        )
+        return {
+            **ItemDTO.CONTEXT,
+            "data": ItemDTO(item).to_dict() if item else None,
+        }
 
     @staticmethod
     def from_model_list(items: List[Item]) -> dict:

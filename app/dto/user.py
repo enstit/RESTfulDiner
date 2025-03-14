@@ -1,5 +1,6 @@
 # app/dto/user.py
 
+
 from typing import List
 
 from app.config import Config
@@ -35,14 +36,10 @@ class UserDTO:
 
     @staticmethod
     def from_model(user: User) -> dict:
-        return (
-            {
-                **UserDTO.CONTEXT,
-                "data": UserDTO(user).to_dict(),
-            }
-            if user
-            else None
-        )
+        return {
+            **UserDTO.CONTEXT,
+            "data": UserDTO(user).to_dict() if user else None,
+        }
 
     @staticmethod
     def from_model_list(users: List[User]) -> dict:
