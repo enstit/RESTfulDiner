@@ -1,0 +1,38 @@
+%% images/usecases.tex
+%% Copyright (c) 2025 Enrico Stefanel <enrico.stefanel@studenti.units.it>
+
+
+\documentclass{standalone}
+
+\usepackage{amsmath}
+\usepackage{tikz-uml}
+\tikzumlset{font=\sffamily}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{umlsystem}[x=4] {RESTfulDiner}
+        \umlusecase[name=postOrders,width=2cm] {Register orders details}
+        \umlusecase[name=getOrders,x=5,width=2cm] {Get orders details}
+        \umlusecase[name=getItems,y=-2,width=2cm] {Get menu items}
+        \umlusecase[name=putItems,x=5,y=-2,width=2cm] {Update menu items}
+    \end{umlsystem}
+
+    \umlactor[x=0] {Waiter}
+    \umlactor[x=0,y=-2] {Hungry Customer}
+    \umlactor[x=13,y=1] {Chef}
+    \umlactor[x=13,y=-1] {Data Analyst}
+    \umlactor[x=13,y=-3] {Manager}
+
+    \umlinclude{postOrders}{getItems}
+    \umlinclude{putItems}{getItems}
+
+    \umlassoc{Waiter}{postOrders}
+    \umlassoc{Hungry Customer}{getItems}
+    \umlassoc{Chef}{getOrders}
+    \umlassoc{Manager}{getOrders}
+    \umlassoc{Data Analyst}{getOrders}
+    \umlassoc{Manager}{putItems}
+\end{tikzpicture}
+
+\end{document}
