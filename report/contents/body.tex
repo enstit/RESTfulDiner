@@ -13,7 +13,7 @@
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.9\textwidth,height=0.75\textheight,keepaspectratio]{images/usecases}
+		\includegraphics[width=0.9\textwidth,height=0.6\textheight,keepaspectratio]{images/usecases}
 		\caption{Use cases diagram}
 		\label{fig:usecases}
 	\end{figure}
@@ -21,9 +21,12 @@
 \end{frame}
 
 \begin{frame}{E/R Diagram}
+	Next, the E/R diagram was designed to represent the data model of the
+	system:
+
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{images/er}
+		\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/er}
 		\caption{E/R diagram}
 		\label{fig:er}
 	\end{figure}
@@ -33,15 +36,39 @@
 \subsection[Open Data]{Open Data}
 
 \begin{frame}[allowframebreaks]{Data model implementation}
+
+	The data model has been implemented using the SQLAlchemy ORM, which
+	provides a high-level interface to the (PostgreSQL, in this case) database.
+
 	\lstinputlisting[style=PythonStyle,linerange={18-28}]{../app/models/_base.py}
+
+	Any class inherits from the \texttt{BaseModel} class and is automatically
+	mapped to a table in the database.
+
+	\framebreak
+
+	An example of a model class is the \texttt{Department} class:
+
 	\lstinputlisting[style=PythonStyle,linerange={17-22,24-26,28-32,35-38}]{../app/models/department.py}
 \end{frame}
 
-\begin{frame}{API resources}
-	\lstinputlisting[style=PythonStyle,linerange={12-12,16-33}]{../app/resources/department.py}
-\end{frame}
+\newenvironment{slide}[1][]
+{%
+  \begin{frame}[allowframebreaks,#1]%
+  }{%
+  \end{frame}%
+}
 
-\begin{frame}[fragile]
+\begin{frame}[allowframebreaks,fragile]{API resources}
+	\vspace*{-.25\baselineskip}
+	The RESTful API has been implemented using the Flask web framework. Any
+	resource exposes its endpoints that can be accessed using basic HTTP
+	methods.
+
+	\lstinputlisting[style=PythonStyle,linerange={12-12,16-33}]{../app/resources/department.py}
+
+	\framebreak
+
 	\begin{lstlisting}[style=JSONStyle,caption={\texttt{GET /api/v1/departments} response}]
 {
 	"@context": {
@@ -59,14 +86,10 @@
 		}
 	},
 	"license": "https://creativecommons.org/licenses/by/4.0/",
-	"data": [
-			{
-			"self": "http://127.0.0.1/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
-			"type": "schema:Organization",
-			"name": "Kitchen",
-			"printer": "http://127.0.0.1/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"
-			},
-		]
+	"self": "http://127.0.0.1/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
+	"type": "schema:Organization",
+	"name": "Kitchen",
+	"printer": "http://127.0.0.1/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"
 }\end{lstlisting}
 \end{frame}
 
