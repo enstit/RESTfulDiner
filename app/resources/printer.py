@@ -1,7 +1,5 @@
 # app/resources/printer.py
 
-from typing import Union
-
 from flask_restful import reqparse
 
 from app.extensions import db
@@ -18,7 +16,7 @@ class PrinterResource(ProtectedResource):
 
     def get(
         self, *, _id: str | None = None, name: str | None = None
-    ) -> Union[dict | list[dict], int]:
+    ) -> tuple[dict, int]:
         if _id or name:
             printer = (
                 db.session.query(Printer)
@@ -27,7 +25,7 @@ class PrinterResource(ProtectedResource):
             )
             if printer:
                 return PrinterDTO.from_model(printer), 200
-            return {"message": f"Printer was not found"}, 404
+            return {"message": "Printer was not found"}, 404
         printers = db.session.query(Printer).all()
         return PrinterDTO.from_model_list(printers), 200
 

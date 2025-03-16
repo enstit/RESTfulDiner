@@ -1,7 +1,5 @@
 # app/resources/department.py
 
-from typing import Union
-
 from flask_restful import reqparse
 
 from app.dto.department import DepartmentDTO
@@ -18,7 +16,7 @@ class DepartmentResource(ProtectedResource):
 
     def get(
         self, *, _id: str | None = None, name: str | None = None
-    ) -> Union[dict | list[dict], int]:
+    ) -> tuple[dict, int]:
         if _id or name:
             department = (
                 db.session.query(Department)
@@ -29,7 +27,7 @@ class DepartmentResource(ProtectedResource):
             )
             if department:
                 return DepartmentDTO.from_model(department), 200
-            return {"message": f"Department was not found"}, 404
+            return {"message": "Department was not found"}, 404
 
         departments = db.session.query(Department).all()
         return DepartmentDTO.from_model_list(departments), 200

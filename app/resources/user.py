@@ -1,7 +1,5 @@
 # app/resources/user.py
 
-from typing import Union
-
 from flask_restful import Resource
 from flask_restful import reqparse
 
@@ -21,7 +19,7 @@ class UserResource(Resource):
 
     def get(
         self, *, _id: str | None = None, username: str | None = None
-    ) -> Union[dict | list[dict], int]:
+    ) -> tuple[dict, int]:
         if _id or username:
             user = (
                 db.session.query(User)
@@ -30,7 +28,7 @@ class UserResource(Resource):
             )
             if user:
                 return UserDTO.from_model(user), 200
-            return {"message": f"User was not found"}, 404
+            return {"message": "User was not found"}, 404
         users = db.session.query(User).all()
         return UserDTO.from_model_list(users), 200
 
@@ -66,7 +64,7 @@ class LoginResource(Resource):
         "password", type=str, required=True, help="Password cannot be blank"
     )
 
-    def post(self):
+    def post(self) -> tuple[dict, int]:
         data = LoginResource.parser.parse_args()
         user = UserResource.authenticate(data["username"], data["password"])
 

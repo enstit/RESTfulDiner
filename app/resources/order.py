@@ -1,7 +1,5 @@
 # app/resources/item.py
 
-from typing import Union
-
 from cerberus import Validator
 import json
 
@@ -37,14 +35,14 @@ class OrderResource(ProtectedResource):
     parser.add_argument("total_paid", type=float)
     parser.add_argument("items", type=order_validator, action="append")
 
-    def get(self, *, _id: str | None = None) -> Union[dict | list[dict], int]:
+    def get(self, *, _id: str | None = None) -> tuple[dict, int]:
         if _id:
             order = (
                 db.session.query(Order).where(Order.id == _id).one_or_none()
             )
             if order:
                 return OrderDTO.from_model(order), 200
-            return {"message": f"Order was not found"}, 404
+            return {"message": "Order was not found"}, 404
         orders = db.session.query(Order).all()
         return OrderDTO.from_model_list(orders), 200
 

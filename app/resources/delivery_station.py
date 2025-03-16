@@ -1,7 +1,5 @@
 # app/resources/DeliveryStation.py
 
-from typing import Tuple
-
 from flask_restful import reqparse
 
 from app.dto.delivery_station import DeliveryStationDTO
@@ -17,7 +15,7 @@ class DeliveryStationResource(ProtectedResource):
 
     def get(
         self, *, _id: str | None = None, name: str | None = None
-    ) -> Tuple[dict, int]:
+    ) -> tuple[dict, int]:
         if _id or name:
             delivery_station = (
                 db.session.query(DeliveryStation)
@@ -30,7 +28,7 @@ class DeliveryStationResource(ProtectedResource):
             )
             if delivery_station:
                 return DeliveryStationDTO.from_model(delivery_station), 200
-            return {"message": f"DeliveryStation was not found"}, 404
+            return {"message": "DeliveryStation was not found"}, 404
 
         delivery_stations = db.session.query(DeliveryStation).all()
         return DeliveryStationDTO.from_model_list(delivery_stations), 200
