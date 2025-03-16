@@ -29,7 +29,7 @@ class DepartmentResource(ProtectedResource):
             )
             if department:
                 return DepartmentDTO.from_model(department), 200
-            return {"message": f"Department {name} was not found"}, 404
+            return {"message": f"Department was not found"}, 404
 
         departments = db.session.query(Department).all()
         return DepartmentDTO.from_model_list(departments), 200

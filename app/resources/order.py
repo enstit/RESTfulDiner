@@ -44,7 +44,7 @@ class OrderResource(ProtectedResource):
             )
             if order:
                 return OrderDTO.from_model(order), 200
-            return {"message": f"Order {_id} was not found"}, 404
+            return {"message": f"Order was not found"}, 404
         orders = db.session.query(Order).all()
         return OrderDTO.from_model_list(orders), 200
 

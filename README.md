@@ -224,6 +224,11 @@ foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-
 
 And as you can see, the department has been updated with printer link.
 
+## Next steps
+
+- [ ] Use [`marshmallow` package](https://github.com/marshmallow-code/marshmallow)
+      for serilization and deserialization of model objects.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE)

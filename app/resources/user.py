@@ -30,7 +30,7 @@ class UserResource(Resource):
             )
             if user:
                 return UserDTO.from_model(user), 200
-            return {"message": f"User {username} was not found"}, 404
+            return {"message": f"User was not found"}, 404
         users = db.session.query(User).all()
         return UserDTO.from_model_list(users), 200
 

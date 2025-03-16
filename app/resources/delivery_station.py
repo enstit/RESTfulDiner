@@ -30,7 +30,7 @@ class DeliveryStationResource(ProtectedResource):
             )
             if delivery_station:
                 return DeliveryStationDTO.from_model(delivery_station), 200
-            return {"message": f"DeliveryStation {name} was not found"}, 404
+            return {"message": f"DeliveryStation was not found"}, 404
 
         delivery_stations = db.session.query(DeliveryStation).all()
         return DeliveryStationDTO.from_model_list(delivery_stations), 200

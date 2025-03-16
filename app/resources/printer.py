@@ -27,7 +27,7 @@ class PrinterResource(ProtectedResource):
             )
             if printer:
                 return PrinterDTO.from_model(printer), 200
-            return {"message": f"Printer {name} was not found"}, 404
+            return {"message": f"Printer was not found"}, 404
         printers = db.session.query(Printer).all()
         return PrinterDTO.from_model_list(printers), 200
 

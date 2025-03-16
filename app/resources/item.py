@@ -35,7 +35,7 @@ class ItemResource(ProtectedResource):
             )
             if item:
                 return ItemDTO.from_model(item), 200
-            return {"message": f"Item {name} was not found"}, 404
+            return {"message": f"Item was not found"}, 404
         items = db.session.query(Item).all()
         return ItemDTO.from_model_list(items), 200
 
