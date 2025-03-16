@@ -3,7 +3,7 @@
 %!TEX encoding = UTF-8 Unicode
 
 
-\section[Section]{Section}
+\section[RESTfulDiner]{RESTfulDiner}
 
 \subsection[System design]{System design}
 
@@ -34,7 +34,7 @@
 
 \begin{frame}[allowframebreaks]{Data model implementation}
 	\lstinputlisting[style=PythonStyle,linerange={18-28}]{../app/models/_base.py}
-	\lstinputlisting[style=PythonStyle,linerange={17-37}]{../app/models/department.py}
+	\lstinputlisting[style=PythonStyle,linerange={17-22,24-26,28-32,35-38}]{../app/models/department.py}
 \end{frame}
 
 \begin{frame}{API resources}
@@ -96,5 +96,4 @@
 	Every resource in the system is identified by a URI, and can be accessed
 	by a simple HTTP GET request to that URI. A relation between resources
 	is established by linking them in the JSON response.
-
 \end{frame}
