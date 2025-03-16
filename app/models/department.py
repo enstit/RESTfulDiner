@@ -16,6 +16,7 @@ from app.models._types import ColumnsDomains as cd
 
 class Department(BaseModel):
 
+    id = BaseModel.id
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME,
         unique=True,

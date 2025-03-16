@@ -18,6 +18,7 @@ from app.models._types import PaymentMethodType
 
 class Order(BaseModel):
 
+    id = BaseModel.id
     created_datetime: Mapped[datetime] = mapped_column(
         cd.DATETIME,
         server_default=func.now(),
@@ -73,7 +74,7 @@ class Order(BaseModel):
         return self.total_paid - self.total_price if self.total_paid else None
 
     @hybrid_property
-    def order_departments(self) -> list["Department"]:
+    def order_departments(self) -> list["Department"]:  # type: ignore # noqa: F821
         """Return the list of departments associated with the order"""
         return [
             department_order.department

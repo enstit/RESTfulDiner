@@ -11,6 +11,7 @@ from app.models._base import BaseModel
 
 class Printer(BaseModel):
 
+    id = BaseModel.id
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME, unique=True, comment="Unique printer name"
     )

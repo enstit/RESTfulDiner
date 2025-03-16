@@ -10,6 +10,7 @@ from app.models._types import UserRoleType
 
 class User(BaseModel):
 
+    id = BaseModel.id
     username: Mapped[str] = mapped_column(
         cd.SHORT_NAME, unique=True, comment="Unique username"
     )

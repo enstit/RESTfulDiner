@@ -11,6 +11,7 @@ from app.models._types import ColumnsDomains as cd
 
 class DeliveryStation(BaseModel):
 
+    id = BaseModel.id
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME, unique=True, comment="Unique delivery station name"
     )
