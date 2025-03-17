@@ -48,7 +48,7 @@ class DepartmentDTO:
         }
 
     @staticmethod
-    def from_model_list(departments: List[Department]) -> list:
+    def from_model_list(departments: List[Department]) -> dict:
         return {
             **DepartmentDTO.CONTEXT,
             "data": [

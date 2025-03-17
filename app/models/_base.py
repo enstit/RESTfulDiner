@@ -24,7 +24,7 @@ class BaseModel(DeclarativeBase):
         cd.ID,
         default=uuid,
         primary_key=True,
-        comment="Unique row identifier.",
+        comment="Unique object identifier",
     )
 
     # Automatically set the table name to the snake_case version of the
