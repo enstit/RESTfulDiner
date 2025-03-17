@@ -40,7 +40,7 @@
 	The data model has been implemented using the SQLAlchemy ORM, which
 	provides a high-level interface to the (PostgreSQL, in this case) database.
 
-	\lstinputlisting[style=PythonStyle,linerange={18-28}]{../app/models/_base.py}
+	\lstinputlisting[language=PythonPlus,linerange={18-28}]{../app/models/_base.py}
 
 	Any class inherits from the \texttt{BaseModel} class and is automatically
 	mapped to a table in the database.
@@ -49,7 +49,7 @@
 
 	An example of a model class is the \texttt{Department} class:
 
-	\lstinputlisting[style=PythonStyle,linerange={17-22,24-26,28-32,35-38}]{../app/models/department.py}
+	\lstinputlisting[language=PythonPlus,linerange={17-22,24-26,28-32,35-38}]{../app/models/department.py}
 	\vspace*{-.25\baselineskip}
 \end{frame}
 
@@ -64,11 +64,11 @@
 	%\vspace*{-.75\baselineskip}
 	The RESTful API has been implemented using the Flask web framework.
 
-	\lstinputlisting[style=PythonStyle,linerange={12-12,16-33}]{../app/resources/department.py}
+	\lstinputlisting[language=PythonPlus,linerange={12-12,16-33}]{../app/resources/department.py}
 
 	\framebreak
 
-	\begin{lstlisting}[style=JSONStyle,caption={\texttt{GET /api/v1/departments} response}]
+	\begin{lstlisting}[caption={\texttt{GET /api/v1/departments} response}]
 	"@context": {
 		"schema": "https://schema.org/",
 		"self": "@id",
