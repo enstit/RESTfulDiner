@@ -10,5 +10,24 @@
 \setbeamertemplate{itemize items}[circle]
 \setbeamertemplate{enumerate items}[circle]
 
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Code}
+
 \usepackage{caption}
 \captionsetup{skip=\baselineskip,font=scriptsize}
+
+\usepackage[backend=bibtex,style=numeric,sorting=ynt,maxbibnames=99,urldate=iso,autocite=superscript]{biblatex}
+\addbibresource{reference.bib}
+\setbeamertemplate{bibliography item}[text]
+
+\DeclareCiteCommand{\supercite}[\mkbibsuperscript]
+  {\iffieldundef{prenote}
+     {}
+     {\BibliographyWarning{Ignoring prenote argument}}%
+   \iffieldundef{postnote}
+     {}
+     {\BibliographyWarning{Ignoring postnote argument}}}
+  {\usebibmacro{citeindex}%
+   \bibopenbracket\usebibmacro{cite}\bibclosebracket}
+  {\supercitedelim}
+  {}

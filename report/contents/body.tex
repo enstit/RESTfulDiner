@@ -13,7 +13,7 @@
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.9\textwidth,height=0.6\textheight,keepaspectratio]{images/usecases}
+		\includegraphics[width=0.9\textwidth,height=0.55\textheight,keepaspectratio]{images/usecases}
 		\caption{Use cases diagram}
 		\label{fig:usecases}
 	\end{figure}
@@ -50,6 +50,7 @@
 	An example of a model class is the \texttt{Department} class:
 
 	\lstinputlisting[style=PythonStyle,linerange={17-22,24-26,28-32,35-38}]{../app/models/department.py}
+	\vspace*{-.25\baselineskip}
 \end{frame}
 
 \newenvironment{slide}[1][]
@@ -60,17 +61,14 @@
 }
 
 \begin{frame}[allowframebreaks,fragile]{API resources}
-	\vspace*{-.25\baselineskip}
-	The RESTful API has been implemented using the Flask web framework. Any
-	resource exposes its endpoints that can be accessed using basic HTTP
-	methods.
+	%\vspace*{-.75\baselineskip}
+	The RESTful API has been implemented using the Flask web framework.
 
 	\lstinputlisting[style=PythonStyle,linerange={12-12,16-33}]{../app/resources/department.py}
 
 	\framebreak
 
 	\begin{lstlisting}[style=JSONStyle,caption={\texttt{GET /api/v1/departments} response}]
-{
 	"@context": {
 		"schema": "https://schema.org/",
 		"self": "@id",
@@ -89,30 +87,34 @@
 	"self": "http://127.0.0.1/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
 	"type": "schema:Organization",
 	"name": "Kitchen",
-	"printer": "http://127.0.0.1/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"
-}\end{lstlisting}
+	"printer": "http://127.0.0.1/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"\end{lstlisting}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Open Data principles}
+\begin{frame}[allowframebreaks]{Open Data principles\autocite{FiveStarLinkedData}}
 	\begin{block}{\faStar\faStarO\faStarO\faStarO\faStarO}
 		Make your stuff available on the Web (whatever format) under an open
 		license.
 	\end{block}
+	\vspace*{-8pt}
 	\begin{block}{\faStar\faStar\faStarO\faStarO\faStarO}
 		Make it available as structured data (e.g., Excel instead of image scan
 		of a table).
 	\end{block}
+	\vspace*{-8pt}
 	\begin{block}{\faStar\faStar\faStar\faStarO\faStarO}
 		Make it available in a non-proprietary open format (e.g., CSV instead of
 		Excel).
 	\end{block}
 	These requirements are satisfied by our RESTful API that allows
-	publicly access to data in JSON format and provide them under Creative
+	publicly access to data in JSON-LD format and provide them under Creative
 	Commons license.
+
+	\framebreak
 
 	\begin{block}{\faStar\faStar\faStar\faStar\faStarO}
 		Use URIs to denote things, so that people can point at your stuff.
 	\end{block}
+	\vspace*{-8pt}
 	\begin{block}{\faStar\faStar\faStar\faStar\faStar}
 		Link your data to other data to provide context.
 	\end{block}

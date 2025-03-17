@@ -1,7 +1,7 @@
 %% beamerouterthemeunits.sty
 %% Copyright (c) 2025 Enrico Stefanel <enrico.stefanel@studenti.units.it>
 
-\useoutertheme[subsection=false]{miniframes}
+\useoutertheme[subsection=true]{miniframes}
 %\setbeamertemplate{mini frames}{}
 
 % remove navigation symbols from slides
@@ -82,12 +82,10 @@
 \usepackage{graphicx}
 \usebackgroundtemplate{%
     \ifnum \theframenumber=1
-        \tikz[overlay,remember picture] \node[opacity=.08, at=(current page.center)] {
-            %   \includesvg[height=.55\paperheight]{figure/logo.svg}};
+        \tikz[overlay,remember picture] \node[opacity=.08,at=(current page.center)] {
             \includegraphics[height=.85\paperheight]{images/units.pdf}};
     \else
-        \tikz[overlay,remember picture] \node[opacity=.04, at=(current page.center)] {
-            %   \includesvg[height=.55\paperheight]{figure/logo.svg}};
+        \tikz[overlay,remember picture] \node[opacity=.04, at={(current page.center)}, yshift=-8pt] {
             \includegraphics[height=.85\paperheight]{images/units.pdf}};
     \fi
 }
