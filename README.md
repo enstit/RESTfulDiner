@@ -228,6 +228,9 @@ And as you can see, the department has been updated with printer link.
 
 - [ ] Use [`marshmallow` package](https://github.com/marshmallow-code/marshmallow)
       for serilization and deserialization of model objects.
+- [ ] Implement `DELETE` methods for the resources.
+- [ ] Improve authentication mechanism by saving client token to cache, also
+      adding expritation time for a single authentication.
 
 ## License
 
