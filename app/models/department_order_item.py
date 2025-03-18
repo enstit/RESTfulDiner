@@ -13,7 +13,6 @@ from app.models._types import ColumnsDomains as cd
 
 class DepartmentOrderItem(BaseModel):
 
-    id = BaseModel.id
     department_order__id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         ForeignKey("department_order.id"),

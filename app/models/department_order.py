@@ -14,7 +14,6 @@ from app.models._types import OrderStatusType
 
 class DepartmentOrder(BaseModel):
 
-    id = BaseModel.id
     department__id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         ForeignKey("department.id"),

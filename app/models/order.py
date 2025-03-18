@@ -18,7 +18,6 @@ from app.models._types import PaymentMethodType
 
 class Order(BaseModel):
 
-    id = BaseModel.id
     created_datetime: Mapped[datetime] = mapped_column(
         cd.DATETIME,
         server_default=func.now(),
