@@ -3,7 +3,7 @@
 %!TEX encoding = UTF-8 Unicode
 
 
-\section[RESTfulDiner]{RESTfulDiner}
+\section[Application]{Application}
 
 \subsection[System design]{System design}
 
@@ -33,7 +33,7 @@
 
 \end{frame}
 
-\subsection[Open Data]{Open Data}
+\subsection[System implementation]{System implementation}
 
 \begin{frame}[allowframebreaks]{Data model implementation}
 
@@ -47,24 +47,22 @@
 
 	\framebreak
 
-	An example of a model class is the \texttt{Department} class:
+	\vspace*{-1\baselineskip}
+	\lstinputlisting[language=PythonPlus,linerange={17-38}]{../app/models/department.py}
 
-	\lstinputlisting[language=PythonPlus,linerange={17-22,24-26,28-32,35-41}]{../app/models/department.py}
-	\vspace*{-.25\baselineskip}
 \end{frame}
 
 \newenvironment{slide}[1][]
 {%
-  \begin{frame}[allowframebreaks,#1]%
-  }{%
-  \end{frame}%
+	\begin{frame}[allowframebreaks,#1]%
+		}{%
+	\end{frame}%
 }
 
 \begin{frame}[allowframebreaks,fragile]{API resources}
-	%\vspace*{-.75\baselineskip}
 	The RESTful API has been implemented using the Flask web framework.
 
-	\lstinputlisting[language=PythonPlus,linerange={12-12,16-33},caption={\texttt{GET /api/v1/departments[/<string:\_id>]} GET method definition}]{../app/resources/department.py}
+	\lstinputlisting[language=PythonPlus,linerange={12-12,16-33}]{../app/resources/department.py}
 
 	\framebreak
 
@@ -88,7 +86,11 @@
 	"type": "schema:Organization",
 	"name": "Kitchen",
 	"printer": "http://127.0.0.1/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"\end{lstlisting}
+
 \end{frame}
+
+
+\subsection[Linked Open Data]{Linked Open Data}
 
 \begin{frame}[allowframebreaks]{Open Data principles\autocite{Berners-Lee_2006}}
 	\begin{block}{\faStar\faStarO\faStarO\faStarO\faStarO}

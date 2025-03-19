@@ -224,17 +224,21 @@ foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/e5e63c86-fb42-
 
 And as you can see, the department has been updated with printer link.
 
+
 ## Next steps
 
-- [ ] Use [`marshmallow` package](https://github.com/marshmallow-code/marshmallow)
-      for serilization and deserialization of model objects.
-- [ ] Implement `DELETE` methods for the resources.
+- [ ] Use [`marshmallow`](https://github.com/marshmallow-code/marshmallow)
+      for serilization and deserialization of model objects
+- [ ] Implement `DELETE` methods for the resources
 - [ ] Improve authentication mechanism by saving client token to cache, also
-      adding expritation time for a single authentication.
+      adding expiration time for a single authentication
+
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE)
 file for details.
+
+
 
 [^1]: Berners-Lee, T., "Linked Data", _w3.org_, 2006. [https://www.w3.org/DesignIssues/LinkedData.html](https://www.w3.org/DesignIssues/LinkedData.html).

@@ -1,6 +1,6 @@
 FROM python:3.13.1-slim
 
-LABEL author="Enrico Stefanel (me@enst.it)"
+LABEL author="Enrico Stefanel (enrico.stefanel@studenti.units.it)"
 
 ENV FLASK_APP='/usr/src/app/app'
 

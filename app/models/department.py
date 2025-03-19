@@ -23,14 +23,17 @@ class Department(BaseModel):
     )
     color: Mapped[Optional[str]] = mapped_column(
         cd.SHORT_NAME,
-        comment="Department color",
+        comment=(
+            "A color between the Recognized color keyword names. "
+            "See also https://www.w3.org/TR/SVG11/types.html#ColorKeywords"
+        ),
     )
     printer__id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
         ForeignKey("printer.id"),
         nullable=True,
         default=None,
-        comment="Printer identifier associated with the department",
+        comment="Identifier of the printer the department is equipped with",
     )
 
     printer = relationship("Printer", back_populates="department")
