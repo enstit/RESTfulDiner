@@ -52,13 +52,6 @@
 
 \end{frame}
 
-\newenvironment{slide}[1][]
-{%
-	\begin{frame}[allowframebreaks,#1]%
-		}{%
-	\end{frame}%
-}
-
 \begin{frame}[allowframebreaks,fragile]{API resources}
 	The RESTful API has been implemented using the Flask web framework.
 
@@ -89,10 +82,17 @@
 
 \end{frame}
 
+\begin{frame}{Demo}
+	A live demo of the system is available at
+	\url{https://restful-diner.enricostefanel.it/api/v1}.
+\end{frame}
+
+
+\section[Open Data principles]{Open Data principles}
 
 \subsection[Linked Open Data]{Linked Open Data}
 
-\begin{frame}[allowframebreaks]{Open Data principles\autocite{Berners-Lee_2006}}
+\begin{frame}[allowframebreaks]{Linked Open Data\autocite{Berners-Lee_2006} requirements}
 	\begin{block}{\faStar\faStarO\faStarO\faStarO\faStarO}
 		Make your stuff available on the Web (whatever format) under an open
 		license.
@@ -123,4 +123,33 @@
 	Every resource in the system is identified by a URI, and can be accessed
 	by a simple HTTP GET request to that URI. A relation between resources
 	is established by linking them in the JSON response.
+\end{frame}
+
+
+\subsection[Data Management]{Data Management}
+
+\begin{frame}[allowframebreaks]{Data Management Plan}
+
+	\begin{enumerate}
+		\item \textbf{How will the data be created?} The data will be created by the
+		      restaurant staff, who will use the system to manage the restaurant's
+		      departments, tables, and printers.
+		\item \textbf{How will the data be documented?} The data will be documented in
+		      the system's database, and the API will provide a JSON-LD representation of
+		      the data.
+		\item \textbf{Who will access the data?} The data will be publicly accessible
+		      through the RESTful API.
+		\item \textbf{How will the data be stored?} The data will be stored by the
+		      system's database, which is a PostgreSQL database. In case, the database
+			  can also be installed on a cloud service.
+		\item \textbf{How will the data be shared?} The data will be shared through the
+		      RESTful API, which will provide a JSON-LD representation of the data for
+			  basic HTTP requests (GET, POST, PUT, DELETE).
+		\item \textbf{How will the data be preserved?} The data will be preserved by
+		      the system's database, which will be backed up regularly to ensure data
+			  integrity.
+		\item \textbf{Who will back up the data?} The data will be backed up by the
+		      system administrator, who will ensure that the database is backed up
+			  regularly.
+	\end{enumerate}
 \end{frame}
