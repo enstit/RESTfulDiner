@@ -9,10 +9,10 @@ services:
     environment:
       - APP_URL=http://127.0.0.1:5000
       - API_URI=/api/v1
-      - DATABASE_URL=postgresql://user:password@database:5432/postgres
-    secrets:
-       - jwt_secrets
-       - uuid_secrets
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/postgres
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - UUID_SECRET1=${UUID_SECRET1}
+      - UUID_SECRET2=${UUID_SECRET2}
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - ./app:/usr/src/app
@@ -22,12 +22,6 @@ services:
     image: postgres:13
     hostname: database
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=postgres
-
-secrets:
-   jwt_secrets:
-     file: jwt_secrets.txt
-   uuid_secrets:
-     file: uuid_secrets.txt
