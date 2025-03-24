@@ -11,7 +11,7 @@
 > Year.
 
 In this project, we are going to build a RESTful APIs service to host an Open
-Data[^1]-compliant repository to host data about food orders at a restaurant.
+Data[^1][^2]-compliant repository to host data about food orders at a restaurant.
 
 ## Usage
 
@@ -242,3 +242,5 @@ file for details.
 
 
 [^1]: Berners-Lee, T., "Linked Data", _w3.org_, 2006. [https://www.w3.org/DesignIssues/LinkedData.html](https://www.w3.org/DesignIssues/LinkedData.html).
+
+[^2]: Wilkinson Mark D. et al., "The FAIR Guiding Principles for scientific data management and stewardship", _Scientific Data_, 2016. [10.1038/sdata.2016.18](https://doi.org/10.1038/sdata.2016.18).
