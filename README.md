@@ -76,7 +76,7 @@ foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Typ
     },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "data": {
-        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-8000-8000-6496d5c5c0cf",
+        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
         "type": "schema:Organization",
         "name": "Cuisine",
         "printer": null
@@ -110,7 +110,7 @@ foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "data": [
         {
-            "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-8000-8000-6496d5c5c0cf",
+            "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
             "type": "schema:Organization",
             "name": "Cuisine",
             "printer": null
@@ -126,7 +126,7 @@ everyone. Better to change the Department name to a more universal `Kitchen`.
 In order to do that, we simply need to use a **PUT** operation:
 
 ```bash
-foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-8000-8000-6496d5c5c0cf -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Kitchen"}'
+foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Kitchen"}'
 
 {
     "@context": {
@@ -145,7 +145,7 @@ foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-80
     },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "data": {
-        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-8000-8000-6496d5c5c0cf",
+        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
         "type": "schema:Organization",
         "name": "Kitchen",
         "printer": null
@@ -182,7 +182,7 @@ foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "data": [
         {
-            "self": "http://127.0.0.1:5000/api/v1/printers/5b11618c-944d-8000-8000-2a5553677712",
+            "self": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-2a5553677712",
             "type": "Printer",
             "name": "KitchenPrinter",
             "mac_address": "32:1c:35:93:4e:07",
@@ -195,7 +195,7 @@ foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
 Here's where the **PATCH** operation comes in our hand:
 
 ```bash
-foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-8000-8000-6496d5c5c0cf -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"printer_id": "5b11618c-944d-8000-8000-2a5553677712"}'
+foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"printer_id": "5b11618c-51f5-8000-8000-2a5553677712"}'
 
 {
     "@context": {
@@ -214,10 +214,10 @@ foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-
     },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "data": {
-        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-944d-8000-8000-6496d5c5c0cf",
+        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
         "type": "schema:Organization",
         "name": "Kitchen",
-        "printer": "http://127.0.0.1:5000/api/v1/printers/5b11618c-944d-8000-8000-2a5553677712"
+        "printer": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-2a5553677712"
     }
 }
 ```

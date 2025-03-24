@@ -1,4 +1,4 @@
-# app/dto/kiosk.py
+# app/dto/delivery_station.py
 
 
 from typing import List

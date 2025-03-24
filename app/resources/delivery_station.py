@@ -1,4 +1,4 @@
-# app/resources/DeliveryStation.py
+# app/resources/delivery_station.py
 
 from flask_restful import reqparse
 

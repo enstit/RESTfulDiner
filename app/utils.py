@@ -8,9 +8,20 @@ from app.config import Config
 
 
 class UUIDv8:
-    """Custom UUID version8 generator.
-    See https://www.rfc-editor.org/rfc/rfc9562.html#name-uuid-version-8
-    for further information.
+    """Custom UUID class for generating domain-specific identifiers.
+    The UUIDv8 structure is as follows:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           secret_1                            |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |            secret_2           |1 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0|
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |1 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0|            domain             |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           timestamp                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     """
 
     version = 0b1000
@@ -35,32 +46,36 @@ class UUIDv8:
 
         # Next 16 bits from hash(secret2 + first 32 bits)
         # e.g., 12345678-[1234]-xxxx-xxxx-xxxxxxxxxxxx
-        part2 = self._hash_value(self.secret2 + str(part1), 16)
+        part2 = self._hash_value(str(part1) + self.secret2, 16)
 
         # Next 4 bits for the version and 12 empty bits, so 16 bits total
         # e.g., 12345678-1234-[8000]-xxxx-xxxxxxxxxxxx
+        #                    /      \
+        #              [1000][000000000000]
         part3 = UUIDv8.version << 12
 
         # Next 2 bits for the variant and 14 empty bits, so 16 bits total
         # e.g., 12345678-1234-8000-[8000]-xxxxxxxxxxxx
+        #                         /      \
+        #                   [10][00000000000000]
         part4 = UUIDv8.variant << 14
 
         # Next 16 bits from hash(domain + first 80 bits)
         # e.g., 12345678-1234-8000-8000-[1234]xxxxxxxx
         part5 = self._hash_value(
-            domain + str(part1) + str(part2) + str(part3) + str(part4),
+            str(part1) + str(part2) + str(part3) + str(part4) + domain,
             16,
         )
 
         # Last 32 bits from hash(current_timestamp[nanoseconds] + first 96 bits)
         # e.g., 12345678-1234-8000-8000-1234[12345678]
         part6 = self._hash_value(
-            str(time.time_ns())
-            + str(part1)
+            str(part1)
             + str(part2)
             + str(part3)
             + str(part4)
-            + str(part5),
+            + str(part5)
+            + str(time.time_ns()),
             32,
         )
 
