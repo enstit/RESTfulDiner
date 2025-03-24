@@ -1,27 +1,25 @@
 # app/models/_types.py
 
 
+import base64
 from dataclasses import dataclass
 from enum import Enum
-
-import base64
 from io import BytesIO
-from PIL import Image
 
-from sqlalchemy import Boolean
-from sqlalchemy import DateTime
-from sqlalchemy import Integer
-from sqlalchemy import LargeBinary
-from sqlalchemy import Numeric
-from sqlalchemy import SmallInteger
-from sqlalchemy import String
-from sqlalchemy import Text
+from PIL import Image
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    Integer,
+    LargeBinary,
+    Numeric,
+    SmallInteger,
+    String,
+    Text,
+)
 from sqlalchemy.types import SmallInteger as SmallIntegerType
 from sqlalchemy.types import TypeDecorator
-
-from sqlalchemy_utils import UUIDType
-from sqlalchemy_utils import PasswordType
-from sqlalchemy_utils import IPAddressType
+from sqlalchemy_utils import IPAddressType, PasswordType, UUIDType
 
 
 class PNGImageType(TypeDecorator):
@@ -112,8 +110,7 @@ class EnumType(TypeDecorator):
                 if member.code == value:
                     return member
             return ValueError(
-                f"Unknown type with ID {value} in {self.enum_class.__name__}"
-                " enum"
+                f"Unknown type with ID {value} in {self.enum_class.__name__}" " enum"
             )
         return None
 
@@ -181,7 +178,7 @@ class PaymentMethodType(TypeDescriptionMixin, Enum):
 
 
 class MenuSectionType(TypeDescriptionMixin, Enum):
-    APPEETIZERS = 1, "Appetizers"  # Appetizers
+    APPETIZERS = 1, "Appetizers"  # Appetizers
     FIRST_COURSES = 2, "First courses"  # First courses
     MAIN_COURSES = 3, "Main courses"  # Main courses
     SIDE_DISHES = 4, "Side dishes"  # Side dishes
@@ -265,11 +262,11 @@ class AllergenType(TypeDescriptionMixin, Enum):
     # Sesame seeds and products thereof;
     SESAME_SEEDS = 11, "Sesame seeds"  # Sesame seeds and derivatives
 
-    # Sulphur dioxide and sulphites at concentrations of more than 10 mg/kg or
+    # Sulphur dioxide and sulfites at concentrations of more than 10 mg/kg or
     # 10 mg/litre in terms of the total SO2 which are to be calculated for
     # products as proposed ready for consumption or as reconstituted according
     # to the instructions of the manufacturers;
-    SULFUR_DIOXIDE = 12, "Sulphur dioxide and sulphites"  # Sulfur dioxide
+    SULFUR_DIOXIDE = 12, "Sulphur dioxide and sulfites"  # Sulfur dioxide
 
     # Lupin and products thereof;
     LUPIN = 13, "Lupin"  # Lupin and derivatives

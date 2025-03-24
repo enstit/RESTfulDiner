@@ -1,14 +1,11 @@
 # app/resources/user.py
 
-from flask_restful import Resource
-from flask_restful import reqparse
-
 from flask_jwt_extended import create_access_token
+from flask_restful import Resource, reqparse
 
-from app.extensions import db
 from app.dto.user import UserDTO
-from app.models.user import User
-from app.models.user import UserRoleType
+from app.extensions import db
+from app.models.user import User, UserRoleType
 
 
 class UserResource(Resource):
@@ -45,11 +42,7 @@ class UserResource(Resource):
 
     @staticmethod
     def authenticate(username: str, password: str) -> User | None:
-        user = (
-            db.session.query(User)
-            .where(User.username == username)
-            .one_or_none()
-        )
+        user = db.session.query(User).where(User.username == username).one_or_none()
         if user and user.password == password:
             return user
         return None

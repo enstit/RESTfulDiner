@@ -1,14 +1,13 @@
 # app/models/order.py
 
 
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import ForeignKey
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
-from sqlalchemy.ext.hybrid import hybrid_property
-
 from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
@@ -54,16 +53,13 @@ class Order(BaseModel):
 
     kiosk = relationship("Kiosk", back_populates="orders")
     delivery_station = relationship("DeliveryStation", back_populates="orders")
-    departments_orders = relationship(
-        "DepartmentOrder", back_populates="order"
-    )
+    departments_orders = relationship("DepartmentOrder", back_populates="order")
 
     @hybrid_property
     def total_price(self) -> float:
         """Return the total price of the order, in the system currency"""
         return sum(
-            department_order.total_price
-            for department_order in self.departments_orders
+            department_order.total_price for department_order in self.departments_orders
         )
 
     @hybrid_property
@@ -76,6 +72,5 @@ class Order(BaseModel):
     def order_departments(self) -> list["Department"]:  # type: ignore # noqa: F821
         """Return the list of departments associated with the order"""
         return [
-            department_order.department
-            for department_order in self.departments_orders
+            department_order.department for department_order in self.departments_orders
         ]

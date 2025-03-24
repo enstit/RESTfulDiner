@@ -41,7 +41,7 @@
 	The data model has been implemented using the SQLAlchemy ORM, which
 	provides a high-level interface to the (PostgreSQL, in this case) database.
 
-	\lstinputlisting[language=PythonPlus,linerange={18-28}]{../app/models/_base.py}
+	\lstinputlisting[language=PythonPlus,linerange={14-26}]{../app/models/_base.py}
 
 	Any class inherits from the \texttt{BaseModel} class and is automatically
 	mapped to a table in the database.
@@ -49,37 +49,19 @@
 	\framebreak
 
 	\vspace*{-1\baselineskip}
-	\lstinputlisting[language=PythonPlus,linerange={17-38}]{../app/models/department.py}
+	\lstinputlisting[language=PythonPlus,linerange={13-33}]{../app/models/department.py}
 
 \end{frame}
 
 \begin{frame}[allowframebreaks,fragile]{API resources}
 	The RESTful API has been implemented using the Flask web framework.
 
-	\lstinputlisting[language=PythonPlus,linerange={12-12,16-33}]{../app/resources/department.py}
+	\lstinputlisting[language=PythonPlus,linerange={12-12,16-31}]{../app/resources/department.py}
 
 	\framebreak
 
-	\begin{lstlisting}[caption={\texttt{GET /api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003} response}]
-	"@context": {
-		"schema": "https://schema.org/",
-		"self": "@id",
-		"type": "@type",
-		"name": "schema:name",
-		"printer": {
-			"@id": "schema:isRelatedTo",
-			"@type": "@id"
-		},
-		"license": {
-			"@id": "schema:license",
-			"@type": "@id"
-		}
-	},
-	"license": "https://creativecommons.org/licenses/by/4.0/",
-	"self": "http://127.0.0.1/api/v1/departments/851c8de8-fb55-11ef-9aea-0242ac120003",
-	"type": "schema:Organization",
-	"name": "Kitchen",
-	"printer": "http://127.0.0.1/api/v1/printers/67936882-fb55-11ef-b5b9-0242ac120003"\end{lstlisting}
+	\vspace*{-1\baselineskip}
+	\lstinputlisting[linerange={201-215,217-220}]{../README.md}
 
 \end{frame}
 
@@ -139,7 +121,7 @@
 			\item \textbf{F1.} (Meta)data are assigned a globally unique and persistent identifier
 			\item \textbf{F2.} Data are described with rich metadata (defined by R1 below)
 			\item \textbf{F3.} Metadata clearly and explicitly include the identifier of the data they describe
-			\item \textbf{F4.} (Meta)data are registered or indexed in a searchable resource
+			\item \textcolor{UNITSCherry}{\textbf{F4.} (Meta)data are registered or indexed in a searchable resource}
 		\end{itemize}
 	\end{block}
 	
@@ -150,7 +132,7 @@
 			\item \textbf{A1.} (Meta)data are retrievable by their identifier using a standardized communications protocol
 			\item \textbf{A1.1} The protocol is open, free, and universally implementable
 			\item \textbf{A1.2} The protocol allows for an authentication and authorization procedure, where necessary
-			\item \textbf{A2.} Metadata are accessible, even when the data are no longer available
+			\item \textcolor{UNITSCherry}{\textbf{A2.} Metadata are accessible, even when the data are no longer available}
 		\end{itemize}
 	\end{block}
 	
@@ -170,8 +152,8 @@
 		\begin{itemize}
 			\item \textbf{R1.} Meta(data) are richly described with a plurality of accurate and relevant attributes
 			\item \textbf{R1.1} (Meta)data are released with a clear and accessible data usage license
-			\item \textbf{R1.2} (Meta)data are associated with detailed provenance
-			\item \textbf{R1.3} (Meta)data meet domain-relevant community standards
+			\item \textcolor{UNITSCherry}{\textbf{R1.2} (Meta)data are associated with detailed provenance}
+			\item \textcolor{UNITSCherry}{\textbf{R1.3} (Meta)data meet domain-relevant community standards}
 		\end{itemize}
 	\end{block}
 \end{frame}

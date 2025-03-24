@@ -1,19 +1,16 @@
 # app/models/item.py
 
 
-from typing import Optional, List
+from typing import List, Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import ARRAY
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
+from app.models._types import AllergenType, MenuSectionType, OrderStatusType
 from app.models._types import ColumnsDomains as cd
-from app.models._types import AllergenType
-from app.models._types import OrderStatusType
-from app.models._types import MenuSectionType
 
 
 class Item(BaseModel):
@@ -42,9 +39,7 @@ class Item(BaseModel):
             + ", ".join([menusection.desc for menusection in MenuSectionType])
         ),
     )
-    price: Mapped[float] = mapped_column(
-        cd.MONEY, comment="Item price, in euros"
-    )
+    price: Mapped[float] = mapped_column(cd.MONEY, comment="Item price, in euros")
     deposit: Mapped[Optional[float]] = mapped_column(
         cd.MONEY,
         nullable=True,

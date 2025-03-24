@@ -1,17 +1,16 @@
 # app/resources/item.py
 
-from cerberus import Validator
 import json
 
+from cerberus import Validator
 from flask_restful import reqparse
 
-from app.extensions import db
 from app.dto.order import OrderDTO
+from app.extensions import db
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
-from app.models.order import Order
 from app.models.item import Item
-from app.models.order import PaymentMethodType
+from app.models.order import Order, PaymentMethodType
 from app.resources.auth import ProtectedResource
 
 
@@ -37,9 +36,7 @@ class OrderResource(ProtectedResource):
 
     def get(self, *, _id: str | None = None) -> tuple[dict, int]:
         if _id:
-            order = (
-                db.session.query(Order).where(Order.id == _id).one_or_none()
-            )
+            order = db.session.query(Order).where(Order.id == _id).one_or_none()
             if order:
                 return OrderDTO.from_model(order), 200
             return {"message": "Order was not found"}, 404

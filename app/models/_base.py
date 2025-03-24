@@ -3,16 +3,12 @@
 
 import re
 
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import declared_attr
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 from sqlalchemy_utils import UUIDType
-
-from uuid import uuid1 as uuid
 
 from app.models import metadata
 from app.models._types import ColumnsDomains as cd
+from app.utils import uuid8
 
 
 class BaseModel(DeclarativeBase):
@@ -20,12 +16,14 @@ class BaseModel(DeclarativeBase):
     __abstract__ = True
     metadata = metadata
 
-    id: Mapped[UUIDType] = mapped_column(
-        cd.ID,
-        default=uuid,
-        primary_key=True,
-        comment="Unique object identifier",
-    )
+    @declared_attr
+    def id(cls) -> Mapped[UUIDType]:
+        return mapped_column(
+            cd.ID,
+            default=lambda: uuid8(domain=cls.__name__),
+            primary_key=True,
+            comment=f"Unique {cls.__name__} instance identifier",
+        )
 
     # Automatically set the table name to the snake_case version of the
     # ClassName
@@ -64,11 +62,8 @@ class BaseModel(DeclarativeBase):
 
         if keys:
             if any(k not in self.__mapper__.columns for k in keys):
-                raise ValueError(
-                    "Invalid column provided: {k} not in model columns."
-                )
+                raise ValueError("Invalid column provided: {k} not in model columns.")
             return {k: getattr(self, k) for k in keys}
         return {
-            k.description: getattr(self, k.description)
-            for k in self.__mapper__.columns
+            k.description: getattr(self, k.description) for k in self.__mapper__.columns
         }

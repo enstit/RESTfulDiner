@@ -2,9 +2,8 @@
 
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
@@ -23,9 +22,7 @@ class DepartmentOrderItem(BaseModel):
         ForeignKey("item.id"),
         comment="Item identifier associated with the item",
     )
-    quantity: Mapped[int] = mapped_column(
-        cd.INT, default=1, comment="Item quantity"
-    )
+    quantity: Mapped[int] = mapped_column(cd.INT, default=1, comment="Item quantity")
 
     department_order = relationship(
         "DepartmentOrder", back_populates="department_order_items"

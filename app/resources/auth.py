@@ -1,12 +1,10 @@
 # app/resources/auth.py
 
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
-from flask_jwt_extended import get_jwt_identity
 
 from app.extensions import db
-from app.models.user import User
-from app.models.user import UserRoleType
+from app.models.user import User, UserRoleType
 
 
 class ProtectedResource(Resource):

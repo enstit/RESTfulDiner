@@ -1,13 +1,9 @@
 # app/models/department.py
 
-
 from typing import Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
@@ -38,6 +34,4 @@ class Department(BaseModel):
 
     printer = relationship("Printer", back_populates="department")
     items = relationship("Item", back_populates="department")
-    department_orders = relationship(
-        "DepartmentOrder", back_populates="department"
-    )
+    department_orders = relationship("DepartmentOrder", back_populates="department")

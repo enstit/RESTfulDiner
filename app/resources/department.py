@@ -20,9 +20,7 @@ class DepartmentResource(ProtectedResource):
         if _id or name:
             department = (
                 db.session.query(Department)
-                .where(
-                    Department.id == _id if _id else Department.name == name
-                )
+                .where(Department.id == _id if _id else Department.name == name)
                 .one_or_none()
             )
             if department:
@@ -52,9 +50,7 @@ class DepartmentResource(ProtectedResource):
             return {"message": f"Department {_id} was not found"}, 404
         department.name = data["name"]
         printer = (
-            db.session.query(Printer)
-            .filter_by(id=data["printer_id"])
-            .one_or_none()
+            db.session.query(Printer).filter_by(id=data["printer_id"]).one_or_none()
         )
         department.printer = printer if printer else None
 
@@ -73,9 +69,7 @@ class DepartmentResource(ProtectedResource):
             department.name = data["name"]
         if "printer_id" in data and data["printer_id"]:
             printer = (
-                db.session.query(Printer)
-                .filter_by(id=data["printer_id"])
-                .one_or_none()
+                db.session.query(Printer).filter_by(id=data["printer_id"]).one_or_none()
             )
             if not printer:
                 return {"message": "Printer not found"}, 404

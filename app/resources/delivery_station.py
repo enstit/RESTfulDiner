@@ -20,9 +20,7 @@ class DeliveryStationResource(ProtectedResource):
             delivery_station = (
                 db.session.query(DeliveryStation)
                 .where(
-                    DeliveryStation.id == _id
-                    if _id
-                    else DeliveryStation.name == name
+                    DeliveryStation.id == _id if _id else DeliveryStation.name == name
                 )
                 .one_or_none()
             )

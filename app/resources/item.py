@@ -2,10 +2,9 @@
 
 from flask_restful import reqparse
 
-from app.extensions import db
 from app.dto.item import ItemDTO
-from app.models._types import MenuSectionType
-from app.models._types import OrderStatusType
+from app.extensions import db
+from app.models._types import MenuSectionType, OrderStatusType
 from app.models.department import Department
 from app.models.item import Item
 from app.resources.auth import ProtectedResource

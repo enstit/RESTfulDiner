@@ -23,7 +23,6 @@ class User(BaseModel):
         cd.CHOICE(UserRoleType),
         default=UserRoleType.OPERATOR,
         comment=(
-            "User role: one between "
-            + ", ".join([role.desc for role in UserRoleType])
+            "User role: one between " + ", ".join([role.desc for role in UserRoleType])
         ),
     )

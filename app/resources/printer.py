@@ -2,8 +2,8 @@
 
 from flask_restful import reqparse
 
-from app.extensions import db
 from app.dto.printer import PrinterDTO
+from app.extensions import db
 from app.models.printer import Printer
 from app.resources.auth import ProtectedResource
 

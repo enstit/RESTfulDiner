@@ -2,19 +2,15 @@ from flask import Flask
 from flask_restful import Api
 
 from app.config import Config
-from app.extensions import db
-from app.extensions import jwt
+from app.extensions import db, jwt
 from app.models.department import Department
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
-from app.models.item import Item
-from app.models.item import MenuSectionType
+from app.models.item import Item, MenuSectionType
 from app.models.kiosk import Kiosk
-from app.models.order import Order
-from app.models.order import PaymentMethodType
+from app.models.order import Order, PaymentMethodType
 from app.models.printer import Printer
-from app.models.user import User
-from app.models.user import UserRoleType
+from app.models.user import User, UserRoleType
 from app.resources import initialize_routes
 
 
@@ -122,9 +118,7 @@ def create_app():
         )
         db.session.bulk_save_objects(
             [
-                User(
-                    username="admin", password="admin", role=UserRoleType.ADMIN
-                ),
+                User(username="admin", password="admin", role=UserRoleType.ADMIN),
                 User(
                     username="operator",
                     password="operator",
