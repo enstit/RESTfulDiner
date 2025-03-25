@@ -36,12 +36,12 @@
 
 \subsection[System implementation]{System implementation}
 
-\begin{frame}[allowframebreaks]{Data model implementation}
+\begin{frame}[allowframebreaks]{Data model (logical) implementation}
 
 	The data model has been implemented using the SQLAlchemy ORM, which
 	provides a high-level interface to the (PostgreSQL, in this case) database.
 
-	\lstinputlisting[language=PythonPlus,linerange={14-26}]{../app/models/_base.py}
+	\lstinputlisting[language=PythonPlus,linerange={14-27}]{../app/models/_base.py}
 
 	Any class inherits from the \texttt{BaseModel} class and is automatically
 	mapped to a table in the database.
@@ -50,6 +50,25 @@
 
 	\vspace*{-1\baselineskip}
 	\lstinputlisting[language=PythonPlus,linerange={13-33}]{../app/models/department.py}
+
+\end{frame}
+
+\begin{frame}[fragile]{Data model (physical) implementation}
+	
+	\begin{lstlisting}[language=SQL]
+		CREATE TABLE department (
+			id UUID NOT NULL,
+			name VARCHAR(63) NOT NULL,
+			color VARCHAR(63),
+			printer__id UUID,
+			PRIMARY KEY (id),
+			UNIQUE (name),
+			FOREIGN KEY(printer__id) REFERENCES printer (id)
+		);
+		COMMENT ON COLUMN department.id IS 'Unique Department instance identifier';
+		COMMENT ON COLUMN department.name IS 'Unique name of the department';
+		COMMENT ON COLUMN department.color IS 'A color between the Recognized color keyword names. See also https://www.w3.org/TR/SVG11/types.html#ColorKeywords';
+		COMMENT ON COLUMN department.printer__id IS 'Identifier of the printer the department is equipped with';\end{lstlisting}
 
 \end{frame}
 
