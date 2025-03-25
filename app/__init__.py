@@ -8,7 +8,7 @@ from app.extensions import db, jwt
 from app.models.department import Department
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
-from app.models.item import Item, MenuSectionType
+from app.models.item import Item, MenuSectionType, AllergenType
 from app.models.kiosk import Kiosk
 from app.models.order import Order, PaymentMethodType
 from app.models.printer import Printer
@@ -43,11 +43,18 @@ def create_app():
                         name="Fried Chicken",
                         price=5.99,
                         menu_section=MenuSectionType.MAIN_COURSES,
+                        allergens=[
+                            AllergenType.GLUTEN,
+                            AllergenType.EGGS,
+                            AllergenType.MILK,
+                            AllergenType.MUSTARD,
+                        ],
                     ),
                     fries_item := Item(
                         name="French Fries",
                         price=2.99,
                         menu_section=MenuSectionType.SIDE_DISHES,
+                        allergens=[AllergenType.GLUTEN],
                     ),
                 ],
             )
@@ -69,6 +76,13 @@ def create_app():
                     beer_item := Item(
                         name="Beer",
                         price=4.49,
+                        menu_section=MenuSectionType.DRINKS,
+                        allergens=[AllergenType.GLUTEN],
+                    ),
+                    wine_item := Item(
+                        name="Wine glass",
+                        price=6.99,
+                        deposit=1.51,
                         menu_section=MenuSectionType.DRINKS,
                     ),
                 ],
@@ -120,7 +134,9 @@ def create_app():
         )
         db.session.bulk_save_objects(
             [
-                User(username="admin", password="admin", role=UserRoleType.ADMIN),
+                User(
+                    username="admin", password="admin", role=UserRoleType.ADMIN
+                ),
                 User(
                     username="operator",
                     password="operator",
