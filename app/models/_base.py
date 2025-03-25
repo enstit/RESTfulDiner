@@ -23,6 +23,7 @@ class BaseModel(DeclarativeBase):
             default=lambda: uuid8(domain=cls.__name__),
             primary_key=True,
             comment=f"Unique {cls.__name__} instance identifier",
+            sort_order=-1,  # Ensure the id is the first column in the table
         )
 
     # Automatically set the table name to the snake_case version of the
