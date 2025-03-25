@@ -92,7 +92,30 @@ class UUIDv8:
         # Convert to UUID format
         return UUID(int=uuid_int, is_safe=SafeUUID.unsafe)
 
+    def complete(self, part5n6: str) -> UUID:
+        """Knowing the last 48 bits of the UUID, generate the whole UUID."""
+        part1 = self._hash_value(self.secret1, 32)
+        part2 = self._hash_value(str(part1) + self.secret2, 16)
+        part3 = UUIDv8.version << 12
+        part4 = UUIDv8.variant << 14
+        part5n6 = int(part5n6, 16)
+
+        uuid_int = (
+            (part1 << 96)
+            | (part2 << 80)
+            | (part3 << 64)
+            | (part4 << 48)
+            | part5n6
+        )
+        return UUID(int=uuid_int, is_safe=SafeUUID.unsafe)
+
 
 def uuid8(domain: str) -> UUID:
     """Generate a UUIDv8 with the default structure."""
     return UUIDv8(Config.UUID_SECRET1, Config.UUID_SECRET2).generate(domain)
+
+
+def complete_uuid8(part5n6: str) -> UUID:
+    """Generate a UUIDv8 with the default structure, knowing the secrets and"
+    the last 48 bits of the UUID."""
+    return UUIDv8(Config.UUID_SECRET1, Config.UUID_SECRET2).complete(part5n6)
