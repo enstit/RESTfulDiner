@@ -189,26 +189,65 @@
 
 \begin{frame}[allowframebreaks]{Data Management Plan}
 
-	\begin{enumerate}
-		\item \textbf{How will the data be created?} The data will be created by the
+	\begin{enumerate}\justifying
+		\item \textbf{How will the data be \textcolor{UNITSCherry}{created}?} The data will be created by the
 		      restaurant staff, who will use the system to manage the restaurant's
 		      departments, tables, and printers.
-		\item \textbf{How will the data be documented?} The data will be documented in
+		\item \textbf{How will the data be \textcolor{UNITSCherry}{documented}?} The data will be documented in
 		      the system's database, and the API will provide a JSON-LD representation of
 		      the data.
-		\item \textbf{Who will access the data?} The data will be publicly accessible
+		\item \textbf{Who will \textcolor{UNITSCherry}{access} the data?} The data will be publicly accessible
 		      through the RESTful API.
-		\item \textbf{How will the data be stored?} The data will be stored by the
+		\item \textbf{How will the data be \textcolor{UNITSCherry}{stored}?} The data will be stored by the
 		      system's database, which is a PostgreSQL database. In case, the database
 			  can also be installed on a cloud service.
-		\item \textbf{How will the data be shared?} The data will be shared through the
+		\item \textbf{How will the data be \textcolor{UNITSCherry}{shared}?} The data will be shared through the
 		      RESTful API, which will provide a JSON-LD representation of the data for
 			  basic HTTP requests (GET, POST, PUT, DELETE).
-		\item \textbf{How will the data be preserved?} The data will be preserved by
+		\item \textbf{How will the data be \textcolor{UNITSCherry}{preserved}?} The data will be preserved by
 		      the system's database, which will be backed up regularly to ensure data
 			  integrity.
-		\item \textbf{Who will back up the data?} The data will be backed up by the
+		\item \textbf{Who will \textcolor{UNITSCherry}{back up} the data?} The data will be backed up by the
 		      system administrator, who will ensure that the database is backed up
 			  regularly.
 	\end{enumerate}
+\end{frame}
+
+\subsection{Storage and Backup}
+
+\begin{frame}[allowframebreaks]{Storage metrics}
+	Let's try to imagine some storage metrics for our system:
+
+	\begin{itemize}
+		\item \textbf{Bandwidth} (volume of data read and written in a second):
+		\begin{itemize}
+			\item{\textbf{How many orders per day?} About 200 orders per day, which %
+			means less than a order per minute.}
+			\item{\textbf{How many items per order?} An average of 5 items per order %
+			can be considered a good approximation.}
+		  \end{itemize}
+		We are talking about less than 1 MB of data per day, which is not a big deal
+		for a modern database. $\rightarrow$ \textcolor{UNITSBlue}{We do not need a %
+		distributed database, a single instance is enough.}
+		\item \textbf{Latency} (time taken to read and write data): since the system does %
+		not imply heavy computation and it is not required to guarantee real-time %
+		responses, we can assume that the latency is not a big deal. A good %
+		approximation is that the latency is less than 1 second for a single %
+		request. $\rightarrow$ \textcolor{UNITSBlue}{Even an infrastructure based on %
+		hard disk drives is fast enough  for our purpose.}
+		\item \textbf{Scalability} (ability to handle increasing load): the system could, %
+		in theory, be designed to already foreseen a future increase in the number of %
+		users and restaurants. $\rightarrow$ \textcolor{UNITSBlue}{We can use a cloud %
+		service to host the database in future, which can be easily scaled up or down. %
+		The migration will be easy and fast, and the API will only require to change the %
+		connection string to the new database.}
+		\item \textbf{Reliability} (ability to recover from failures): since we are using %
+		the system in a running business, it is strictly required to have a %
+		reliable system. The database must be backed up regularly to ensure data %
+		integrity. $\rightarrow$ \textcolor{UNITSBlue}{We can use a cloud service to host %
+		the database, which can be easily backed up and restored in case of failure. Furthermore, %
+		the filesystem could be based on a RAID 1 configuration, which assures the replication %
+		of the data on two different disks and rapid recovery in case of failure.}
+	\end{itemize}
+
 \end{frame}
