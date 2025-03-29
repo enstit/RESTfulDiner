@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   database:
-    image: postgres:13
+    image: postgres:17.4-alpine3.21
     hostname: database
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
