@@ -27,7 +27,7 @@
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/er}
+		\includegraphics[width=\textwidth,height=0.57\textheight,keepaspectratio]{images/er}
 		\caption{E/R diagram}
 		\label{fig:er}
 	\end{figure}
@@ -127,12 +127,17 @@
 	\end{block}
 	\vspace*{-8pt}
 	\begin{block}{\faStar\faStar\faStar\faStar\faStar}
-		Link your data to other data to provide context.
+		Link your data to \textcolor{UNITSCherry}{other} data to provide context.
 	\end{block}
 	Every resource in the system is identified by a URI, and can be accessed
 	by a simple HTTP GET request to that URI. A relation between resources
 	is established by linking them in the JSON response.
+	We are not fully inter-operable with other datasets, given the nature of the
+	system, but we are open to the possibility of linking our data with
+	other datasets in the future.
 \end{frame}
+
+\subsection[FAIR Data Principles]{FAIR Data Principles}
 
 \begin{frame}[allowframebreaks]{FAIR\autocite{Wilkinson_2016} principles requirements}
 	\begin{block}{Findable}
@@ -177,6 +182,8 @@
 	\end{block}
 \end{frame}
 
+
+\section[Data Infrastructure]{Data Infrastructure}
 
 \subsection[Data Management]{Data Management}
 
