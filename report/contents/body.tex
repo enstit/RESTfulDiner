@@ -21,16 +21,40 @@
 
 \end{frame}
 
-\begin{frame}{E/R Diagram}
-	Next, the E/R diagram was designed to represent the data model of the
-	system:
+\begin{frame}[allowframebreaks]{E/R Diagram}
 
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=\textwidth,height=0.57\textheight,keepaspectratio]{images/er}
-		\caption{E/R diagram}
-		\label{fig:er}
-	\end{figure}
+	\begin{columns}
+		\begin{column}{0.4\textwidth}
+			\justifying Next, the E/R diagram was designed to represent the data model of the
+			system:
+		\end{column}
+		\begin{column}{0.6\textwidth}
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/er v0}
+				\caption{Preliminary E/R diagram}
+				\label{fig:er_preliminary}
+			\end{figure}
+		\end{column}
+	\end{columns}
+
+	\framebreak
+
+	\begin{columns}
+		\begin{column}{0.4\textwidth}
+			\justifying After the first version, we updated the E/R diagram to transform the \texttt{MenuSection} entity
+			into an enumerable type, and to add the \texttt{DepratmentOrder} entity to track the status of the order in the
+			kitchen, rather than the status of the single item.
+		\end{column}
+		\begin{column}{0.6\textwidth}
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{images/er v1}
+				\caption{Final E/R diagram}
+				\label{fig:er_final}
+			\end{figure}
+		\end{column}
+	\end{columns}
 
 \end{frame}
 
