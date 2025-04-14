@@ -1,6 +1,10 @@
 %% beamerinnerthemeunits.sty
 %% Copyright (c) 2025 Enrico Stefanel <enrico.stefanel@studenti.units.it>
 
+\setbeamertemplate{section in toc}{\inserttocsectionnumber.~\inserttocsection}
+\setbeamertemplate{subsection in toc}{%
+  \hspace{1.2em}\inserttocsectionnumber.\inserttocsubsectionnumber~\inserttocsubsection\par}
+
 \usepackage{hyperref}
 \newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
 
@@ -58,7 +62,7 @@
 \usepackage{caption}
 \captionsetup{skip=\baselineskip,font=scriptsize}
 
-\usepackage[backend=bibtex,style=numeric,sorting=ynt,maxbibnames=99,urldate=iso,autocite=superscript]{biblatex}
+\usepackage[backend=bibtex,style=numeric,sorting=ynt,maxbibnames=99,urldate=iso,seconds=true,autocite=superscript]{biblatex}
 \addbibresource{reference.bib}
 \setbeamertemplate{bibliography item}[text]
 

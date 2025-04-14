@@ -5,9 +5,18 @@
 
 \section[Introduction]{Introduction}
 
+\subsection{Table of Contents}
+
 \begin{frame}{Table of Contents}
-	\tableofcontents
-	\note{Lorem ipsum\dots}
+	The presentation is divided into the following sections:
+	\begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-2}]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={3-5}]
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \subsection{System requirements}

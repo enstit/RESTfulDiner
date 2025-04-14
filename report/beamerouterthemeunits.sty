@@ -7,6 +7,13 @@
 % remove navigation symbols from slides
 \setbeamertemplate{navigation symbols}{}
 
+% change itemize bullets colors
+\setbeamercolor{itemize item}{fg=UNITSBlue}
+\setbeamercolor{itemize subitem}{fg=UNITSEyesBlue}
+
+% change enumerate bullets colors
+\setbeamercolor{local structure}{fg=UNITSBlue}
+
 % footline command
 \newcommand{\Ffootline}{
     % footline
@@ -88,3 +95,38 @@
             \includegraphics[height=.85\paperheight]{images/units.pdf}};
     \fi
 }
+
+% bibliography colors
+\setbeamercolor{bibliography item}{fg=UNITSBlue}
+\setbeamercolor*{bibliography entry title}{fg=UNITSBlue}
+\setbeamercolor*{bibliography entry author}{fg=UNITSSugarPaperBlue}
+\setbeamercolor*{bibliography entry location}{fg=black}
+\setbeamercolor*{bibliography entry note}{fg=black}
+
+% redefine itemize environment to be justified
+\makeatletter
+\renewcommand{\itemize}[1][]{%
+  \beamer@ifempty{#1}{}{\def\beamer@defaultospec{#1}}%
+  \ifnum \@itemdepth >2\relax\@toodeep\else
+    \advance\@itemdepth\@ne
+    \beamer@computepref\@itemdepth% sets \beameritemnestingprefix
+    \usebeamerfont{itemize/enumerate \beameritemnestingprefix body}%
+    \usebeamercolor[fg]{itemize/enumerate \beameritemnestingprefix body}%
+    \usebeamertemplate{itemize/enumerate \beameritemnestingprefix body begin}%
+    \list
+      {\usebeamertemplate{itemize \beameritemnestingprefix item}}
+      {\def\makelabel##1{%
+          {%
+            \hss\llap{{%
+                \usebeamerfont*{itemize \beameritemnestingprefix item}%
+                \usebeamercolor[fg]{itemize \beameritemnestingprefix item}##1}}%
+          }%
+        }%
+      }
+  \fi%
+  \beamer@cramped%
+  \justifying% NEW
+  %\raggedright% ORIGINAL
+  \beamer@firstlineitemizeunskip%
+}
+\makeatother
