@@ -9,6 +9,7 @@
 > Cozzini ([`@cozzini`](https://github.com/cozzini)) at
 > [University of Trieste](https://www.units.it/en) in the 2024-2025 Academic
 > Year.
+> The exam was evaluated with the maximum vote (30 over 30).
 
 In this project, we are going to build a RESTful APIs service to host an Open
 Data[^1][^2]-compliant repository to host data about food orders at a restaurant.
