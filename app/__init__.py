@@ -67,11 +67,28 @@ def create_app():
                 ],
             )
         )
-        db.session.commit()
-        db.session.add(kiosk := Kiosk(event__id=event.id, name="Kiosk 1"))
+        db.session.add(
+            User(username="admin", password="admin", role=UserRoleType.ADMIN)
+        )
+        db.session.add(
+            operator := User(
+                username="operator",
+                password="operator",
+                role=UserRoleType.OPERATOR,
+            )
+        )
+        db.session.add(
+            Printer(
+                event=event,
+                name="KitchenPrinter",
+                mac_address="32:1c:35:93:4e:07",
+                ip_address="10.172.54.145",
+            )
+        )
+        db.session.add(kiosk := Kiosk(event=event, name="Kiosk 1"))
         db.session.add(
             fried_department := Department(
-                event__id=event.id,
+                event=event,
                 name="Fried Station",
                 items=[
                     chicken_item := Item(
@@ -96,7 +113,7 @@ def create_app():
         )
         db.session.add(
             beverages_department := Department(
-                event__id=event.id,
+                event=event,
                 name="Beverages",
                 items=[
                     water_item := Item(
@@ -126,10 +143,11 @@ def create_app():
         )
         db.session.add(
             Order(
-                event_day__id=first_day.id,
+                event_day=first_day,
                 payment_method=PaymentMethodType.CASH,
                 total_paid=20.00,
                 kiosk=kiosk,
+                user=operator,
                 departments_orders=[
                     DepartmentOrder(
                         department=fried_department,
@@ -149,10 +167,11 @@ def create_app():
         )
         db.session.add(
             Order(
-                event_day__id=first_day.id,
+                event_day=first_day,
                 payment_method=PaymentMethodType.ELECTRONIC,
                 total_paid=12.76,
                 kiosk=kiosk,
+                user=operator,
                 departments_orders=[
                     DepartmentOrder(
                         department=fried_department,
@@ -169,24 +188,6 @@ def create_app():
                     ),
                 ],
             )
-        )
-        db.session.bulk_save_objects(
-            [
-                User(
-                    username="admin", password="admin", role=UserRoleType.ADMIN
-                ),
-                User(
-                    username="operator",
-                    password="operator",
-                    role=UserRoleType.OPERATOR,
-                ),
-                Printer(
-                    event__id=event.id,
-                    name="KitchenPrinter",
-                    mac_address="32:1c:35:93:4e:07",
-                    ip_address="10.172.54.145",
-                ),
-            ]
         )
         db.session.commit()
 

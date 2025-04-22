@@ -66,7 +66,7 @@ class OrderResource(ProtectedResource):
             payment_method=PaymentMethodType[data["payment_method"]],
             event_day__id=event_day.id,
             total_paid=data["total_paid"],
-            user__id=msg["user_id"],
+            user__id=msg.get("user_id"),
             kiosk__id=msg.get("kiosk_id"),
         )
         # Group items by department
