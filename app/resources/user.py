@@ -87,8 +87,4 @@ class LoginResource(Resource):
                 "kiosk_id": data.get("kiosk_id"),
             },
         )
-        return {
-            "access_token": access_token,
-            "event_id": data.get("event_id"),
-            "kiosk_id": data.get("kiosk_id"),
-        }, 200
+        return {"access_token": access_token}, 200

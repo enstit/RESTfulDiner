@@ -5,6 +5,7 @@ from typing import List
 
 from app.config import Config
 from app.models.order import Order
+from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
 
 
@@ -92,4 +93,65 @@ class OrderDTO:
         return {
             **OrderDTO.CONTEXT,
             "data": [OrderDTO(order).to_dict() for order in orders],
+        }
+
+
+class DepartmentOrderDTO:
+    CONTEXT = {
+        "@context": {
+            "schema": "https://schema.org/",
+            "self": "@id",
+            "type": "@type",
+            "department": {"@id": "schema:isRelatedTo", "@type": "@id"},
+            "current_status": {"@id": "schema:isRelatedTo", "@type": "@id"},
+            "delivery_station": {"@id": "schema:isRelatedTo", "@type": "@id"},
+            "items": {"@id": "schema:isRelatedTo", "@type": "@id"},
+            "license": {"@id": "schema:license", "@type": "@id"},
+        },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+    }
+
+    def __init__(self, department_order: DepartmentOrder):
+        self.id = department_order.id
+        self.department = department_order.department
+        self.current_status = department_order.current_status
+        self.delivery_station = department_order.order.delivery_station
+        self.items = [
+            OrderItemDTO(department_order_item)
+            for department_order_item in department_order.department_order_items
+        ]
+
+    def to_dict(self) -> dict:
+        return {
+            "type": "schema:Order",
+            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.id}/orders/{self.id}",
+            "department": (
+                f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.id}"
+            ),
+            "current_status": self.current_status.name,
+            "delivery_station": (
+                f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.delivery_station.id}"
+                if self.delivery_station
+                else None
+            ),
+            "items": [item.to_dict() for item in self.items],
+        }
+
+    @staticmethod
+    def from_model(department_order: DepartmentOrder) -> dict:
+        return {
+            **DepartmentOrderDTO.CONTEXT,
+            "data": DepartmentOrderDTO(department_order).to_dict()
+            if department_order
+            else None,
+        }
+
+    @staticmethod
+    def from_model_list(department_orders: List[DepartmentOrder]) -> dict:
+        return {
+            **DepartmentOrderDTO.CONTEXT,
+            "data": [
+                DepartmentOrderDTO(department_order).to_dict()
+                for department_order in department_orders
+            ],
         }

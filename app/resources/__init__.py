@@ -3,7 +3,7 @@
 from app.resources.delivery_station import DeliveryStationResource
 from app.resources.department import DepartmentResource
 from app.resources.item import ItemResource
-from app.resources.order import OrderResource
+from app.resources.order import OrderResource, DepartmentOrderResource
 from app.resources.printer import PrinterResource
 from app.resources.user import LoginResource
 
@@ -31,6 +31,11 @@ def initialize_routes(api):
         "/items/name=<string:name>",
     )
     api.add_resource(OrderResource, "/orders", "/orders/<string:_id>")
+    api.add_resource(
+        DepartmentOrderResource,
+        "/departments/<string:department_id>/orders",
+        "/departments/<string:department_id>/orders/<string:_id>",
+    )
     api.add_resource(
         PrinterResource,
         "/printers",

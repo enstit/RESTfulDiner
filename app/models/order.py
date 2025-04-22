@@ -91,10 +91,10 @@ class Order(BaseModel):
         )
 
     @hybrid_property
-    def total_charge(self) -> Optional[float]:
+    def total_charge(self) -> float:
         """Return the total charge of the order, if the order has a total paid
         amount, in the system currency"""
-        return self.total_paid - self.total_price if self.total_paid else None
+        return self.total_paid - self.total_price if self.total_paid else 0
 
     @hybrid_property
     def order_departments(self) -> list["Department"]:  # type: ignore # noqa: F821

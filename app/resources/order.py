@@ -6,8 +6,9 @@ from datetime import datetime
 from cerberus import Validator
 from flask_restful import reqparse
 
-from app.dto.order import OrderDTO
+from app.dto.order import OrderDTO, DepartmentOrderDTO
 from app.extensions import db
+from app.models.department import Department
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
 from app.models.event_day import EventDay
@@ -36,14 +37,25 @@ class OrderResource(ProtectedResource):
     parser.add_argument("items", type=order_validator, action="append")
 
     def get(self, *, _id: str | None = None) -> tuple[dict, int]:
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
         if _id:
             order = (
-                db.session.query(Order).where(Order.id == _id).one_or_none()
+                db.session.query(Order)
+                .where(Order.id == _id)
+                .where(Order.event_day.event__id == msg.get("event_id"))
+                .one_or_none()
             )
             if order:
                 return OrderDTO.from_model(order), 200
             return {"message": "Order was not found"}, 404
-        orders = db.session.query(Order).all()
+        orders = (
+            db.session.query(Order)
+            .join(EventDay)
+            .where(EventDay.event__id == msg.get("event_id"))
+            .all()
+        )
         return OrderDTO.from_model_list(orders), 200
 
     def post(self):
@@ -111,3 +123,35 @@ class OrderResource(ProtectedResource):
         db.session.add(new_order)
         db.session.commit()
         return OrderDTO.from_model(new_order), 201
+
+
+class DepartmentOrderResource(ProtectedResource):
+    def get(
+        self, department_id: str, *, _id: str | None = None
+    ) -> tuple[dict, int]:
+        """Get all orders for a specific department in the event"""
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
+        if _id:
+            department_order = (
+                db.session.query(DepartmentOrder)
+                .join(Department)
+                .where(DepartmentOrder.department__id == department_id)
+                .where(DepartmentOrder.id == _id)
+                .where(Department.event__id == msg.get("event_id"))
+                .one_or_none()
+            )
+            if department_order:
+                return DepartmentOrderDTO.from_model(department_order), 200
+            return {"message": "Department order was not found"}, 404
+        department_orders = (
+            db.session.query(DepartmentOrder)
+            .join(Department)
+            .where(DepartmentOrder.department__id == department_id)
+            .where(Department.event__id == msg.get("event_id"))
+            .all()
+        )
+        if department_orders:
+            return DepartmentOrderDTO.from_model_list(department_orders), 200
+        return {"message": "Department orders were not found"}, 404
