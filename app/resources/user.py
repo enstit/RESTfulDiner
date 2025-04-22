@@ -42,7 +42,11 @@ class UserResource(Resource):
 
     @staticmethod
     def authenticate(username: str, password: str) -> User | None:
-        user = db.session.query(User).where(User.username == username).one_or_none()
+        user = (
+            db.session.query(User)
+            .where(User.username == username)
+            .one_or_none()
+        )
         if user and user.password == password:
             return user
         return None
@@ -56,6 +60,18 @@ class LoginResource(Resource):
     parser.add_argument(
         "password", type=str, required=True, help="Password cannot be blank"
     )
+    parser.add_argument(
+        "event_id",
+        type=str,
+        required=True,
+        help="ID of the event cannot be blank",
+    )
+    parser.add_argument(
+        "kiosk_id",
+        type=str,
+        required=True,
+        help="ID of the working kiosk cannot be blank",
+    )
 
     def post(self) -> tuple[dict, int]:
         data = LoginResource.parser.parse_args()
@@ -65,6 +81,14 @@ class LoginResource(Resource):
             return {"message": "Invalid credentials"}, 401
 
         access_token = create_access_token(
-            identity=user.id, additional_claims={"role": user.role}
+            identity=user.id,
+            additional_claims={
+                "event_id": data.get("event_id"),
+                "kiosk_id": data.get("kiosk_id"),
+            },
         )
-        return {"access_token": access_token}, 200
+        return {
+            "access_token": access_token,
+            "event_id": data.get("event_id"),
+            "kiosk_id": data.get("kiosk_id"),
+        }, 200

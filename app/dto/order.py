@@ -9,7 +9,6 @@ from app.models.department_order_item import DepartmentOrderItem
 
 
 class OrderItemDTO:
-
     def __init__(self, department_order_item: DepartmentOrderItem):
         self.item = department_order_item.item
         self.quantity = department_order_item.quantity
@@ -23,7 +22,6 @@ class OrderItemDTO:
 
 
 class OrderDTO:
-
     CONTEXT = {
         "@context": {
             "schema": "https://schema.org/",
@@ -31,6 +29,7 @@ class OrderDTO:
             "type": "@type",
             "created_datetime": "schema:orderDate",
             "kiosk": {"@id": "schema:isRelatedTo", "@type": "@id"},
+            "user": "schema:name",
             "payment_method": "schema:paymentMethod",
             "total_price": "schema:price",
             "total_paid": "schema:price",
@@ -46,6 +45,7 @@ class OrderDTO:
         self.id = order.id
         self.created_datetime = order.created_datetime
         self.kiosk = order.kiosk
+        self.user = order.user
         self.payment_method = order.payment_method
         self.total_price = round(order.total_price, 2)
         self.total_paid = round(order.total_paid, 2)
@@ -67,6 +67,7 @@ class OrderDTO:
                 if self.kiosk
                 else None
             ),
+            "user": self.user.username,
             "payment_method": self.payment_method.name,
             "total_price": self.total_price,
             "total_paid": self.total_paid,

@@ -1,7 +1,9 @@
 # app/models/user.py
 
 
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import List
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
@@ -25,4 +27,8 @@ class User(BaseModel):
             "User role: one between "
             + ", ".join([role.desc for role in UserRoleType])
         ),
+    )
+
+    orders: Mapped[List["Order"]] = relationship(  # type: ignore # noqa: F821
+        "Order", back_populates="user"
     )

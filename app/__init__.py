@@ -59,6 +59,11 @@ def create_app():
                         start_datetime=datetime(2025, 5, 3, 10, 0),
                         end_datetime=datetime(2025, 5, 3, 23, 0),
                     ),
+                    EventDay(
+                        event_date=date(2025, 4, 22),
+                        start_datetime=datetime(2025, 4, 22, 0, 0),
+                        end_datetime=datetime(2025, 4, 22, 23, 0),
+                    ),
                 ],
             )
         )

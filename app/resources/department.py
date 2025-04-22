@@ -17,10 +17,16 @@ class DepartmentResource(ProtectedResource):
     def get(
         self, *, _id: str | None = None, name: str | None = None
     ) -> tuple[dict, int]:
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
         if _id or name:
             department = (
                 db.session.query(Department)
-                .where(Department.id == _id if _id else Department.name == name)
+                .where(
+                    Department.id == _id if _id else Department.name == name
+                )
+                .where(Department.event__id == msg.get("event_id"))
                 .one_or_none()
             )
             if department:
@@ -35,7 +41,9 @@ class DepartmentResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DepartmentResource.parser.parse_args()
-        new_department = Department(name=data["name"])
+        new_department = Department(
+            event__id=msg.get("event_id"), name=data["name"]
+        )
         db.session.add(new_department)
         db.session.commit()
         return DepartmentDTO.from_model(new_department), 201
@@ -45,12 +53,19 @@ class DepartmentResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DepartmentResource.parser.parse_args()
-        department = db.session.query(Department).get(_id)
+        department = (
+            db.session.query(Department)
+            .where(Department.id == _id)
+            .where(Department.event__id == msg.get("event_id"))
+            .one_or_none()
+        )
         if not department:
             return {"message": f"Department {_id} was not found"}, 404
         department.name = data["name"]
         printer = (
-            db.session.query(Printer).filter_by(id=data["printer_id"]).one_or_none()
+            db.session.query(Printer)
+            .filter_by(id=data["printer_id"])
+            .one_or_none()
         )
         department.printer = printer if printer else None
 
@@ -62,14 +77,21 @@ class DepartmentResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DepartmentResource.parser.parse_args()
-        department = db.session.query(Department).get(_id)
+        department = (
+            db.session.query(Department)
+            .where(Department.id == _id)
+            .where(Department.event__id == msg.get("event_id"))
+            .one_or_none()
+        )
         if not department:
             return {"message": f"Department {_id} was not found"}, 404
         if "name" in data and data["name"]:
             department.name = data["name"]
         if "printer_id" in data and data["printer_id"]:
             printer = (
-                db.session.query(Printer).filter_by(id=data["printer_id"]).one_or_none()
+                db.session.query(Printer)
+                .filter_by(id=data["printer_id"])
+                .one_or_none()
             )
             if not printer:
                 return {"message": "Printer not found"}, 404

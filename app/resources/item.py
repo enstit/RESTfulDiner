@@ -24,10 +24,14 @@ class ItemResource(ProtectedResource):
     def get(
         self, *, _id: str | None = None, name: str | None = None
     ) -> tuple[dict, int]:
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
         if _id or name:
             item = (
                 db.session.query(Item)
                 .where(Item.id == _id if _id else Item.name == name)
+                .where(Item.department.event__id == msg.get("event_id"))
                 .one_or_none()
             )
             if item:
@@ -43,7 +47,8 @@ class ItemResource(ProtectedResource):
         data = ItemResource.parser.parse_args()
         department = (
             db.session.query(Department)
-            .filter_by(id=data["department_id"])
+            .where(Department.event__id == msg.get("event_id"))
+            .where(Department.id == data["department_id"])
             .one_or_none()
         )
         new_item = Item(

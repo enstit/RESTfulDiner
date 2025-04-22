@@ -32,6 +32,12 @@ class Order(BaseModel):
         server_default=func.now(),
         comment="Order creation datetime",
     )
+    user__id: Mapped[Optional[UUIDType]] = mapped_column(
+        cd.ID,
+        ForeignKey("user.id"),
+        nullable=True,
+        comment="User identifier associated with the order",
+    )
     kiosk__id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
         ForeignKey("kiosk.id"),
@@ -66,6 +72,9 @@ class Order(BaseModel):
     )
     kiosk: Mapped["Kiosk"] = relationship(  # type: ignore # noqa: F821
         "Kiosk", back_populates="orders"
+    )
+    user: Mapped["User"] = relationship(  # type: ignore # noqa: F821
+        "User", back_populates="orders"
     )
     delivery_station: Mapped["DeliveryStation"] = relationship(  # type: ignore # noqa: F821
         "DeliveryStation", back_populates="orders"

@@ -16,12 +16,18 @@ class DeliveryStationResource(ProtectedResource):
     def get(
         self, *, _id: str | None = None, name: str | None = None
     ) -> tuple[dict, int]:
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
         if _id or name:
             delivery_station = (
                 db.session.query(DeliveryStation)
                 .where(
-                    DeliveryStation.id == _id if _id else DeliveryStation.name == name
+                    DeliveryStation.id == _id
+                    if _id
+                    else DeliveryStation.name == name
                 )
+                .where(DeliveryStation.event__id == msg.get("event_id"))
                 .one_or_none()
             )
             if delivery_station:
@@ -37,7 +43,9 @@ class DeliveryStationResource(ProtectedResource):
             return msg, code
         data = DeliveryStationResource.parser.parse_args()
         new_delivery_station = DeliveryStation(
-            name=data["name"], active_flag=data["active_flag"]
+            event__id=msg.get("event_id"),
+            name=data["name"],
+            active_flag=data["active_flag"],
         )
         db.session.add(new_delivery_station)
         db.session.commit()
@@ -48,7 +56,12 @@ class DeliveryStationResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DeliveryStationResource.parser.parse_args()
-        delivery_station = db.session.query(DeliveryStation).get(_id)
+        delivery_station = (
+            db.session.query(DeliveryStation)
+            .where(DeliveryStation.id == _id)
+            .where(DeliveryStation.event__id == msg.get("event_id"))
+            .one_or_none()
+        )
         if not delivery_station:
             return {"message": f"DeliveryStation {_id} was not found"}, 404
         delivery_station.name = data["name"]
@@ -62,7 +75,12 @@ class DeliveryStationResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DeliveryStationResource.parser.parse_args()
-        delivery_station = db.session.query(DeliveryStation).get(_id)
+        delivery_station = (
+            db.session.query(DeliveryStation)
+            .where(DeliveryStation.id == _id)
+            .where(DeliveryStation.event__id == msg.get("event_id"))
+            .one_or_none()
+        )
         if not delivery_station:
             return {"message": f"DeliveryStation {_id} was not found"}, 404
         if "name" in data and data["name"]:

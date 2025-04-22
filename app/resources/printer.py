@@ -17,10 +17,14 @@ class PrinterResource(ProtectedResource):
     def get(
         self, *, _id: str | None = None, name: str | None = None
     ) -> tuple[dict, int]:
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
         if _id or name:
             printer = (
                 db.session.query(Printer)
                 .where(Printer.id == _id if _id else Printer.name == name)
+                .where(Printer.event__id == msg.get("event_id"))
                 .one_or_none()
             )
             if printer:
@@ -35,6 +39,7 @@ class PrinterResource(ProtectedResource):
             return msg, code
         data = PrinterResource.parser.parse_args()
         new_printer = Printer(
+            event__id=msg.get("event_id"),
             name=data["name"],
             mac_address=data["mac_address"],
             ip_address=data["ip_address"],
