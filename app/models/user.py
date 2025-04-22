@@ -9,7 +9,6 @@ from app.models._types import UserRoleType
 
 
 class User(BaseModel):
-
     username: Mapped[str] = mapped_column(
         cd.SHORT_NAME, unique=True, comment="Unique username"
     )
@@ -23,6 +22,7 @@ class User(BaseModel):
         cd.CHOICE(UserRoleType),
         default=UserRoleType.OPERATOR,
         comment=(
-            "User role: one between " + ", ".join([role.desc for role in UserRoleType])
+            "User role: one between "
+            + ", ".join([role.desc for role in UserRoleType])
         ),
     )

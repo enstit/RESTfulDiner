@@ -1,5 +1,6 @@
 # app/models/department_order.py
 
+from typing import List
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -12,7 +13,6 @@ from app.models._types import OrderStatusType
 
 
 class DepartmentOrder(BaseModel):
-
     department__id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         ForeignKey("department.id"),
@@ -32,9 +32,13 @@ class DepartmentOrder(BaseModel):
         ),
     )
 
-    department = relationship("Department", back_populates="department_orders")
-    order = relationship("Order", back_populates="departments_orders")
-    department_order_items = relationship(
+    department: Mapped["Department"] = relationship(  # type: ignore # noqa: F821
+        "Department", back_populates="department_orders"
+    )
+    order: Mapped["Order"] = relationship(  # type: ignore # noqa: F821
+        "Order", back_populates="departments_orders"
+    )
+    department_order_items: Mapped[List["DepartmentOrderItem"]] = relationship(  # type: ignore # noqa: F821
         "DepartmentOrderItem", back_populates="department_order"
     )
 

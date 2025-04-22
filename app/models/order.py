@@ -1,8 +1,8 @@
 # app/models/order.py
 
 
+from typing import Optional, List
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -16,7 +16,17 @@ from app.models._types import PaymentMethodType
 
 
 class Order(BaseModel):
-
+    event_day__id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        ForeignKey("event_day.id"),
+        nullable=False,
+        comment="Event day identifier associated with the order",
+    )
+    seq_no: Mapped[int] = mapped_column(
+        cd.POS,
+        nullable=True,
+        comment="Order sequence number, unique for the event day",
+    )
     created_datetime: Mapped[datetime] = mapped_column(
         cd.DATETIME,
         server_default=func.now(),
@@ -51,15 +61,25 @@ class Order(BaseModel):
         comment="Delivery station identifier associated with the order",
     )
 
-    kiosk = relationship("Kiosk", back_populates="orders")
-    delivery_station = relationship("DeliveryStation", back_populates="orders")
-    departments_orders = relationship("DepartmentOrder", back_populates="order")
+    event_day: Mapped["EventDay"] = relationship(  # type: ignore # noqa: F821
+        "EventDay", back_populates="orders"
+    )
+    kiosk: Mapped["Kiosk"] = relationship(  # type: ignore # noqa: F821
+        "Kiosk", back_populates="orders"
+    )
+    delivery_station: Mapped["DeliveryStation"] = relationship(  # type: ignore # noqa: F821
+        "DeliveryStation", back_populates="orders"
+    )
+    departments_orders: Mapped[List["DepartmentOrder"]] = relationship(  # type: ignore # noqa: F821
+        "DepartmentOrder", back_populates="order"
+    )
 
     @hybrid_property
     def total_price(self) -> float:
         """Return the total price of the order, in the system currency"""
         return sum(
-            department_order.total_price for department_order in self.departments_orders
+            department_order.total_price
+            for department_order in self.departments_orders
         )
 
     @hybrid_property
@@ -72,5 +92,6 @@ class Order(BaseModel):
     def order_departments(self) -> list["Department"]:  # type: ignore # noqa: F821
         """Return the list of departments associated with the order"""
         return [
-            department_order.department for department_order in self.departments_orders
+            department_order.department
+            for department_order in self.departments_orders
         ]

@@ -10,6 +10,8 @@ from app.models.delivery_station import DeliveryStation
 from app.models.department import Department
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
+from app.models.event import Event
+from app.models.event_day import EventDay
 from app.models.item import Item
 from app.models.kiosk import Kiosk
 from app.models.order import Order
@@ -22,6 +24,8 @@ __all__ = [
     "Department",
     "DepartmentOrder",
     "DepartmentOrderItem",
+    "Event",
+    "EventDay",
     "Item",
     "Kiosk",
     "Order",

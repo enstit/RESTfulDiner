@@ -14,7 +14,6 @@ from app.models._types import ColumnsDomains as cd
 
 
 class Item(BaseModel):
-
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME,
         unique=True,
@@ -39,7 +38,9 @@ class Item(BaseModel):
             + ", ".join([menusection.desc for menusection in MenuSectionType])
         ),
     )
-    price: Mapped[float] = mapped_column(cd.MONEY, comment="Item price, in euros")
+    price: Mapped[float] = mapped_column(
+        cd.MONEY, comment="Item price, in euros"
+    )
     deposit: Mapped[Optional[float]] = mapped_column(
         cd.MONEY,
         nullable=True,
@@ -75,7 +76,9 @@ class Item(BaseModel):
         ),
     )
 
-    department = relationship("Department", back_populates="items")
-    departments_orders_items = relationship(
-        "DepartmentOrderItem", back_populates="item"
+    department: Mapped["Department"] = relationship(  # type: ignore # noqa: F821
+        "Department", back_populates="items"
+    )
+    departments_orders_items: Mapped[List["DepartmentOrderItem"]] = (  # type: ignore # noqa: F821
+        relationship("DepartmentOrderItem", back_populates="item")
     )

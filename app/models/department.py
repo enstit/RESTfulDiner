@@ -1,6 +1,6 @@
 # app/models/department.py
 
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -11,7 +11,12 @@ from app.models._types import ColumnsDomains as cd
 
 
 class Department(BaseModel):
-
+    event__id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        ForeignKey("event.id"),
+        nullable=False,
+        comment="Event identifier associated with the department",
+    )
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME,
         unique=True,
@@ -32,6 +37,15 @@ class Department(BaseModel):
         comment="Identifier of the printer the department is equipped with",
     )
 
-    printer = relationship("Printer", back_populates="department")
-    items = relationship("Item", back_populates="department")
-    department_orders = relationship("DepartmentOrder", back_populates="department")
+    event: Mapped["Event"] = relationship(  # type: ignore # noqa: F821
+        "Event", back_populates="departments"
+    )
+    printer: Mapped["Printer"] = relationship(  # type: ignore # noqa: F821
+        "Printer", back_populates="department"
+    )
+    items: Mapped[List["Item"]] = relationship(  # type: ignore # noqa: F821
+        "Item", back_populates="department"
+    )
+    department_orders: Mapped[List["DepartmentOrder"]] = relationship(  # type: ignore # noqa: F821
+        "DepartmentOrder", back_populates="department"
+    )

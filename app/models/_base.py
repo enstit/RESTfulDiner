@@ -3,7 +3,12 @@
 
 import re
 
-from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    declared_attr,
+    mapped_column,
+)
 from sqlalchemy_utils import UUIDType
 
 from app.models import metadata
@@ -12,7 +17,6 @@ from app.utils import uuid8
 
 
 class BaseModel(DeclarativeBase):
-
     __abstract__ = True
     metadata = metadata
 
@@ -56,15 +60,20 @@ class BaseModel(DeclarativeBase):
             ")"
         )
 
-    def to_dict(self, keys: list[str] | None = None) -> dict:
+    def to_dict(
+        self, keys: list[str] | None = None
+    ) -> dict[str, str | int | float]:
         """Return a dictionary representation of the model instance.
         If keys is provided, return only the values of the keys in the list.
         Otherwise, return all the values of the model instance."""
 
         if keys:
             if any(k not in self.__mapper__.columns for k in keys):
-                raise ValueError("Invalid column provided: {k} not in model columns.")
+                raise ValueError(
+                    "Invalid column provided: {k} not in model columns."
+                )
             return {k: getattr(self, k) for k in keys}
         return {
-            k.description: getattr(self, k.description) for k in self.__mapper__.columns
+            k.description: getattr(self, k.description)
+            for k in self.__mapper__.columns
         }

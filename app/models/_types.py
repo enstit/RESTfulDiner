@@ -9,6 +9,7 @@ from io import BytesIO
 from PIL import Image
 from sqlalchemy import (
     Boolean,
+    Date,
     DateTime,
     Integer,
     LargeBinary,
@@ -110,7 +111,7 @@ class EnumType(TypeDecorator):
                 if member.code == value:
                     return member
             return ValueError(
-                f"Unknown type with ID {value} in {self.enum_class.__name__}" " enum"
+                f"Unknown type with ID {value} in {self.enum_class.__name__} enum"
             )
         return None
 
@@ -131,6 +132,7 @@ class ColumnsDomains:
     NO = SmallInteger  # Numeric ID
     POS = SmallInteger  # Index, position or offset
     FLAG = Boolean  # Flag (True/False)
+    DATE = Date()  # Date without time
     DATETIME = DateTime(timezone=True)  # UTC DateTime with timezone info
     TIME = Integer  # Interval expressed as integer number of seconds
     STRING = String(255)  # Alphanumeric value
@@ -158,6 +160,10 @@ class TypeDescriptionMixin:
             if member.code == value.get("code"):
                 return member
         return None
+
+
+class EventType(TypeDescriptionMixin, Enum):
+    SAGRA = 1, "Sagra"  # Sagra
 
 
 class UserRoleType(TypeDescriptionMixin, Enum):

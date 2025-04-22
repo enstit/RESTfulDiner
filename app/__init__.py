@@ -1,5 +1,7 @@
 ### __init__.py
 
+from datetime import date, datetime
+
 from flask import Flask
 from flask_restful import Api
 
@@ -8,6 +10,8 @@ from app.extensions import db, jwt
 from app.models.department import Department
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
+from app.models.event import Event
+from app.models.event_day import EventDay
 from app.models.item import Item, MenuSectionType, AllergenType
 from app.models.kiosk import Kiosk
 from app.models.order import Order, PaymentMethodType
@@ -34,9 +38,35 @@ def create_app():
         db.create_all()
 
         # Add sample data for README tutorial
-        db.session.add(kiosk := Kiosk(name="Kiosk 1"))
+        db.session.add(
+            event := Event(
+                name="Sample Event",
+                description="Sample event",
+                location="Via Planis, 93 - 33100 Udine UD",
+                days=[
+                    first_day := EventDay(
+                        event_date=date(2025, 5, 1),
+                        start_datetime=datetime(2025, 5, 1, 10, 0),
+                        end_datetime=datetime(2025, 5, 1, 23, 0),
+                    ),
+                    EventDay(
+                        event_date=date(2025, 5, 2),
+                        start_datetime=datetime(2025, 5, 2, 10, 0),
+                        end_datetime=datetime(2025, 5, 2, 23, 0),
+                    ),
+                    EventDay(
+                        event_date=date(2025, 5, 3),
+                        start_datetime=datetime(2025, 5, 3, 10, 0),
+                        end_datetime=datetime(2025, 5, 3, 23, 0),
+                    ),
+                ],
+            )
+        )
+        db.session.commit()
+        db.session.add(kiosk := Kiosk(event__id=event.id, name="Kiosk 1"))
         db.session.add(
             fried_department := Department(
+                event__id=event.id,
                 name="Fried Station",
                 items=[
                     chicken_item := Item(
@@ -61,6 +91,7 @@ def create_app():
         )
         db.session.add(
             beverages_department := Department(
+                event__id=event.id,
                 name="Beverages",
                 items=[
                     water_item := Item(
@@ -90,6 +121,7 @@ def create_app():
         )
         db.session.add(
             Order(
+                event_day__id=first_day.id,
                 payment_method=PaymentMethodType.CASH,
                 total_paid=20.00,
                 kiosk=kiosk,
@@ -112,6 +144,7 @@ def create_app():
         )
         db.session.add(
             Order(
+                event_day__id=first_day.id,
                 payment_method=PaymentMethodType.ELECTRONIC,
                 total_paid=12.76,
                 kiosk=kiosk,
@@ -143,6 +176,7 @@ def create_app():
                     role=UserRoleType.OPERATOR,
                 ),
                 Printer(
+                    event__id=event.id,
                     name="KitchenPrinter",
                     mac_address="32:1c:35:93:4e:07",
                     ip_address="10.172.54.145",

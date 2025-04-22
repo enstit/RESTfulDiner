@@ -3,14 +3,21 @@
 
 from typing import Optional
 
+from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 
 
 class Printer(BaseModel):
-
+    event__id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        ForeignKey("event.id"),
+        nullable=False,
+        comment="Event identifier",
+    )
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME, unique=True, comment="Unique printer name"
     )
@@ -21,7 +28,20 @@ class Printer(BaseModel):
         cd.IP_ADDRESS, unique=True, comment="Printer IP address"
     )
 
-    kiosk: Mapped["Kiosk"] = relationship(  # noqa: F821 # type: ignore
+    event: Mapped["Event"] = relationship(  # noqa: F821 # type: ignore
+        "Event", back_populates="printers"
+    )
+    kiosk: Mapped[Optional["Kiosk"]] = relationship(  # noqa: F821 # type: ignore
         "Kiosk", back_populates="printer"
     )
-    department = relationship("Department", back_populates="printer")
+    department: Mapped[Optional["Department"]] = relationship(  # noqa: F821 # type: ignore
+        "Department", back_populates="printer"
+    )
+
+    __table_args__ = (
+        UniqueConstraint("event__id", "name", name="uq_event_printer"),
+        {
+            "comment": "Event Printer for orders and reports printing",
+            "extend_existing": True,
+        },
+    )
