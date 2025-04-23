@@ -20,6 +20,8 @@ class ProtectedResource(Resource):
         if admin_only and user is not None and user.role != UserRoleType.ADMIN:
             return {"error": "Admin privileges required"}, 403
         return {
+            "message": f"User {user_id} correctly authenticated in event {claims.get('event_id')}",
             "user_id": user_id,
-            "event_id": claims["event_id"],
+            "event_id": claims.get("event_id"),
+            "kiosk_id": claims.get("kiosk_id"),
         }, 200

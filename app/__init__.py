@@ -1,6 +1,7 @@
 ### __init__.py
 
 from datetime import date, datetime
+from uuid import UUID
 
 from flask import Flask
 from flask_restful import Api
@@ -40,6 +41,7 @@ def create_app():
         # Add sample data for README tutorial
         db.session.add(
             event := Event(
+                event_id=UUID("00000000-0000-8000-8000-000100000001"),
                 name="Sample Event",
                 description="Sample event",
                 location="Via Planis, 93 - 33100 Udine UD",
@@ -68,10 +70,16 @@ def create_app():
             )
         )
         db.session.add(
-            User(username="admin", password="admin", role=UserRoleType.ADMIN)
+            User(
+                user_id=UUID("00000000-0000-8000-8000-000200000001"),
+                username="admin",
+                password="admin",
+                role=UserRoleType.ADMIN,
+            )
         )
         db.session.add(
             operator := User(
+                user_id=UUID("00000000-0000-8000-8000-000200000002"),
                 username="operator",
                 password="operator",
                 role=UserRoleType.OPERATOR,
@@ -80,15 +88,16 @@ def create_app():
         db.session.add(
             Printer(
                 event=event,
+                printer_id=UUID("00000000-0000-8000-8000-000400000001"),
                 name="KitchenPrinter",
                 mac_address="32:1c:35:93:4e:07",
                 ip_address="10.172.54.145",
             )
         )
-        db.session.add(kiosk := Kiosk(event=event, name="Kiosk 1"))
         db.session.add(
             fried_department := Department(
                 event=event,
+                department_id=UUID("00000000-0000-8000-8000-000300000001"),
                 name="Fried Station",
                 items=[
                     chicken_item := Item(
@@ -114,6 +123,7 @@ def create_app():
         db.session.add(
             beverages_department := Department(
                 event=event,
+                department_id=UUID("00000000-0000-8000-8000-000300000002"),
                 name="Beverages",
                 items=[
                     water_item := Item(
@@ -139,6 +149,13 @@ def create_app():
                         menu_section=MenuSectionType.DRINKS,
                     ),
                 ],
+            )
+        )
+        db.session.add(
+            kiosk := Kiosk(
+                event=event,
+                kiosk_id=UUID("00000000-0000-8000-8000-000500000001"),
+                name="Kiosk 1",
             )
         )
         db.session.add(

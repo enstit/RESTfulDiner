@@ -1,5 +1,7 @@
 ### app/utils.py
 
+from typing import Any
+
 import hashlib
 import time
 from uuid import UUID, SafeUUID
@@ -92,7 +94,7 @@ class UUIDv8:
         # Convert to UUID format
         return UUID(int=uuid_int, is_safe=SafeUUID.unsafe)
 
-    def complete(self, part5n6: str) -> UUID:
+    def complete(self, part5n6: Any) -> UUID:
         """Knowing the last 48 bits of the UUID, generate the whole UUID."""
         part1 = self._hash_value(self.secret1, 32)
         part2 = self._hash_value(str(part1) + self.secret2, 16)

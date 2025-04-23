@@ -37,34 +37,39 @@ foo@bar:~$ docker compose up --detach
 To interact with the APIs, we firstly need to login into the system with a
 valid admin user.
 
-First of all, we need to recover the list of configured users in the system
-```bash
-foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/users
+First of all, we need to recover the list of configured events and users in the
+system.
 
-[
-    {
-        "url": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd930cbd30d",
-        "id": "5b11618c-51f5-8000-8000-bcd930cbd30d",
-        "username": "admin",
-        "role": "ADMIN"
-    },
-    {
-        "url": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd93dab7afd",
-        "id": "5b11618c-51f5-8000-8000-bcd93dab7afd",
-        "username": "operator",
-        "role": "OPERATOR"
-    }
-]
-```
-
+To recover the list of events, we can send a `GET` request at the events
+endpoint:
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/events
 
 [
     {
-        "url": "http://127.0.0.1:5000/api/v1/events/5b11618c-51f5-8000-8000-1bacec79bda0",
-        "id": "5b11618c-51f5-8000-8000-1bacec79bda0",
+        "url": "http://127.0.0.1:5000/api/v1/events/00000000-0000-8000-8000-000100000001",
+        "id": "00000000-0000-8000-8000-000100000001",
         "name": "Sample Event"
+    }
+]
+```
+
+Similarly, we can retrieve the list of configured users in the system with:
+```bash
+foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/users
+
+[
+    {
+        "url": "http://127.0.0.1:5000/api/v1/users/00000000-0000-8000-8000-000200000001",
+        "id": "00000000-0000-8000-8000-000200000001",
+        "username": "admin",
+        "role": "ADMIN"
+    },
+    {
+        "url": "http://127.0.0.1:5000/api/v1/users/00000000-0000-8000-8000-000200000002",
+        "id": "00000000-0000-8000-8000-000200000002",
+        "username": "operator",
+        "role": "OPERATOR"
     }
 ]
 ```
@@ -73,7 +78,7 @@ then call its `login` action providing the password and the kiosk selected for
 the access:
 
 ```bash
-foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd930cbd30d/login?event_id=5b11618c-51f5-8000-8000-1bacec79bda0 \
+foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/users/00000000-0000-8000-8000-000200000001/login?event_id=00000000-0000-8000-8000-000100000001 \
 foo@bar:~$ -H "Content-Type: application/json" \
 foo@bar:~$ -d '{"password": "admin"}'
 
@@ -102,8 +107,8 @@ foo@bar:~$ -H "Content-Type: application/json" \
 foo@bar:~$ -d '{"name": "Cuisine"}'
 
 {
-    "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
-    "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+    "url": "http://127.0.0.1:5000/api/v1/departments/00000000-0000-8000-8000-000300000003",
+    "id": "00000000-0000-8000-8000-000300000003",
     "name": "Cuisine",
     "printer_url": null
 }
@@ -120,8 +125,8 @@ foo@bar:~$ -H "Authorization: Bearer <access_token>"
 
 [
     {
-        "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
-        "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+        "url": "http://127.0.0.1:5000/api/v1/departments/00000000-0000-8000-8000-000300000003",
+        "id": "00000000-0000-8000-8000-000300000003",
         "name": "Cuisine",
         "printer_url": null
     }
@@ -135,14 +140,14 @@ everyone. Better to change the Department name to a more universal `Kitchen`.
 In order to do that, we simply need to use a **PUT** operation:
 
 ```bash
-foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499 \
+foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/00000000-0000-8000-8000-000300000003 \
 foo@bar:~$ -H "Authorization: Bearer <access_token>" \
 foo@bar:~$ -H "Content-Type: application/json" \
 foo@bar:~$ -d '{"name": "Kitchen"}'
 
 {
-    "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
-    "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+    "url": "http://127.0.0.1:5000/api/v1/departments/00000000-0000-8000-8000-000300000003",
+    "id": "00000000-0000-8000-8000-000300000003",
     "name": "Kitchen",
     "printer_url": null
 }
@@ -155,7 +160,7 @@ by providing the whole representation of it, so if the department had a printer
 associated, the command above would have overwritten it.
 If we take a look at the printers in the system (with a **GET**
 request at `http://127.0.0.1:5000/api/v1/printers`) we will see that there is a
-`KitchenPrinter` with id `5b11618c-51f5-8000-8000-04e446b2b7c1` that really
+`KitchenPrinter` with id `00000000-0000-8000-8000-000400000001` that really
 sounds to be the printer associated with the Department we just created.
 
 ```bash
@@ -164,8 +169,8 @@ foo@bar:~$ -H "Authorization: Bearer <access_token>"
 
 [
     {
-        "url": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-04e446b2b7c1",
-        "id": "5b11618c-51f5-8000-8000-04e446b2b7c1",
+        "url": "http://127.0.0.1:5000/api/v1/printers/00000000-0000-8000-8000-000400000001",
+        "id": "00000000-0000-8000-8000-000400000001",
         "name": "KitchenPrinter",
         "mac_address": "32:1c:35:93:4e:07",
         "ip_address": "10.172.54.145"
@@ -176,16 +181,16 @@ foo@bar:~$ -H "Authorization: Bearer <access_token>"
 Here's where the **PATCH** operation comes in our hand:
 
 ```bash
-foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499 \
+foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/00000000-0000-8000-8000-000300000003 \
 foo@bar:~$ -H "Authorization: Bearer <access_token>" \
 foo@bar:~$ -H "Content-Type: application/json" \
-foo@bar:~$ -d '{"printer_id": "5b11618c-51f5-8000-8000-04e446b2b7c1"}'
+foo@bar:~$ -d '{"printer_id": "00000000-0000-8000-8000-000400000001"}'
 
 {
-    "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
-    "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+    "url": "http://127.0.0.1:5000/api/v1/departments/00000000-0000-8000-8000-000300000003",
+    "id": "00000000-0000-8000-8000-000300000003",
     "name": "Kitchen",
-    "printer_url": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-04e446b2b7c1"
+    "printer_url": "http://127.0.0.1:5000/api/v1/printers/00000000-0000-8000-8000-000400000001"
 }
 ```
 
