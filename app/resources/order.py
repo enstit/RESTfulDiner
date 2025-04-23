@@ -8,11 +8,11 @@ from flask_restful import reqparse
 
 from app.dto.order import OrderDTO, DepartmentOrderDTO
 from app.extensions import db
-from app.models.department_order import DepartmentOrder
-from app.models.department_order_item import DepartmentOrderItem
-from app.models.event_day import EventDay
-from app.models.item import Item
-from app.models.order import Order, PaymentMethodType
+from app.models.sys_order_department import SysOrderDepartment
+from app.models.sys_order_department_item import SysOrderDepartmentItem
+from app.models.cfg_event_day import CfgEventDay
+from app.models.cfg_item import CfgItem
+from app.models.sys_order import SysOrder, PaymentMethodType
 from app.models._types import OrderStatusType
 from app.resources.auth import ProtectedResource
 
@@ -44,10 +44,10 @@ class OrderResource(ProtectedResource):
             return msg, code
         if order_id:
             order = (
-                db.session.query(Order)
+                db.session.query(SysOrder)
                 .filter(
-                    Order.event_id == msg.get("event_id"),
-                    Order.order_id == order_id,
+                    SysOrder.event_id == msg.get("event_id"),
+                    SysOrder.order_id == order_id,
                 )
                 .one_or_none()
             )
@@ -57,8 +57,8 @@ class OrderResource(ProtectedResource):
                 "error": f"Order {order_id} was not found in the current event"
             }, 404
         orders = (
-            db.session.query(Order)
-            .filter(Order.event_id == msg.get("event_id"))
+            db.session.query(SysOrder)
+            .filter(SysOrder.event_id == msg.get("event_id"))
             .all()
         )
         return OrderDTO.from_model_list(orders), 200
@@ -70,11 +70,11 @@ class OrderResource(ProtectedResource):
         data = OrderResource.parser.parse_args()
         # Get the EventDay from the current datetime
         event_day = (
-            db.session.query(EventDay)
+            db.session.query(CfgEventDay)
             .filter(
-                EventDay.event_id == msg.get("event_id"),
-                EventDay.start_datetime <= datetime.now(),
-                EventDay.end_datetime > datetime.now(),
+                CfgEventDay.event_id == msg.get("event_id"),
+                CfgEventDay.start_datetime <= datetime.now(),
+                CfgEventDay.end_datetime > datetime.now(),
             )
             .one_or_none()
         )
@@ -83,7 +83,7 @@ class OrderResource(ProtectedResource):
                 "error": "There are no events at the current time for the current event"
             }, 400
         # Create a new empty order, to which we will add DepartmentsOrders
-        new_order = Order(
+        new_order = SysOrder(
             payment_method=PaymentMethodType[data["payment_method"]],
             event_day=event_day,
             total_paid=data["total_paid"],
@@ -94,24 +94,24 @@ class OrderResource(ProtectedResource):
         if data["items"] is not None:
             for item in data["items"]:
                 department = (
-                    db.session.query(Item)
+                    db.session.query(CfgItem)
                     .filter(
-                        Item.event_id == msg.get("event_id"),
-                        Item.item_id == item["item_id"],
+                        CfgItem.event_id == msg.get("event_id"),
+                        CfgItem.item_id == item["item_id"],
                     )
                     .one()
                     .department
                 )
-                if department in new_order.order_departments:
+                if department in new_order.departments:
                     new_order.departments_orders[
-                        new_order.order_departments.index(department)
+                        new_order.departments.index(department)
                     ].department_order_items.append(
-                        DepartmentOrderItem(
+                        SysOrderDepartmentItem(
                             item=(
-                                db.session.query(Item)
+                                db.session.query(CfgItem)
                                 .filter(
-                                    Item.event_id == msg.get("event_id"),
-                                    Item.item_id == item["item_id"],
+                                    CfgItem.event_id == msg.get("event_id"),
+                                    CfgItem.item_id == item["item_id"],
                                 )
                                 .one_or_none()
                             ),
@@ -120,16 +120,16 @@ class OrderResource(ProtectedResource):
                     )
                 else:
                     new_order.departments_orders.append(
-                        DepartmentOrder(
+                        SysOrderDepartment(
                             department=department,
                             department_order_items=[
-                                DepartmentOrderItem(
+                                SysOrderDepartmentItem(
                                     item=(
-                                        db.session.query(Item)
+                                        db.session.query(CfgItem)
                                         .filter(
-                                            Item.event_id
+                                            CfgItem.event_id
                                             == msg.get("event_id"),
-                                            Item.item_id == item["item_id"],
+                                            CfgItem.item_id == item["item_id"],
                                         )
                                         .one_or_none()
                                     ),
@@ -156,11 +156,11 @@ class DepartmentOrderResource(ProtectedResource):
             return msg, code
         if order_id:
             department_order = (
-                db.session.query(DepartmentOrder)
+                db.session.query(SysOrderDepartment)
                 .filter(
-                    DepartmentOrder.event_id == msg.get("event_id"),
-                    DepartmentOrder.department_id == department_id,
-                    DepartmentOrder.order_id == order_id,
+                    SysOrderDepartment.event_id == msg.get("event_id"),
+                    SysOrderDepartment.department_id == department_id,
+                    SysOrderDepartment.order_id == order_id,
                 )
                 .one_or_none()
             )
@@ -170,14 +170,14 @@ class DepartmentOrderResource(ProtectedResource):
                 "error": f"Department order {order_id} for department {department_id} was not found in the current event"
             }, 404
         department_orders = (
-            db.session.query(DepartmentOrder)
+            db.session.query(SysOrderDepartment)
             .filter(
-                DepartmentOrder.event_id == msg.get("event_id"),
-                DepartmentOrder.department_id == department_id,
+                SysOrderDepartment.event_id == msg.get("event_id"),
+                SysOrderDepartment.department_id == department_id,
                 # Filter out cancelled and completed orders, to only keep
                 # the ones that are in progress or not started yet
-                DepartmentOrder.current_status != OrderStatusType.CANCELLED,
-                DepartmentOrder.current_status != OrderStatusType.COMPLETED,
+                SysOrderDepartment.current_status != OrderStatusType.CANCELLED,
+                SysOrderDepartment.current_status != OrderStatusType.COMPLETED,
             )
             .all()
         )
@@ -193,11 +193,11 @@ class DepartmentOrderResource(ProtectedResource):
             return msg, code
         data = DepartmentOrderResource.parser.parse_args()
         department_order = (
-            db.session.query(DepartmentOrder)
+            db.session.query(SysOrderDepartment)
             .filter(
-                DepartmentOrder.event_id == msg.get("event_id"),
-                DepartmentOrder.department_id == department_id,
-                DepartmentOrder.order_id == order_id,
+                SysOrderDepartment.event_id == msg.get("event_id"),
+                SysOrderDepartment.department_id == department_id,
+                SysOrderDepartment.order_id == order_id,
             )
             .one_or_none()
         )

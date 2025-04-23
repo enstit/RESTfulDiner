@@ -4,7 +4,7 @@ from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from flask_restful import Resource
 
 from app.extensions import db
-from app.models.user import User, UserRoleType
+from app.models.cfg_user import CfgUser, UserRoleType
 
 
 class ProtectedResource(Resource):
@@ -13,8 +13,8 @@ class ProtectedResource(Resource):
         user_id = get_jwt_identity()
         claims = get_jwt()
         user = (
-            db.session.query(User)
-            .filter(User.user_id == user_id)
+            db.session.query(CfgUser)
+            .filter(CfgUser.user_id == user_id)
             .one_or_none()
         )
         if admin_only and user is not None and user.role != UserRoleType.ADMIN:

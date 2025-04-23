@@ -1,4 +1,4 @@
-# app/models/order.py
+# app/models/sys_order.py
 
 
 from typing import Optional, List
@@ -17,7 +17,7 @@ from app.models._types import PaymentMethodType
 from app.utils import uuid8
 
 
-class Order(BaseModel):
+class SysOrder(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -25,7 +25,7 @@ class Order(BaseModel):
     )
     order_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="Kiosk"),
+        default=lambda: uuid8(domain="SysOrder"),
         primary_key=True,
         comment="Unique Order identifier for the event",
     )
@@ -75,20 +75,20 @@ class Order(BaseModel):
         comment="Delivery station identifier associated with the order",
     )
 
-    event_day: Mapped["EventDay"] = relationship(  # type: ignore # noqa: F821
-        "EventDay", back_populates="orders"
+    event_day: Mapped["CfgEventDay"] = relationship(  # type: ignore # noqa: F821
+        "CfgEventDay", back_populates="orders"
     )
-    kiosk: Mapped["Kiosk"] = relationship(  # type: ignore # noqa: F821
-        "Kiosk", back_populates="orders"
+    kiosk: Mapped["CfgKiosk"] = relationship(  # type: ignore # noqa: F821
+        "CfgKiosk", back_populates="orders"
     )
-    user: Mapped["User"] = relationship(  # type: ignore # noqa: F821
-        "User", back_populates="orders"
+    user: Mapped["CfgUser"] = relationship(  # type: ignore # noqa: F821
+        "CfgUser", back_populates="orders"
     )
-    delivery_station: Mapped["DeliveryStation"] = relationship(  # type: ignore # noqa: F821
-        "DeliveryStation", back_populates="orders"
+    delivery_station: Mapped["CfgDeliveryStation"] = relationship(  # type: ignore # noqa: F821
+        "CfgDeliveryStation", back_populates="orders"
     )
-    departments_orders: Mapped[List["DepartmentOrder"]] = relationship(  # type: ignore # noqa: F821
-        "DepartmentOrder", back_populates="order"
+    departments_orders: Mapped[List["SysOrderDepartment"]] = relationship(  # type: ignore # noqa: F821
+        "SysOrderDepartment", back_populates="order"
     )
 
     @hybrid_property
@@ -106,7 +106,7 @@ class Order(BaseModel):
         return self.total_paid - self.total_price if self.total_paid else 0
 
     @hybrid_property
-    def order_departments(self) -> list["Department"]:  # type: ignore # noqa: F821
+    def departments(self) -> list["CfgDepartment"]:  # type: ignore # noqa: F821
         """Return the list of departments associated with the order"""
         return [
             department_order.department
@@ -115,24 +115,20 @@ class Order(BaseModel):
 
     __table_args__ = (
         UniqueConstraint(event_id, event_day_id, seq_no),
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
         ForeignKeyConstraint(
             [event_id, event_day_id],
-            ["event_day.event_id", "event_day.event_day_id"],
+            ["cfg_event_day.event_id", "cfg_event_day.event_day_id"],
         ),
         ForeignKeyConstraint(
-            [event_id, kiosk_id], ["kiosk.event_id", "kiosk.kiosk_id"]
+            [event_id, kiosk_id], ["cfg_kiosk.event_id", "cfg_kiosk.kiosk_id"]
         ),
         ForeignKeyConstraint(
             [event_id, delivery_station_id],
             [
-                "delivery_station.event_id",
-                "delivery_station.delivery_station_id",
+                "cfg_delivery_station.event_id",
+                "cfg_delivery_station.delivery_station_id",
             ],
         ),
-        ForeignKeyConstraint([user_id], ["user.user_id"]),
-        {
-            "comment": "Order for the event",
-            "extend_existing": True,
-        },
+        ForeignKeyConstraint([user_id], ["cfg_user.user_id"]),
     )

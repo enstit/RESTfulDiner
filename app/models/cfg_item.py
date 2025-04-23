@@ -1,4 +1,4 @@
-# app/models/item.py
+# app/models/cfg_item.py
 
 
 from typing import List, Optional
@@ -15,7 +15,7 @@ from app.models._types import ColumnsDomains as cd
 from app.utils import uuid8
 
 
-class Item(BaseModel):
+class CfgItem(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -23,7 +23,7 @@ class Item(BaseModel):
     )
     item_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="Item"),
+        default=lambda: uuid8(domain="CfgItem"),
         primary_key=True,
         comment="Unique Item identifier for the event",
     )
@@ -87,18 +87,18 @@ class Item(BaseModel):
         ),
     )
 
-    department: Mapped["Department"] = relationship(  # type: ignore # noqa: F821
-        "Department", back_populates="items"
+    department: Mapped["CfgDepartment"] = relationship(  # type: ignore # noqa: F821
+        "CfgDepartment", back_populates="items"
     )
-    departments_orders_items: Mapped[List["DepartmentOrderItem"]] = (  # type: ignore # noqa: F821
-        relationship("DepartmentOrderItem", back_populates="item")
+    departments_orders_items: Mapped[List["SysOrderDepartmentItem"]] = (  # type: ignore # noqa: F821
+        relationship("SysOrderDepartmentItem", back_populates="item")
     )
 
     __table_args__ = (
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
         ForeignKeyConstraint(
             [event_id, department_id],
-            ["department.event_id", "department.department_id"],
+            ["cfg_department.event_id", "cfg_department.department_id"],
         ),
         UniqueConstraint("event_id", "name"),
     )

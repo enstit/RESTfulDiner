@@ -4,11 +4,11 @@
 from typing import List
 
 from app.config import Config
-from app.models.department import Department
+from app.models.cfg_department import CfgDepartment
 
 
 class DepartmentDTO:
-    def __init__(self, department: Department):
+    def __init__(self, department: CfgDepartment):
         self.event_id = str(department.event_id)
         self.department_id = str(department.department_id)
         self.name = department.name
@@ -29,11 +29,11 @@ class DepartmentDTO:
         }
 
     @staticmethod
-    def from_model(department: Department) -> dict:
+    def from_model(department: CfgDepartment) -> dict:
         return DepartmentDTO(department).to_dict() if department else {}
 
     @staticmethod
-    def from_model_list(departments: List[Department]) -> list[dict]:
+    def from_model_list(departments: List[CfgDepartment]) -> list[dict]:
         return [
             DepartmentDTO(department).to_dict() for department in departments
         ]

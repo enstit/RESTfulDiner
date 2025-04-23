@@ -5,8 +5,8 @@ from flask_restful import reqparse
 from app.dto.item import ItemDTO
 from app.extensions import db
 from app.models._types import MenuSectionType, OrderStatusType
-from app.models.department import Department
-from app.models.item import Item
+from app.models.cfg_department import CfgDepartment
+from app.models.cfg_item import CfgItem
 from app.resources.auth import ProtectedResource
 
 
@@ -29,10 +29,10 @@ class ItemResource(ProtectedResource):
             return msg, code
         if item_id:
             item = (
-                db.session.query(Item)
+                db.session.query(CfgItem)
                 .filter(
-                    Item.event_id == msg.get("event_id"),
-                    Item.item_id == item_id,
+                    CfgItem.event_id == msg.get("event_id"),
+                    CfgItem.item_id == item_id,
                 )
                 .one_or_none()
             )
@@ -42,8 +42,8 @@ class ItemResource(ProtectedResource):
                 "error": f"Item {item_id} was not found in the current event"
             }, 404
         items = (
-            db.session.query(Item)
-            .filter(Item.event_id == msg.get("event_id"))
+            db.session.query(CfgItem)
+            .filter(CfgItem.event_id == msg.get("event_id"))
             .all()
         )
         return ItemDTO.from_model_list(items), 200
@@ -54,14 +54,14 @@ class ItemResource(ProtectedResource):
             return msg, code
         data = ItemResource.parser.parse_args()
         department = (
-            db.session.query(Department)
+            db.session.query(CfgDepartment)
             .filter(
-                Department.event_id == msg.get("event_id"),
-                Department.department_id == data["department_id"],
+                CfgDepartment.event_id == msg.get("event_id"),
+                CfgDepartment.department_id == data["department_id"],
             )
             .one_or_none()
         )
-        new_item = Item(
+        new_item = CfgItem(
             name=data["name"],
             description=data["description"],
             department=department,

@@ -1,4 +1,4 @@
-# app/models/delivery_station.py
+# app/models/cfg_delivery_station.py
 
 
 from typing import List
@@ -13,7 +13,7 @@ from app.models._types import ColumnsDomains as cd
 from app.utils import uuid8
 
 
-class DeliveryStation(BaseModel):
+class CfgDeliveryStation(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -21,7 +21,7 @@ class DeliveryStation(BaseModel):
     )
     delivery_station_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="DeliveryStation"),
+        default=lambda: uuid8(domain="CfgDeliveryStation"),
         primary_key=True,
         comment="Unique Delivery Station identifier for the event",
     )
@@ -34,14 +34,14 @@ class DeliveryStation(BaseModel):
         comment="Whether the Delivery Station is active or not",
     )
 
-    event: Mapped["Event"] = relationship(  # type: ignore # noqa: F821
-        "Event", back_populates="delivery_stations"
+    event: Mapped["CfgEvent"] = relationship(  # type: ignore # noqa: F821
+        "CfgEvent", back_populates="delivery_stations"
     )
-    orders: Mapped[List["Order"]] = relationship(  # type: ignore # noqa: F821
-        "Order", back_populates="delivery_station"
+    orders: Mapped[List["SysOrder"]] = relationship(  # type: ignore # noqa: F821
+        "SysOrder", back_populates="delivery_station"
     )
 
     __table_args__ = (
         UniqueConstraint("event_id", "name"),
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
     )

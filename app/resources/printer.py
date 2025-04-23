@@ -4,7 +4,7 @@ from flask_restful import reqparse
 
 from app.dto.printer import PrinterDTO
 from app.extensions import db
-from app.models.printer import Printer
+from app.models.cfg_printer import CfgPrinter
 from app.resources.auth import ProtectedResource
 
 
@@ -22,10 +22,10 @@ class PrinterResource(ProtectedResource):
             return msg, code
         if printer_id:
             printer = (
-                db.session.query(Printer)
+                db.session.query(CfgPrinter)
                 .filter(
-                    Printer.event_id == msg.get("event_id"),
-                    Printer.printer_id == printer_id,
+                    CfgPrinter.event_id == msg.get("event_id"),
+                    CfgPrinter.printer_id == printer_id,
                 )
                 .one_or_none()
             )
@@ -35,8 +35,8 @@ class PrinterResource(ProtectedResource):
                 "error": f"Printer {printer_id} was not found in the current event"
             }, 404
         printers = (
-            db.session.query(Printer)
-            .filter(Printer.event_id == msg.get("event_id"))
+            db.session.query(CfgPrinter)
+            .filter(CfgPrinter.event_id == msg.get("event_id"))
             .all()
         )
         return PrinterDTO.from_model_list(printers), 200
@@ -46,7 +46,7 @@ class PrinterResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = PrinterResource.parser.parse_args()
-        new_printer = Printer(
+        new_printer = CfgPrinter(
             event_id=msg.get("event_id"),
             name=data["name"],
             mac_address=data["mac_address"],

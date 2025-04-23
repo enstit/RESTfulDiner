@@ -4,8 +4,8 @@ from flask_restful import reqparse
 
 from app.dto.department import DepartmentDTO
 from app.extensions import db
-from app.models.department import Department
-from app.models.printer import Printer
+from app.models.cfg_department import CfgDepartment
+from app.models.cfg_printer import CfgPrinter
 from app.resources.auth import ProtectedResource
 
 
@@ -22,10 +22,10 @@ class DepartmentResource(ProtectedResource):
             return msg, code
         if department_id:
             department = (
-                db.session.query(Department)
+                db.session.query(CfgDepartment)
                 .filter(
-                    Department.event_id == msg.get("event_id"),
-                    Department.department_id == department_id,
+                    CfgDepartment.event_id == msg.get("event_id"),
+                    CfgDepartment.department_id == department_id,
                 )
                 .one_or_none()
             )
@@ -36,8 +36,8 @@ class DepartmentResource(ProtectedResource):
             }, 404
 
         departments = (
-            db.session.query(Department)
-            .filter(Department.event_id == msg.get("event_id"))
+            db.session.query(CfgDepartment)
+            .filter(CfgDepartment.event_id == msg.get("event_id"))
             .all()
         )
         return DepartmentDTO.from_model_list(departments), 200
@@ -47,7 +47,7 @@ class DepartmentResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DepartmentResource.parser.parse_args()
-        new_department = Department(
+        new_department = CfgDepartment(
             event_id=msg.get("event_id"), name=data["name"]
         )
         db.session.add(new_department)
@@ -63,10 +63,10 @@ class DepartmentResource(ProtectedResource):
         new_printer_id = data.get("printer_id")
 
         department = (
-            db.session.query(Department)
+            db.session.query(CfgDepartment)
             .filter(
-                Department.event_id == msg.get("event_id"),
-                Department.department_id == department_id,
+                CfgDepartment.event_id == msg.get("event_id"),
+                CfgDepartment.department_id == department_id,
             )
             .one_or_none()
         )
@@ -79,10 +79,10 @@ class DepartmentResource(ProtectedResource):
         if new_printer_id:
             if not (
                 printer := (
-                    db.session.query(Printer)
+                    db.session.query(CfgPrinter)
                     .filter(
-                        Printer.event_id == msg.get("event_id"),
-                        Printer.printer_id == new_printer_id,
+                        CfgPrinter.event_id == msg.get("event_id"),
+                        CfgPrinter.printer_id == new_printer_id,
                     )
                     .one_or_none()
                 )
@@ -100,10 +100,10 @@ class DepartmentResource(ProtectedResource):
             return msg, code
         data = DepartmentResource.parser.parse_args()
         department = (
-            db.session.query(Department)
+            db.session.query(CfgDepartment)
             .filter(
-                Department.event_id == msg.get("event_id"),
-                Department.department_id == department_id,
+                CfgDepartment.event_id == msg.get("event_id"),
+                CfgDepartment.department_id == department_id,
             )
             .one_or_none()
         )
@@ -115,10 +115,10 @@ class DepartmentResource(ProtectedResource):
             department.name = new_name
         if new_printer_id := data.get("printer_id"):
             printer = (
-                db.session.query(Printer)
+                db.session.query(CfgPrinter)
                 .filter(
-                    Printer.event_id == msg.get("event_id"),
-                    Printer.printer_id == new_printer_id,
+                    CfgPrinter.event_id == msg.get("event_id"),
+                    CfgPrinter.printer_id == new_printer_id,
                 )
                 .one_or_none()
             )

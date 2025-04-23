@@ -4,7 +4,7 @@ from flask_restful import reqparse
 
 from app.dto.delivery_station import DeliveryStationDTO
 from app.extensions import db
-from app.models.delivery_station import DeliveryStation
+from app.models.cfg_delivery_station import CfgDeliveryStation
 from app.resources.auth import ProtectedResource
 
 
@@ -21,10 +21,11 @@ class DeliveryStationResource(ProtectedResource):
             return msg, code
         if delivery_station_id:
             delivery_station = (
-                db.session.query(DeliveryStation)
+                db.session.query(CfgDeliveryStation)
                 .filter(
-                    DeliveryStation.event_id == msg.get("event_id"),
-                    DeliveryStation.delivery_station_id == delivery_station_id,
+                    CfgDeliveryStation.event_id == msg.get("event_id"),
+                    CfgDeliveryStation.delivery_station_id
+                    == delivery_station_id,
                 )
                 .one_or_none()
             )
@@ -35,8 +36,8 @@ class DeliveryStationResource(ProtectedResource):
             }, 404
 
         delivery_stations = (
-            db.session.query(DeliveryStation)
-            .filter(DeliveryStation.event_id == msg.get("event_id"))
+            db.session.query(CfgDeliveryStation)
+            .filter(CfgDeliveryStation.event_id == msg.get("event_id"))
             .all()
         )
         return DeliveryStationDTO.from_model_list(delivery_stations), 200
@@ -46,7 +47,7 @@ class DeliveryStationResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DeliveryStationResource.parser.parse_args()
-        new_delivery_station = DeliveryStation(
+        new_delivery_station = CfgDeliveryStation(
             event_id=msg.get("event_id"),
             name=data["name"],
             active_flag=data["active_flag"],
@@ -61,10 +62,10 @@ class DeliveryStationResource(ProtectedResource):
             return msg, code
         data = DeliveryStationResource.parser.parse_args()
         delivery_station = (
-            db.session.query(DeliveryStation)
+            db.session.query(CfgDeliveryStation)
             .filter(
-                DeliveryStation.event_id == msg.get("event_id"),
-                DeliveryStation.delivery_station_id == delivery_station_id,
+                CfgDeliveryStation.event_id == msg.get("event_id"),
+                CfgDeliveryStation.delivery_station_id == delivery_station_id,
             )
             .one_or_none()
         )
@@ -84,10 +85,10 @@ class DeliveryStationResource(ProtectedResource):
             return msg, code
         data = DeliveryStationResource.parser.parse_args()
         delivery_station = (
-            db.session.query(DeliveryStation)
+            db.session.query(CfgDeliveryStation)
             .filter(
-                DeliveryStation.event_id == msg.get("event_id"),
-                DeliveryStation.delivery_station_id == delivery_station_id,
+                CfgDeliveryStation.event_id == msg.get("event_id"),
+                CfgDeliveryStation.delivery_station_id == delivery_station_id,
             )
             .one_or_none()
         )

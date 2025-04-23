@@ -1,4 +1,4 @@
-# app/models/event.py
+# app/models/cfg_event.py
 
 
 from typing import List
@@ -13,10 +13,10 @@ from app.models._types import EventType
 from app.utils import uuid8
 
 
-class Event(BaseModel):
+class CfgEvent(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="Event"),
+        default=lambda: uuid8(domain="CfgEvent"),
         primary_key=True,
         comment="Unique Event identifier",
     )
@@ -38,18 +38,21 @@ class Event(BaseModel):
         ),
     )
 
-    days: Mapped[List["EventDay"]] = relationship(  # type: ignore # noqa: F821
-        "EventDay", back_populates="event"
+    days: Mapped[List["CfgEventDay"]] = relationship(  # type: ignore # noqa: F821
+        "CfgEventDay", back_populates="event"
     )
-    kiosks: Mapped[List["Kiosk"]] = relationship(  # type: ignore # noqa: F821
-        "Kiosk", back_populates="event"
+    kiosks: Mapped[List["CfgKiosk"]] = relationship(  # type: ignore # noqa: F821
+        "CfgKiosk", back_populates="event"
     )
-    delivery_stations: Mapped[List["DeliveryStation"]] = relationship(  # type: ignore # noqa: F821
-        "DeliveryStation", back_populates="event"
+    delivery_stations: Mapped[List["CfgDeliveryStation"]] = relationship(  # type: ignore # noqa: F821
+        "CfgDeliveryStation", back_populates="event"
     )
-    printers: Mapped[List["Printer"]] = relationship(  # type: ignore # noqa: F821
-        "Printer", back_populates="event"
+    printers: Mapped[List["CfgPrinter"]] = relationship(  # type: ignore # noqa: F821
+        "CfgPrinter", back_populates="event"
     )
-    departments: Mapped[List["Department"]] = relationship(  # type: ignore # noqa: F821
-        "Department", back_populates="event"
+    departments: Mapped[List["CfgDepartment"]] = relationship(  # type: ignore # noqa: F821
+        "CfgDepartment", back_populates="event"
+    )
+    shifts: Mapped[List["SysShift"]] = relationship(  # type: ignore # noqa: F821
+        "SysShift", back_populates="event"
     )

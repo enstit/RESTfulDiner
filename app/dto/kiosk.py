@@ -4,11 +4,11 @@
 from typing import List
 
 from app.config import Config
-from app.models.kiosk import Kiosk
+from app.models.cfg_kiosk import CfgKiosk
 
 
 class KioskDTO:
-    def __init__(self, kiosk: Kiosk):
+    def __init__(self, kiosk: CfgKiosk):
         self.event_id = str(kiosk.event_id)
         self.kiosk_id = str(kiosk.kiosk_id)
         self.name = kiosk.name
@@ -27,9 +27,9 @@ class KioskDTO:
         }
 
     @staticmethod
-    def from_model(kiosk: Kiosk) -> dict:
+    def from_model(kiosk: CfgKiosk) -> dict:
         return KioskDTO(kiosk).to_dict() if kiosk else {}
 
     @staticmethod
-    def from_model_list(kiosks: List[Kiosk]) -> list[dict]:
+    def from_model_list(kiosks: List[CfgKiosk]) -> list[dict]:
         return [KioskDTO(kiosk).to_dict() for kiosk in kiosks]

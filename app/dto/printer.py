@@ -4,11 +4,11 @@
 from typing import List
 
 from app.config import Config
-from app.models.printer import Printer
+from app.models.cfg_printer import CfgPrinter
 
 
 class PrinterDTO:
-    def __init__(self, printer: Printer):
+    def __init__(self, printer: CfgPrinter):
         self.event_id = str(printer.event_id)
         self.printer_id = str(printer.printer_id)
         self.name = printer.name
@@ -25,9 +25,9 @@ class PrinterDTO:
         }
 
     @staticmethod
-    def from_model(printer: Printer) -> dict:
+    def from_model(printer: CfgPrinter) -> dict:
         return PrinterDTO(printer).to_dict() if printer else {}
 
     @staticmethod
-    def from_model_list(printers: List[Printer]) -> list[dict]:
+    def from_model_list(printers: List[CfgPrinter]) -> list[dict]:
         return [PrinterDTO(printer).to_dict() for printer in printers]

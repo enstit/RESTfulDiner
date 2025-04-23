@@ -4,13 +4,13 @@
 from typing import List
 
 from app.config import Config
-from app.models.order import Order
-from app.models.department_order import DepartmentOrder
-from app.models.department_order_item import DepartmentOrderItem
+from app.models.sys_order import SysOrder
+from app.models.sys_order_department import SysOrderDepartment
+from app.models.sys_order_department_item import SysOrderDepartmentItem
 
 
 class OrderItemDTO:
-    def __init__(self, department_order_item: DepartmentOrderItem):
+    def __init__(self, department_order_item: SysOrderDepartmentItem):
         self.item_id = str(department_order_item.item_id)
         self.quantity = department_order_item.quantity
 
@@ -23,7 +23,7 @@ class OrderItemDTO:
 
 
 class OrderDTO:
-    def __init__(self, order: Order):
+    def __init__(self, order: SysOrder):
         self.event_id = str(order.event_id)
         self.order_id = str(order.order_id)
         self.created_datetime = order.created_datetime
@@ -45,12 +45,12 @@ class OrderDTO:
             "self": f"{Config.APP_URL}{Config.API_URI}/orders/{self.order_id}",
             "type": "schema:Order",
             "created_datetime": self.created_datetime.isoformat(),
-            "kiosk": (
+            "CfgKiosk": (
                 f"{Config.APP_URL}{Config.API_URI}/kiosks/{self.kiosk.kiosk_id}"
                 if self.kiosk
                 else None
             ),
-            "user": self.user.username,
+            "CfgUser": self.user.username,
             "payment_method": self.payment_method.name,
             "total_price": self.total_price,
             "total_paid": self.total_paid,
@@ -64,16 +64,16 @@ class OrderDTO:
         }
 
     @staticmethod
-    def from_model(order: Order) -> dict:
+    def from_model(order: SysOrder) -> dict:
         return OrderDTO(order).to_dict() if order else {}
 
     @staticmethod
-    def from_model_list(orders: List[Order]) -> list[dict]:
+    def from_model_list(orders: List[SysOrder]) -> list[dict]:
         return [OrderDTO(order).to_dict() for order in orders]
 
 
 class DepartmentOrderDTO:
-    def __init__(self, department_order: DepartmentOrder):
+    def __init__(self, department_order: SysOrderDepartment):
         self.event_id = str(department_order.event_id)
         self.order_id = str(department_order.order_id)
         self.department_id = str(department_order.department_id)
@@ -102,7 +102,7 @@ class DepartmentOrderDTO:
         }
 
     @staticmethod
-    def from_model(department_order: DepartmentOrder) -> dict:
+    def from_model(department_order: SysOrderDepartment) -> dict:
         return (
             DepartmentOrderDTO(department_order).to_dict()
             if department_order
@@ -111,7 +111,7 @@ class DepartmentOrderDTO:
 
     @staticmethod
     def from_model_list(
-        department_orders: List[DepartmentOrder],
+        department_orders: List[SysOrderDepartment],
     ) -> list[dict]:
         return [
             DepartmentOrderDTO(department_order).to_dict()

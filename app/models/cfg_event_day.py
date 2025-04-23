@@ -1,4 +1,4 @@
-# app/models/event_day.py
+# app/models/cfg_event_day.py
 
 
 from typing import List
@@ -14,7 +14,7 @@ from app.models._types import ColumnsDomains as cd
 from app.utils import uuid8
 
 
-class EventDay(BaseModel):
+class CfgEventDay(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -22,7 +22,7 @@ class EventDay(BaseModel):
     )
     event_day_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="EventDay"),
+        default=lambda: uuid8(domain="CfgEventDay"),
         primary_key=True,
         comment="Unique Event identifier",
     )
@@ -36,11 +36,13 @@ class EventDay(BaseModel):
         cd.DATETIME, comment="Event day end date and time"
     )
 
-    event: Mapped["Event"] = relationship(  # type: ignore # noqa: F821
-        "Event", back_populates="days"
+    event: Mapped["CfgEvent"] = relationship(  # type: ignore # noqa: F821
+        "CfgEvent", back_populates="days"
     )
-    orders: Mapped[List["Order"]] = relationship(  # type: ignore # noqa: F821
-        "Order", back_populates="event_day"
+    orders: Mapped[List["SysOrder"]] = relationship(  # type: ignore # noqa: F821
+        "SysOrder", back_populates="event_day"
     )
 
-    __table_args__ = (ForeignKeyConstraint([event_id], ["event.event_id"]),)
+    __table_args__ = (
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
+    )

@@ -6,29 +6,29 @@ from sqlalchemy import MetaData
 metadata = MetaData()
 
 from app.models._base import BaseModel as Diner
-from app.models.delivery_station import DeliveryStation
-from app.models.department import Department
-from app.models.department_order import DepartmentOrder
-from app.models.department_order_item import DepartmentOrderItem
-from app.models.event import Event
-from app.models.event_day import EventDay
-from app.models.item import Item
-from app.models.kiosk import Kiosk
-from app.models.order import Order
-from app.models.printer import Printer
-from app.models.user import User
+from app.models.cfg_delivery_station import CfgDeliveryStation
+from app.models.cfg_department import CfgDepartment
+from app.models.sys_order_department import SysOrderDepartment
+from app.models.sys_order_department_item import SysOrderDepartmentItem
+from app.models.cfg_event import CfgEvent
+from app.models.cfg_event_day import CfgEventDay
+from app.models.cfg_item import CfgItem
+from app.models.cfg_kiosk import CfgKiosk
+from app.models.sys_order import SysOrder
+from app.models.cfg_printer import CfgPrinter
+from app.models.cfg_user import CfgUser
 
 __all__ = [
     "Diner",
-    "DeliveryStation",
-    "Department",
-    "DepartmentOrder",
-    "DepartmentOrderItem",
-    "Event",
-    "EventDay",
-    "Item",
-    "Kiosk",
-    "Order",
-    "Printer",
-    "User",
+    "CfgDeliveryStation",
+    "CfgDepartment",
+    "SysOrderDepartment",
+    "SysOrderDepartmentItem",
+    "CfgEvent",
+    "CfgEventDay",
+    "CfgItem",
+    "CfgKiosk",
+    "SysOrder",
+    "CfgPrinter",
+    "CfgUser",
 ]

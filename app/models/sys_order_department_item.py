@@ -1,4 +1,4 @@
-# app/models/department_order_item.py
+# app/models/sys_order_department_item.py
 
 
 from sqlalchemy import ForeignKeyConstraint
@@ -10,7 +10,7 @@ from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 
 
-class DepartmentOrderItem(BaseModel):
+class SysOrderDepartmentItem(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -35,11 +35,11 @@ class DepartmentOrderItem(BaseModel):
         cd.INT, default=1, comment="Item quantity"
     )
 
-    department_order: Mapped["DepartmentOrder"] = relationship(  # type: ignore # noqa: F821
-        "DepartmentOrder", back_populates="department_order_items"
+    department_order: Mapped["SysOrderDepartment"] = relationship(  # type: ignore # noqa: F821
+        "SysOrderDepartment", back_populates="department_order_items"
     )
-    item: Mapped["Item"] = relationship(  # type: ignore # noqa: F821
-        "Item", back_populates="departments_orders_items"
+    item: Mapped["CfgItem"] = relationship(  # type: ignore # noqa: F821
+        "CfgItem", back_populates="departments_orders_items"
     )
 
     @hybrid_property
@@ -47,24 +47,24 @@ class DepartmentOrderItem(BaseModel):
         return self.item.price * self.quantity
 
     __table_args__ = (
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
         ForeignKeyConstraint(
             [event_id, department_id],
-            ["department.event_id", "department.department_id"],
+            ["cfg_department.event_id", "cfg_department.department_id"],
         ),
         ForeignKeyConstraint(
-            [event_id, order_id], ["order.event_id", "order.order_id"]
+            [event_id, order_id], ["sys_order.event_id", "sys_order.order_id"]
         ),
         ForeignKeyConstraint(
             [event_id, item_id],
-            ["item.event_id", "item.item_id"],
+            ["cfg_item.event_id", "cfg_item.item_id"],
         ),
         ForeignKeyConstraint(
             [event_id, order_id, department_id],
             [
-                "department_order.event_id",
-                "department_order.order_id",
-                "department_order.department_id",
+                "sys_order_department.event_id",
+                "sys_order_department.order_id",
+                "sys_order_department.department_id",
             ],
         ),
     )

@@ -1,4 +1,4 @@
-# app/models/department_order.py
+# app/models/sys_order_department.py
 
 from typing import List
 
@@ -12,7 +12,7 @@ from app.models._types import ColumnsDomains as cd
 from app.models._types import OrderStatusType
 
 
-class DepartmentOrder(BaseModel):
+class SysOrderDepartment(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -37,14 +37,16 @@ class DepartmentOrder(BaseModel):
         ),
     )
 
-    department: Mapped["Department"] = relationship(  # type: ignore # noqa: F821
-        "Department", back_populates="department_orders"
+    department: Mapped["CfgDepartment"] = relationship(  # type: ignore # noqa: F821
+        "CfgDepartment", back_populates="department_orders"
     )
-    order: Mapped["Order"] = relationship(  # type: ignore # noqa: F821
-        "Order", back_populates="departments_orders"
+    order: Mapped["SysOrder"] = relationship(  # type: ignore # noqa: F821
+        "SysOrder", back_populates="departments_orders"
     )
-    department_order_items: Mapped[List["DepartmentOrderItem"]] = relationship(  # type: ignore # noqa: F821
-        "DepartmentOrderItem", back_populates="department_order"
+    department_order_items: Mapped[List["SysOrderDepartmentItem"]] = (  # type: ignore # noqa: F821
+        relationship(
+            "SysOrderDepartmentItem", back_populates="department_order"
+        )
     )
 
     @hybrid_property
@@ -57,13 +59,13 @@ class DepartmentOrder(BaseModel):
         )
 
     __table_args__ = (
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
         ForeignKeyConstraint(
             [event_id, order_id],
-            ["order.event_id", "order.order_id"],
+            ["sys_order.event_id", "sys_order.order_id"],
         ),
         ForeignKeyConstraint(
             [event_id, department_id],
-            ["department.event_id", "department.department_id"],
+            ["cfg_department.event_id", "cfg_department.department_id"],
         ),
     )

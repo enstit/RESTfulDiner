@@ -1,4 +1,4 @@
-# app/models/user.py
+# app/models/cfg_user.py
 
 
 from typing import List
@@ -13,10 +13,10 @@ from app.models._types import UserRoleType
 from app.utils import uuid8
 
 
-class User(BaseModel):
+class CfgUser(BaseModel):
     user_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="User"),
+        default=lambda: uuid8(domain="CfgUser"),
         primary_key=True,
         comment="Unique User identifier for the system",
     )
@@ -38,6 +38,9 @@ class User(BaseModel):
         ),
     )
 
-    orders: Mapped[List["Order"]] = relationship(  # type: ignore # noqa: F821
-        "Order", back_populates="user"
+    orders: Mapped[List["SysOrder"]] = relationship(  # type: ignore # noqa: F821
+        "SysOrder", back_populates="user"
+    )
+    shifts: Mapped[List["SysShift"]] = relationship(  # type: ignore # noqa: F821
+        "SysShift", back_populates="user"
     )

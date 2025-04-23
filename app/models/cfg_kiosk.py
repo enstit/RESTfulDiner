@@ -1,4 +1,4 @@
-# app/models/kiosk.py
+# app/models/cfg_kiosk.py
 
 
 from typing import Optional, List
@@ -13,7 +13,7 @@ from app.models._types import ColumnsDomains as cd
 from app.utils import uuid8
 
 
-class Kiosk(BaseModel):
+class CfgKiosk(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -21,7 +21,7 @@ class Kiosk(BaseModel):
     )
     kiosk_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="Kiosk"),
+        default=lambda: uuid8(domain="CfgKiosk"),
         primary_key=True,
         comment="Unique Kiosk identifier for the event",
     )
@@ -33,25 +33,22 @@ class Kiosk(BaseModel):
         nullable=True,
         comment="Printer identifier associated with the Kiosk",
     )
-    printer: Mapped["Printer"] = relationship(  # noqa: F821 # type: ignore
-        "Printer", back_populates="kiosk"
+    printer: Mapped["CfgPrinter"] = relationship(  # noqa: F821 # type: ignore
+        "CfgPrinter", back_populates="kiosk"
     )
 
-    event: Mapped["Event"] = relationship(  # noqa: F821 # type: ignore
-        "Event", back_populates="kiosks"
+    event: Mapped["CfgEvent"] = relationship(  # noqa: F821 # type: ignore
+        "CfgEvent", back_populates="kiosks"
     )
-    orders: Mapped[List["Order"]] = relationship(  # noqa: F821 # type: ignore
-        "Order", back_populates="kiosk"
+    orders: Mapped[List["SysOrder"]] = relationship(  # noqa: F821 # type: ignore
+        "SysOrder", back_populates="kiosk"
     )
 
     __table_args__ = (
         UniqueConstraint("event_id", "name"),
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
         ForeignKeyConstraint(
-            [event_id, printer_id], ["printer.event_id", "printer.printer_id"]
+            [event_id, printer_id],
+            ["cfg_printer.event_id", "cfg_printer.printer_id"],
         ),
-        {
-            "comment": "Event Kiosk for order management",
-            "extend_existing": True,
-        },
     )

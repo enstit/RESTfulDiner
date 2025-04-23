@@ -4,11 +4,11 @@
 from typing import List
 
 from app.config import Config
-from app.models.item import Item
+from app.models.cfg_item import CfgItem
 
 
 class ItemDTO:
-    def __init__(self, item: Item):
+    def __init__(self, item: CfgItem):
         self.event_id = str(item.event_id)
         self.item_id = str(item.item_id)
         self.name = item.name
@@ -41,9 +41,9 @@ class ItemDTO:
         }
 
     @staticmethod
-    def from_model(item: Item) -> dict:
+    def from_model(item: CfgItem) -> dict:
         return ItemDTO(item).to_dict() if item else {}
 
     @staticmethod
-    def from_model_list(items: List[Item]) -> list[dict]:
+    def from_model_list(items: List[CfgItem]) -> list[dict]:
         return [ItemDTO(item).to_dict() for item in items]

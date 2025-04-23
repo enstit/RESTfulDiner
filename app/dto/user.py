@@ -4,11 +4,11 @@
 from typing import List
 
 from app.config import Config
-from app.models.user import User
+from app.models.cfg_user import CfgUser
 
 
 class UserDTO:
-    def __init__(self, user: User):
+    def __init__(self, user: CfgUser):
         self.user_id = str(user.user_id)
         self.username = user.username
         self.role = user.role
@@ -22,9 +22,9 @@ class UserDTO:
         }
 
     @staticmethod
-    def from_model(user: User) -> dict:
+    def from_model(user: CfgUser) -> dict:
         return UserDTO(user).to_dict() if user else {}
 
     @staticmethod
-    def from_model_list(users: List[User]) -> list[dict]:
+    def from_model_list(users: List[CfgUser]) -> list[dict]:
         return [UserDTO(user).to_dict() for user in users]

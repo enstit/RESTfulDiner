@@ -4,11 +4,11 @@
 from typing import List
 
 from app.config import Config
-from app.models.delivery_station import DeliveryStation
+from app.models.cfg_delivery_station import CfgDeliveryStation
 
 
 class DeliveryStationDTO:
-    def __init__(self, delivery_station: DeliveryStation):
+    def __init__(self, delivery_station: CfgDeliveryStation):
         self.event_id = str(delivery_station.event_id)
         self.delivery_station_id = str(delivery_station.delivery_station_id)
         self.name = delivery_station.name
@@ -23,7 +23,7 @@ class DeliveryStationDTO:
         }
 
     @staticmethod
-    def from_model(delivery_station: DeliveryStation) -> dict:
+    def from_model(delivery_station: CfgDeliveryStation) -> dict:
         return (
             DeliveryStationDTO(delivery_station).to_dict()
             if delivery_station
@@ -32,7 +32,7 @@ class DeliveryStationDTO:
 
     @staticmethod
     def from_model_list(
-        delivery_stations: List[DeliveryStation],
+        delivery_stations: List[CfgDeliveryStation],
     ) -> list[dict]:
         return [
             DeliveryStationDTO(delivery_station).to_dict()

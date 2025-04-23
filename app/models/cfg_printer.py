@@ -1,4 +1,4 @@
-# app/models/printer.py
+# app/models/cfg_printer.py
 
 
 from typing import Optional
@@ -13,7 +13,7 @@ from app.models._types import ColumnsDomains as cd
 from app.utils import uuid8
 
 
-class Printer(BaseModel):
+class CfgPrinter(BaseModel):
     event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
         primary_key=True,
@@ -21,7 +21,7 @@ class Printer(BaseModel):
     )
     printer_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        default=lambda: uuid8(domain="Printer"),
+        default=lambda: uuid8(domain="CfgPrinter"),
         primary_key=True,
         comment="Unique Printer identifier for the event",
     )
@@ -35,19 +35,19 @@ class Printer(BaseModel):
         cd.IP_ADDRESS, comment="Printer IP address"
     )
 
-    event: Mapped["Event"] = relationship(  # noqa: F821 # type: ignore
-        "Event", back_populates="printers"
+    event: Mapped["CfgEvent"] = relationship(  # noqa: F821 # type: ignore
+        "CfgEvent", back_populates="printers"
     )
-    kiosk: Mapped[Optional["Kiosk"]] = relationship(  # noqa: F821 # type: ignore
-        "Kiosk", back_populates="printer"
+    kiosk: Mapped[Optional["CfgKiosk"]] = relationship(  # noqa: F821 # type: ignore
+        "CfgKiosk", back_populates="printer"
     )
-    department: Mapped[Optional["Department"]] = relationship(  # noqa: F821 # type: ignore
-        "Department", back_populates="printer"
+    department: Mapped[Optional["CfgDepartment"]] = relationship(  # noqa: F821 # type: ignore
+        "CfgDepartment", back_populates="printer"
     )
 
     __table_args__ = (
         UniqueConstraint("event_id", "name"),
         UniqueConstraint("event_id", "mac_address"),
         UniqueConstraint("event_id", "ip_address"),
-        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint([event_id], ["cfg_event.event_id"]),
     )
