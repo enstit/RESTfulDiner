@@ -14,15 +14,11 @@ class UserResource(Resource):
     parser.add_argument("password", type=str)
     parser.add_argument("role", type=str, default=UserRoleType.OPERATOR.name)
 
-    def get(
-        self, *, _id: str | None = None, username: str | None = None
-    ) -> tuple[dict, int]:
-        if _id or username:
+    def get(self, *, user_id: str | None = None) -> tuple[dict, int]:
+        if user_id:
             user = (
                 db.session.query(User)
-                .where(
-                    User.user_id == _id if _id else User.username == username
-                )
+                .filter(User.user_id == user_id)
                 .one_or_none()
             )
             if user:
@@ -43,10 +39,10 @@ class UserResource(Resource):
         return UserDTO.from_model(new_user), 201
 
     @staticmethod
-    def authenticate(username: str, password: str) -> User | None:
+    def authenticate(user_id: str, password: str) -> User | None:
         user = (
             db.session.query(User)
-            .where(User.username == username)
+            .filter(User.user_id == user_id)
             .one_or_none()
         )
         if user and user.password == password:
@@ -56,9 +52,6 @@ class UserResource(Resource):
 
 class LoginResource(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument(
-        "username", type=str, required=True, help="Username cannot be blank"
-    )
     parser.add_argument(
         "password", type=str, required=True, help="Password cannot be blank"
     )
@@ -75,9 +68,9 @@ class LoginResource(Resource):
         help="ID of the working kiosk cannot be blank",
     )
 
-    def post(self) -> tuple[dict, int]:
+    def post(self, user_id: str) -> tuple[dict, int]:
         data = LoginResource.parser.parse_args()
-        user = UserResource.authenticate(data["username"], data["password"])
+        user = UserResource.authenticate(user_id, data["password"])
 
         if not user:
             return {"message": "Invalid credentials"}, 401

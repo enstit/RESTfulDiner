@@ -21,23 +21,27 @@ class ItemResource(ProtectedResource):
     parser.add_argument("availability", type=int)
     parser.add_argument("initial_status", type=str)
 
-    def get(
-        self, *, _id: str | None = None, name: str | None = None
-    ) -> tuple[dict, int]:
+    def get(self, *, item_id: str | None = None) -> tuple[dict, int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
-        if _id or name:
+        if item_id:
             item = (
                 db.session.query(Item)
-                .where(Item.event_id == msg.get("event_id"))
-                .where(Item.item_id == _id if _id else Item.name == name)
+                .filter(
+                    Item.event_id == msg.get("event_id"),
+                    Item.item_id == item_id,
+                )
                 .one_or_none()
             )
             if item:
                 return ItemDTO.from_model(item), 200
             return {"message": "Item was not found"}, 404
-        items = db.session.query(Item).all()
+        items = (
+            db.session.query(Item)
+            .filter(Item.event_id == msg.get("event_id"))
+            .all()
+        )
         return ItemDTO.from_model_list(items), 200
 
     def post(self):
@@ -47,8 +51,10 @@ class ItemResource(ProtectedResource):
         data = ItemResource.parser.parse_args()
         department = (
             db.session.query(Department)
-            .where(Department.event_id == msg.get("event_id"))
-            .where(Department.department_id == data["department_id"])
+            .filter(
+                Department.event_id == msg.get("event_id"),
+                Department.department_id == data["department_id"],
+            )
             .one_or_none()
         )
         new_item = Item(

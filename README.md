@@ -33,23 +33,63 @@ foo@bar:~$ docker compose up -d
 
 ### Authentication
 
-To interact with the APIs, the first step is to login into the system with a
-valid admin user (we can use the user `admin` with password `admin`):
+To interact with the APIs, we firstly need to login into the system with a
+valid admin user.
+
+First of all, we need to recover the list of configured users in the system
+```bash
+foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/users
+
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "self": "@id",
+        "type": "@type",
+        "username": "schema:name",
+        "role": "schema:hasOccupation",
+        "license": {
+            "@id": "schema:license",
+            "@type": "@id"
+        }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "data": [
+        {
+            "self": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9bf9901f8",
+            "type": "schema:Person",
+            "username": "admin",
+            "role": "ADMIN"
+        },
+        {
+            "self": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9400641c0",
+            "type": "schema:Person",
+            "username": "operator",
+            "role": "OPERATOR"
+        }
+    ]
+}
+```
+Now we can select a user with `ADMIN` role, for example the user
+`http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9bf9901f8`
+(i.e., the `admin` user), and then call its `login` action providing the
+password and the kiosk selected for the access:
 
 ```bash
-foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/login -H "Content-Type: application/json" -d '{"username": "admin", "password": "admin"}'
+foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9bf9901f8/login \
+foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ -d '{"password": "admin", "event_id": "5b11618c-51f5-8000-8000-1bacc4523798", "kiosk_id": "5b11618c-51f5-8000-8000-7795ef9724f5"}'
 
 {"access_token": "<access_token>"}
 ```
 
-This should return an object with an `access_token` as above, to be used for all
-the operations of **POST** type with the system.
+This should return an object with an `access_token` as above, to be used for
+all restriced operations within the system.
 
 > [!IMPORTANT]
 > We need to log in in the system with a user with admin role in order to
 > execute **POST**, **PUT**, **PATCH** and **DELETE** operations.
 > For simple **GET** operations, we can also log in as a user with operative
-> role (e.g., user `test` with password `test`).
+> role (e.g., user `operator` with password `operator`).
 
 ### System querying
 
@@ -58,7 +98,10 @@ the operations of **POST** type with the system.
 Let's start by inserting a new Department in the database:
 
 ```bash
-foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Cuisine"}'
+foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments \
+foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ -H "Authorization: Bearer <access_token>" \
+foo@bar:~$ -d '{"name": "Cuisine"}'
 
 {
     "@context": {
@@ -127,7 +170,10 @@ everyone. Better to change the Department name to a more universal `Kitchen`.
 In order to do that, we simply need to use a **PUT** operation:
 
 ```bash
-foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"name": "Kitchen"}'
+foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf \
+foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ -H "Authorization: Bearer <access_token>" \
+foo@bar:~$ -d '{"name": "Kitchen"}'
 
 {
     "@context": {
@@ -196,7 +242,10 @@ foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
 Here's where the **PATCH** operation comes in our hand:
 
 ```bash
-foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf -H "Content-Type: application/json" -H "Authorization: Bearer <access_token>" -d '{"printer_id": "5b11618c-51f5-8000-8000-2a5553677712"}'
+foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf \
+foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ -H "Authorization: Bearer <access_token>" \
+foo@bar:~$ -d '{"printer_id": "5b11618c-51f5-8000-8000-2a5553677712"}'
 
 {
     "@context": {

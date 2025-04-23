@@ -3,42 +3,36 @@
 from app.resources.delivery_station import DeliveryStationResource
 from app.resources.department import DepartmentResource
 from app.resources.item import ItemResource
+from app.resources.kiosk import KioskResource
 from app.resources.order import OrderResource, DepartmentOrderResource
 from app.resources.printer import PrinterResource
-from app.resources.user import LoginResource
+from app.resources.user import UserResource, LoginResource
 
 
 def initialize_routes(api):
-    # Authentication routes
-    api.add_resource(LoginResource, "/login")
+    api.add_resource(UserResource, "/users", "/users/<string:user_id>")
+    api.add_resource(LoginResource, "/users/<string:user_id>/login")
 
     api.add_resource(
         DeliveryStationResource,
         "/delivery_stations",
-        "/delivery_stations/<string:_id>",
-        "/delivery_stations/name=<string:name>",
+        "/delivery_stations/<string:delivery_station_id>",
     )
     api.add_resource(
         DepartmentResource,
         "/departments",
-        "/departments/<string:_id>",
-        "/departments/name=<string:name>",
+        "/departments/<string:department_id>",
     )
     api.add_resource(
-        ItemResource,
-        "/items",
-        "/items/<string:_id>",
-        "/items/name=<string:name>",
+        KioskResource,
+        "/kiosks",
+        "/kiosks/<string:kiosk_id>",
     )
-    api.add_resource(OrderResource, "/orders", "/orders/<string:_id>")
+    api.add_resource(ItemResource, "/items", "/items/<string:item_id>")
+    api.add_resource(OrderResource, "/orders", "/orders/<string:order_id>")
     api.add_resource(
         DepartmentOrderResource,
         "/departments/<string:department_id>/orders",
-        "/departments/<string:department_id>/orders/<string:_id>",
+        "/departments/<string:department_id>/orders/<string:order_id>",
     )
-    api.add_resource(
-        PrinterResource,
-        "/printers",
-        "/printers/<string:_id>",
-        "/printers/name=<string:name>",
-    )
+    api.add_resource(PrinterResource, "/printers", "/printers/<string:_id>")

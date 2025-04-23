@@ -44,11 +44,11 @@ class Order(BaseModel):
         server_default=func.now(),
         comment="Order creation datetime",
     )
-    user__id: Mapped[Optional[UUIDType]] = mapped_column(
+    user_id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
         comment="User identifier associated with the order",
     )
-    kiosk__id: Mapped[Optional[UUIDType]] = mapped_column(
+    kiosk_id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
         comment="Kiosk identifier associated with the order",
     )
@@ -69,7 +69,7 @@ class Order(BaseModel):
         nullable=True,
         comment="Total amount paid, in euros",
     )
-    delivery_station__id: Mapped[Optional[UUIDType]] = mapped_column(
+    delivery_station_id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
         nullable=True,
         comment="Delivery station identifier associated with the order",
@@ -121,16 +121,16 @@ class Order(BaseModel):
             ["event_day.event_id", "event_day.event_day_id"],
         ),
         ForeignKeyConstraint(
-            [event_id, kiosk__id], ["kiosk.event_id", "kiosk.kiosk_id"]
+            [event_id, kiosk_id], ["kiosk.event_id", "kiosk.kiosk_id"]
         ),
         ForeignKeyConstraint(
-            [event_id, delivery_station__id],
+            [event_id, delivery_station_id],
             [
                 "delivery_station.event_id",
                 "delivery_station.delivery_station_id",
             ],
         ),
-        ForeignKeyConstraint([user__id], ["user.user_id"]),
+        ForeignKeyConstraint([user_id], ["user.user_id"]),
         {
             "comment": "Order for the event",
             "extend_existing": True,

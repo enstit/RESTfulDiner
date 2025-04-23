@@ -88,15 +88,15 @@ CREATE TABLE department (
 	id UUID NOT NULL,
 	name VARCHAR(63) NOT NULL,
 	color VARCHAR(63),
-	printer__id UUID,
+	printer_id UUID,
 	PRIMARY KEY (id),
 	UNIQUE (name),
-	FOREIGN KEY(printer__id) REFERENCES printer (id)
+	FOREIGN KEY(printer_id) REFERENCES printer (id)
 );
 COMMENT ON COLUMN department.id IS 'Unique Department instance identifier';
 COMMENT ON COLUMN department.name IS 'Unique name of the department';
 COMMENT ON COLUMN department.color IS 'A color between the Recognized color keyword names. See also https://www.w3.org/TR/SVG11/types.html#ColorKeywords';
-COMMENT ON COLUMN department.printer__id IS 'Identifier of the printer the department is equipped with';\end{lstlisting}
+COMMENT ON COLUMN department.printer_id IS 'Identifier of the printer the department is equipped with';\end{lstlisting}
 
 \end{frame}
 

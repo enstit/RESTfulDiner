@@ -13,7 +13,9 @@ class ProtectedResource(Resource):
         user_id = get_jwt_identity()
         claims = get_jwt()
         user = (
-            db.session.query(User).where(User.user_id == user_id).one_or_none()
+            db.session.query(User)
+            .filter(User.user_id == user_id)
+            .one_or_none()
         )
         if admin_only and user is not None and user.role != UserRoleType.ADMIN:
             return {"message": "Admin privileges required"}, 403

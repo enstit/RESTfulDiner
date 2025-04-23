@@ -8,7 +8,6 @@ from flask_restful import reqparse
 
 from app.dto.order import OrderDTO, DepartmentOrderDTO
 from app.extensions import db
-from app.models.department import Department
 from app.models.department_order import DepartmentOrder
 from app.models.department_order_item import DepartmentOrderItem
 from app.models.event_day import EventDay
@@ -37,15 +36,17 @@ class OrderResource(ProtectedResource):
     parser.add_argument("total_paid", type=float)
     parser.add_argument("items", type=order_validator, action="append")
 
-    def get(self, *, _id: str | None = None) -> tuple[dict, int]:
+    def get(self, *, order_id: str | None = None) -> tuple[dict, int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
-        if _id:
+        if order_id:
             order = (
                 db.session.query(Order)
-                .where(Order.event_id == msg.get("event_id"))
-                .where(Order.order_id == _id)
+                .filter(
+                    Order.event_id == msg.get("event_id"),
+                    Order.order_id == order_id,
+                )
                 .one_or_none()
             )
             if order:
@@ -53,8 +54,7 @@ class OrderResource(ProtectedResource):
             return {"message": "Order was not found"}, 404
         orders = (
             db.session.query(Order)
-            .join(EventDay)
-            .where(EventDay.event_id == msg.get("event_id"))
+            .filter(Order.event_id == msg.get("event_id"))
             .all()
         )
         return OrderDTO.from_model_list(orders), 200
@@ -67,9 +67,11 @@ class OrderResource(ProtectedResource):
         # Get the EventDay from the current datetime
         event_day = (
             db.session.query(EventDay)
-            .where(EventDay.event_id == msg.get("event_id"))
-            .where(EventDay.start_datetime <= datetime.now())
-            .where(EventDay.end_datetime > datetime.now())
+            .filter(
+                EventDay.event_id == msg.get("event_id"),
+                EventDay.start_datetime <= datetime.now(),
+                EventDay.end_datetime > datetime.now(),
+            )
             .one_or_none()
         )
         if event_day is None:
@@ -87,8 +89,10 @@ class OrderResource(ProtectedResource):
             for item in data["items"]:
                 department = (
                     db.session.query(Item)
-                    .where(Item.event_id == msg.get("event_id"))
-                    .where(Item.item_id == item["item_id"])
+                    .filter(
+                        Item.event_id == msg.get("event_id"),
+                        Item.item_id == item["item_id"],
+                    )
                     .one()
                     .department
                 )
@@ -99,7 +103,10 @@ class OrderResource(ProtectedResource):
                         DepartmentOrderItem(
                             item=(
                                 db.session.query(Item)
-                                .where(Item.item_id == item["item_id"])
+                                .filter(
+                                    Item.event_id == msg.get("event_id"),
+                                    Item.item_id == item["item_id"],
+                                )
                                 .one_or_none()
                             ),
                             quantity=item["quantity"],
@@ -113,7 +120,11 @@ class OrderResource(ProtectedResource):
                                 DepartmentOrderItem(
                                     item=(
                                         db.session.query(Item)
-                                        .where(Item.item_id == item["item_id"])
+                                        .filter(
+                                            Item.event_id
+                                            == msg.get("event_id"),
+                                            Item.item_id == item["item_id"],
+                                        )
                                         .one_or_none()
                                     ),
                                     quantity=item["quantity"],
@@ -131,18 +142,20 @@ class DepartmentOrderResource(ProtectedResource):
     parser.add_argument("current_status", type=str)
 
     def get(
-        self, department_id: str, *, _id: str | None = None
+        self, department_id: str, *, order_id: str | None = None
     ) -> tuple[dict, int]:
         """Get all orders for a specific department in the event"""
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
-        if _id:
+        if order_id:
             department_order = (
                 db.session.query(DepartmentOrder)
-                .where(DepartmentOrder.event_id == msg.get("event_id"))
-                .where(DepartmentOrder.department_id == department_id)
-                .where(DepartmentOrder.order_id == _id)
+                .filter(
+                    DepartmentOrder.event_id == msg.get("event_id"),
+                    DepartmentOrder.department_id == department_id,
+                    DepartmentOrder.order_id == order_id,
+                )
                 .one_or_none()
             )
             if department_order:
@@ -150,32 +163,38 @@ class DepartmentOrderResource(ProtectedResource):
             return {"message": "Department order was not found"}, 404
         department_orders = (
             db.session.query(DepartmentOrder)
-            .where(DepartmentOrder.event_id == msg.get("event_id"))
-            .where(DepartmentOrder.department_id == department_id)
-            # Filter out cancelled and completed orders, to only keep
-            # the ones that are in progress or not started yet
-            .where(DepartmentOrder.current_status != OrderStatusType.CANCELLED)
-            .where(DepartmentOrder.current_status != OrderStatusType.COMPLETED)
+            .filter(
+                DepartmentOrder.event_id == msg.get("event_id"),
+                DepartmentOrder.department_id == department_id,
+                # Filter out cancelled and completed orders, to only keep
+                # the ones that are in progress or not started yet
+                DepartmentOrder.current_status != OrderStatusType.CANCELLED,
+                DepartmentOrder.current_status != OrderStatusType.COMPLETED,
+            )
             .all()
         )
         if department_orders:
             return DepartmentOrderDTO.from_model_list(department_orders), 200
         return {"message": "Department orders were not found"}, 404
 
-    def patch(self, department_id: str, _id: str) -> tuple[dict, int]:
+    def patch(self, department_id: str, order_id: str) -> tuple[dict, int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
         data = DepartmentOrderResource.parser.parse_args()
         department_order = (
             db.session.query(DepartmentOrder)
-            .where(DepartmentOrder.event_id == msg.get("event_id"))
-            .where(DepartmentOrder.department_id == department_id)
-            .where(DepartmentOrder.order_id == _id)
+            .filter(
+                DepartmentOrder.event_id == msg.get("event_id"),
+                DepartmentOrder.department_id == department_id,
+                DepartmentOrder.order_id == order_id,
+            )
             .one_or_none()
         )
         if not department_order:
-            return {"message": f"Department order {_id} was not found"}, 404
+            return {
+                "message": f"Department order {order_id} was not found in department {department_id}"
+            }, 404
         if "current_status" in data and data["current_status"]:
             department_order.current_status = OrderStatusType[
                 data["current_status"]

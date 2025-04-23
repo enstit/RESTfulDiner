@@ -14,18 +14,16 @@ class PrinterResource(ProtectedResource):
     parser.add_argument("mac_address", type=str)
     parser.add_argument("ip_address", type=str)
 
-    def get(
-        self, *, _id: str | None = None, name: str | None = None
-    ) -> tuple[dict, int]:
+    def get(self, *, printer_id: str | None = None) -> tuple[dict, int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
-        if _id or name:
+        if printer_id:
             printer = (
                 db.session.query(Printer)
-                .where(Printer.event_id == msg.get("event_id"))
-                .where(
-                    Printer.printer_id == _id if _id else Printer.name == name
+                .filter(
+                    Printer.event_id == msg.get("event_id"),
+                    Printer.printer_id == printer_id,
                 )
                 .one_or_none()
             )
@@ -34,7 +32,7 @@ class PrinterResource(ProtectedResource):
             return {"message": "Printer was not found"}, 404
         printers = (
             db.session.query(Printer)
-            .where(Printer.event_id == msg.get("event_id"))
+            .filter(Printer.event_id == msg.get("event_id"))
             .all()
         )
         return PrinterDTO.from_model_list(printers), 200
