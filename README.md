@@ -11,8 +11,9 @@
 > Year.
 > The exam was evaluated with the maximum vote (30 over 30).
 
-In this project, we are going to build a RESTful APIs service to host an Open
-Data[^1][^2]-compliant repository to host data about food orders at a restaurant.
+In this project, we are going to build a RESTful APIs service to host data
+about food orders at any food business.
+
 
 ## Usage
 
@@ -23,12 +24,12 @@ composed of two services: a `database` service to persist data, and an `app`
 service with all the REST APIs application.
 
 To run the application, we can use the [compose file](compose.yml) already
-defined:
+defined and start it in detached mode:
 
 ```bash
 foo@bar:~$ git clone git@github.com:enstit/RESTfulDiner.git
 foo@bar:~$ cd RESTfulDiner
-foo@bar:~$ docker compose up -d
+foo@bar:~$ docker compose up --detach
 ```
 
 ### Authentication
@@ -40,44 +41,41 @@ First of all, we need to recover the list of configured users in the system
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/users
 
-{
-    "@context": {
-        "schema": "https://schema.org/",
-        "self": "@id",
-        "type": "@type",
-        "username": "schema:name",
-        "role": "schema:hasOccupation",
-        "license": {
-            "@id": "schema:license",
-            "@type": "@id"
-        }
+[
+    {
+        "url": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd930cbd30d",
+        "id": "5b11618c-51f5-8000-8000-bcd930cbd30d",
+        "username": "admin",
+        "role": "ADMIN"
     },
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "data": [
-        {
-            "self": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9bf9901f8",
-            "type": "schema:Person",
-            "username": "admin",
-            "role": "ADMIN"
-        },
-        {
-            "self": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9400641c0",
-            "type": "schema:Person",
-            "username": "operator",
-            "role": "OPERATOR"
-        }
-    ]
-}
+    {
+        "url": "http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd93dab7afd",
+        "id": "5b11618c-51f5-8000-8000-bcd93dab7afd",
+        "username": "operator",
+        "role": "OPERATOR"
+    }
+]
 ```
-Now we can select a user with `ADMIN` role, for example the user
-`http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9bf9901f8`
-(i.e., the `admin` user), and then call its `login` action providing the
-password and the kiosk selected for the access:
 
 ```bash
-foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd9bf9901f8/login \
+foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/events
+
+[
+    {
+        "url": "http://127.0.0.1:5000/api/v1/events/5b11618c-51f5-8000-8000-1bacec79bda0",
+        "id": "5b11618c-51f5-8000-8000-1bacec79bda0",
+        "name": "Sample Event"
+    }
+]
+```
+Now we can select a user with `ADMIN` role, for example the `admin` user, and
+then call its `login` action providing the password and the kiosk selected for
+the access:
+
+```bash
+foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/users/5b11618c-51f5-8000-8000-bcd930cbd30d/login?event_id=5b11618c-51f5-8000-8000-1bacec79bda0 \
 foo@bar:~$ -H "Content-Type: application/json" \
-foo@bar:~$ -d '{"password": "admin", "event_id": "5b11618c-51f5-8000-8000-1bacc4523798", "kiosk_id": "5b11618c-51f5-8000-8000-7795ef9724f5"}'
+foo@bar:~$ -d '{"password": "admin"}'
 
 {"access_token": "<access_token>"}
 ```
@@ -99,32 +97,15 @@ Let's start by inserting a new Department in the database:
 
 ```bash
 foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/departments \
-foo@bar:~$ -H "Content-Type: application/json" \
 foo@bar:~$ -H "Authorization: Bearer <access_token>" \
+foo@bar:~$ -H "Content-Type: application/json" \
 foo@bar:~$ -d '{"name": "Cuisine"}'
 
 {
-    "@context": {
-        "schema": "https://schema.org/",
-        "self": "@id",
-        "type": "@type",
-        "name": "schema:name",
-        "printer": {
-            "@id": "schema:isRelatedTo",
-            "@type": "@id"
-        },
-        "license": {
-            "@id": "schema:license",
-            "@type": "@id"
-        }
-    },
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "data": {
-        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
-        "type": "schema:Organization",
-        "name": "Cuisine",
-        "printer": null
-    }
+    "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
+    "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+    "name": "Cuisine",
+    "printer_url": null
 }
 ```
 
@@ -136,31 +117,14 @@ Now, if we recover all the Departments from the database, the newly inserted
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments
 
-{
-    "@context": {
-        "schema": "https://schema.org/",
-        "self": "@id",
-        "type": "@type",
-        "name": "schema:name",
-        "printer": {
-            "@id": "schema:isRelatedTo",
-            "@type": "@id"
-        },
-        "license": {
-            "@id": "schema:license",
-            "@type": "@id"
-        }
-    },
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "data": [
-        {
-            "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
-            "type": "schema:Organization",
-            "name": "Cuisine",
-            "printer": null
-        }
-    ]
-}
+[
+    {
+        "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
+        "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+        "name": "Cuisine",
+        "printer_url": null
+    }
+]
 ```
 
 #### `PUT` operations
@@ -170,33 +134,16 @@ everyone. Better to change the Department name to a more universal `Kitchen`.
 In order to do that, we simply need to use a **PUT** operation:
 
 ```bash
-foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf \
-foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ curl -X PUT http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499 \
 foo@bar:~$ -H "Authorization: Bearer <access_token>" \
+foo@bar:~$ -H "Content-Type: application/json" \
 foo@bar:~$ -d '{"name": "Kitchen"}'
 
 {
-    "@context": {
-        "schema": "https://schema.org/",
-        "self": "@id",
-        "type": "@type",
-        "name": "schema:name",
-        "printer": {
-            "@id": "schema:isRelatedTo",
-            "@type": "@id"
-        },
-        "license": {
-            "@id": "schema:license",
-            "@type": "@id"
-        }
-    },
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "data": {
-        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
-        "type": "schema:Organization",
-        "name": "Kitchen",
-        "printer": null
-    }
+    "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
+    "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+    "name": "Kitchen",
+    "printer_url": null
 }
 ```
 
@@ -207,68 +154,36 @@ by providing the whole representation of it, so if the department had a printer
 associated, the command above would have overwritten it.
 If we take a look at the printers in the system (with a **GET**
 request at `http://127.0.0.1:5000/api/v1/printers`) we will see that there is a
-`KitchenPrinter` with id `d2dc99fa-fb42-11ef-929e-0242ac120003` that really
+`KitchenPrinter` with id `5b11618c-51f5-8000-8000-04e446b2b7c1` that really
 sounds to be the printer associated with the Department we just created.
 
 ```bash
 foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
 
-{
-    "@context": {
-        "schema": "https://schema.org/",
-        "self": "@id",
-        "type": "@type",
-        "name": "schema:name",
-        "mac_address": "schema:macAddress",
-        "ip_address": "schema:ipAddress",
-        "license": {
-            "@id": "schema:license",
-            "@type": "@id"
-        }
-    },
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "data": [
-        {
-            "self": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-2a5553677712",
-            "type": "Printer",
-            "name": "KitchenPrinter",
-            "mac_address": "32:1c:35:93:4e:07",
-            "ip_address": "10.172.54.145"
-        }
-    ]
-}
+[
+    {
+        "url": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-04e446b2b7c1",
+        "id": "5b11618c-51f5-8000-8000-04e446b2b7c1",
+        "name": "KitchenPrinter",
+        "mac_address": "32:1c:35:93:4e:07",
+        "ip_address": "10.172.54.145"
+    }
+]
 ```
 
 Here's where the **PATCH** operation comes in our hand:
 
 ```bash
-foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf \
-foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ curl -X PATCH http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499 \
 foo@bar:~$ -H "Authorization: Bearer <access_token>" \
-foo@bar:~$ -d '{"printer_id": "5b11618c-51f5-8000-8000-2a5553677712"}'
+foo@bar:~$ -H "Content-Type: application/json" \
+foo@bar:~$ -d '{"printer_id": "5b11618c-51f5-8000-8000-04e446b2b7c1"}'
 
 {
-    "@context": {
-        "schema": "https://schema.org/",
-        "self": "@id",
-        "type": "@type",
-        "name": "schema:name",
-        "printer": {
-            "@id": "schema:isRelatedTo",
-            "@type": "@id"
-        },
-        "license": {
-            "@id": "schema:license",
-            "@type": "@id"
-        }
-    },
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "data": {
-        "self": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-6496d5c5c0cf",
-        "type": "schema:Organization",
-        "name": "Kitchen",
-        "printer": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-2a5553677712"
-    }
+    "url": "http://127.0.0.1:5000/api/v1/departments/5b11618c-51f5-8000-8000-203b8c4a1499",
+    "id": "5b11618c-51f5-8000-8000-203b8c4a1499",
+    "name": "Kitchen",
+    "printer_url": "http://127.0.0.1:5000/api/v1/printers/5b11618c-51f5-8000-8000-04e446b2b7c1"
 }
 ```
 
@@ -289,8 +204,3 @@ And as you can see, the department has been updated with printer link.
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE)
 file for details.
 
-
-
-[^1]: Berners-Lee, T., "Linked Data", _w3.org_, 2006. [https://www.w3.org/DesignIssues/LinkedData.html](https://www.w3.org/DesignIssues/LinkedData.html).
-
-[^2]: Wilkinson Mark D. et al., "The FAIR Guiding Principles for scientific data management and stewardship", _Scientific Data_, 2016. [10.1038/sdata.2016.18](https://doi.org/10.1038/sdata.2016.18).

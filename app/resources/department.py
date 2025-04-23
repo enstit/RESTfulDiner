@@ -14,7 +14,9 @@ class DepartmentResource(ProtectedResource):
     parser.add_argument("name", type=str)
     parser.add_argument("printer_id", type=str)
 
-    def get(self, *, department_id: str | None = None) -> tuple[dict, int]:
+    def get(
+        self, *, department_id: str | None = None
+    ) -> tuple[dict | list[dict], int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
@@ -55,6 +57,9 @@ class DepartmentResource(ProtectedResource):
         if code != 200:
             return msg, code
         data = DepartmentResource.parser.parse_args()
+        new_name = data.get("name")
+        new_printer_id = data.get("printer_id")
+
         department = (
             db.session.query(Department)
             .filter(
@@ -67,17 +72,21 @@ class DepartmentResource(ProtectedResource):
             return {
                 "message": f"Department {department_id} was not found"
             }, 404
-        department.name = data["name"]
-        printer = (
-            db.session.query(Printer)
-            .filter(
-                Printer.event_id == msg.get("event_id"),
-                Printer.printer_id == data["printer_id"],
-            )
-            .one_or_none()
-        )
-        department.printer = printer if printer else None
-
+        if new_name:
+            department.name = new_name
+        if new_printer_id:
+            if not (
+                printer := (
+                    db.session.query(Printer)
+                    .filter(
+                        Printer.event_id == msg.get("event_id"),
+                        Printer.printer_id == new_printer_id,
+                    )
+                    .one_or_none()
+                )
+            ):
+                return {"message": f"Printer {new_printer_id} not found"}, 404
+            department.printer = printer if printer else None
         db.session.commit()
         return DepartmentDTO.from_model(department), 200
 

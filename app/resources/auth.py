@@ -22,5 +22,4 @@ class ProtectedResource(Resource):
         return {
             "user_id": user_id,
             "event_id": claims["event_id"],
-            "kiosk_id": claims["kiosk_id"],
         }, 200

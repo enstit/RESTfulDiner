@@ -8,18 +8,6 @@ from app.models.user import User
 
 
 class UserDTO:
-    CONTEXT = {
-        "@context": {
-            "schema": "https://schema.org/",
-            "self": "@id",
-            "type": "@type",
-            "username": "schema:name",
-            "role": "schema:hasOccupation",
-            "license": {"@id": "schema:license", "@type": "@id"},
-        },
-        "license": "https://creativecommons.org/licenses/by/4.0/",
-    }
-
     def __init__(self, user: User):
         self.user_id = str(user.user_id)
         self.username = user.username
@@ -27,22 +15,16 @@ class UserDTO:
 
     def to_dict(self):
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/users/{self.user_id}",
-            "type": "schema:Person",
+            "url": f"{Config.APP_URL}{Config.API_URI}/users/{self.user_id}",
+            "id": self.user_id,
             "username": self.username,
             "role": self.role.name,
         }
 
     @staticmethod
     def from_model(user: User) -> dict:
-        return {
-            **UserDTO.CONTEXT,
-            "data": UserDTO(user).to_dict() if user else None,
-        }
+        return UserDTO(user).to_dict() if user else {}
 
     @staticmethod
-    def from_model_list(users: List[User]) -> dict:
-        return {
-            **UserDTO.CONTEXT,
-            "data": [UserDTO(user).to_dict() for user in users],
-        }
+    def from_model_list(users: List[User]) -> list[dict]:
+        return [UserDTO(user).to_dict() for user in users]

@@ -8,51 +8,32 @@ from app.models.department import Department
 
 
 class DepartmentDTO:
-    CONTEXT = {
-        "@context": {
-            "schema": "https://schema.org/",
-            "self": "@id",
-            "type": "@type",
-            "name": "schema:name",
-            "printer": {"@id": "schema:isRelatedTo", "@type": "@id"},
-            "license": {"@id": "schema:license", "@type": "@id"},
-        },
-        "license": "https://creativecommons.org/licenses/by/4.0/",
-    }
-
     def __init__(self, department: Department):
         self.event_id = str(department.event_id)
         self.department_id = str(department.department_id)
         self.name = department.name
-        self.printer = department.printer if department.printer else None
+        self.printer_id = (
+            str(department.printer_id) if department.printer else None
+        )
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.department_id}",
-            "type": "schema:Organization",
+            "url": f"{Config.APP_URL}{Config.API_URI}/departments/{self.department_id}",
+            "id": self.department_id,
             "name": self.name,
-            "printer": (
-                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer.printer_id}"
-                if self.printer
+            "printer_url": (
+                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer_id}"
+                if self.printer_id
                 else None
             ),
         }
 
     @staticmethod
     def from_model(department: Department) -> dict:
-        return {
-            **DepartmentDTO.CONTEXT,
-            "data": (
-                DepartmentDTO(department).to_dict() if department else None
-            ),
-        }
+        return DepartmentDTO(department).to_dict() if department else {}
 
     @staticmethod
-    def from_model_list(departments: List[Department]) -> dict:
-        return {
-            **DepartmentDTO.CONTEXT,
-            "data": [
-                DepartmentDTO(department).to_dict()
-                for department in departments
-            ],
-        }
+    def from_model_list(departments: List[Department]) -> list[dict]:
+        return [
+            DepartmentDTO(department).to_dict() for department in departments
+        ]
