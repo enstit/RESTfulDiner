@@ -88,6 +88,16 @@ foo@bar:~$ -d '{"password": "admin"}'
 This should return an object with an `access_token` as above, to be used for
 all restriced operations within the system.
 
+At the end of the job, the user must logout from the system accessing the
+`logout` endpoint:
+```bash
+foo@bar:~$ curl -X POST http://127.0.0.1:5000/api/v1/users/00000000-0000-8000-8000-000200000001/logout \
+foo@bar:~$ -H "Authorization: Bearer <access_token>"
+
+{"message": "User 00000000-0000-8000-8000-000200000001 successfully logged out from event 00000000-0000-8000-8000-000100000001"}
+```
+
+
 > [!IMPORTANT]
 > We need to log in in the system with a user with admin role in order to
 > execute **POST**, **PUT**, **PATCH** and **DELETE** operations.
