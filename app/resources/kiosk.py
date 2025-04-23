@@ -12,7 +12,9 @@ class KioskResource(ProtectedResource):
     parser = reqparse.RequestParser()
     parser.add_argument("name", type=str)
 
-    def get(self, *, kiosk_id: str | None = None) -> tuple[dict, int]:
+    def get(
+        self, *, kiosk_id: str | None = None
+    ) -> tuple[dict | list[dict], int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
@@ -27,7 +29,9 @@ class KioskResource(ProtectedResource):
             )
             if kiosk:
                 return KioskDTO.from_model(kiosk), 200
-            return {"message": "Kiosk was not found"}, 404
+            return {
+                "error": f"Kiosk {kiosk_id} was not found in the current event"
+            }, 404
 
         kiosks = (
             db.session.query(Kiosk)

@@ -115,7 +115,8 @@ Now, if we recover all the Departments from the database, the newly inserted
 `Cuisine` should be present. Let's verify it with:
 
 ```bash
-foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments
+foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/departments \
+foo@bar:~$ -H "Authorization: Bearer <access_token>"
 
 [
     {
@@ -158,7 +159,8 @@ request at `http://127.0.0.1:5000/api/v1/printers`) we will see that there is a
 sounds to be the printer associated with the Department we just created.
 
 ```bash
-foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers
+foo@bar:~$ curl -X GET http://127.0.0.1:5000/api/v1/printers \
+foo@bar:~$ -H "Authorization: Bearer <access_token>"
 
 [
     {

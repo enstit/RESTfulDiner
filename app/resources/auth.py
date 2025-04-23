@@ -18,7 +18,7 @@ class ProtectedResource(Resource):
             .one_or_none()
         )
         if admin_only and user is not None and user.role != UserRoleType.ADMIN:
-            return {"message": "Admin privileges required"}, 403
+            return {"error": "Admin privileges required"}, 403
         return {
             "user_id": user_id,
             "event_id": claims["event_id"],

@@ -36,7 +36,9 @@ class OrderResource(ProtectedResource):
     parser.add_argument("total_paid", type=float)
     parser.add_argument("items", type=order_validator, action="append")
 
-    def get(self, *, order_id: str | None = None) -> tuple[dict, int]:
+    def get(
+        self, *, order_id: str | None = None
+    ) -> tuple[dict | list[dict], int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
@@ -51,7 +53,9 @@ class OrderResource(ProtectedResource):
             )
             if order:
                 return OrderDTO.from_model(order), 200
-            return {"message": "Order was not found"}, 404
+            return {
+                "error": f"Order {order_id} was not found in the current event"
+            }, 404
         orders = (
             db.session.query(Order)
             .filter(Order.event_id == msg.get("event_id"))
@@ -75,7 +79,9 @@ class OrderResource(ProtectedResource):
             .one_or_none()
         )
         if event_day is None:
-            return {"message": "There are no events at the current time"}, 400
+            return {
+                "error": "There are no events at the current time for the current event"
+            }, 400
         # Create a new empty order, to which we will add DepartmentsOrders
         new_order = Order(
             payment_method=PaymentMethodType[data["payment_method"]],
@@ -143,7 +149,7 @@ class DepartmentOrderResource(ProtectedResource):
 
     def get(
         self, department_id: str, *, order_id: str | None = None
-    ) -> tuple[dict, int]:
+    ) -> tuple[dict | list[dict], int]:
         """Get all orders for a specific department in the event"""
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
@@ -160,7 +166,9 @@ class DepartmentOrderResource(ProtectedResource):
             )
             if department_order:
                 return DepartmentOrderDTO.from_model(department_order), 200
-            return {"message": "Department order was not found"}, 404
+            return {
+                "error": f"Department order {order_id} for department {department_id} was not found in the current event"
+            }, 404
         department_orders = (
             db.session.query(DepartmentOrder)
             .filter(
@@ -175,7 +183,9 @@ class DepartmentOrderResource(ProtectedResource):
         )
         if department_orders:
             return DepartmentOrderDTO.from_model_list(department_orders), 200
-        return {"message": "Department orders were not found"}, 404
+        return {
+            "error": f"Department orders for department {department_id} were not found in the current event"
+        }, 404
 
     def patch(self, department_id: str, order_id: str) -> tuple[dict, int]:
         msg, code = super().authenticate(admin_only=False)
@@ -193,7 +203,7 @@ class DepartmentOrderResource(ProtectedResource):
         )
         if not department_order:
             return {
-                "message": f"Department order {order_id} was not found in department {department_id}"
+                "error": f"Department order {order_id} in department {department_id} was not found in the current event"
             }, 404
         if "current_status" in data and data["current_status"]:
             department_order.current_status = OrderStatusType[

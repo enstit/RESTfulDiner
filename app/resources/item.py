@@ -21,7 +21,9 @@ class ItemResource(ProtectedResource):
     parser.add_argument("availability", type=int)
     parser.add_argument("initial_status", type=str)
 
-    def get(self, *, item_id: str | None = None) -> tuple[dict, int]:
+    def get(
+        self, *, item_id: str | None = None
+    ) -> tuple[dict | list[dict], int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
@@ -36,7 +38,9 @@ class ItemResource(ProtectedResource):
             )
             if item:
                 return ItemDTO.from_model(item), 200
-            return {"message": "Item was not found"}, 404
+            return {
+                "error": f"Item {item_id} was not found in the current event"
+            }, 404
         items = (
             db.session.query(Item)
             .filter(Item.event_id == msg.get("event_id"))

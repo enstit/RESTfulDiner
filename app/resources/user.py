@@ -7,6 +7,7 @@ from app.dto.user import UserDTO
 from app.extensions import db
 from app.models.user import User, UserRoleType
 from app.models.event import Event
+from app.models.kiosk import Kiosk
 
 
 class UserResource(Resource):
@@ -26,7 +27,7 @@ class UserResource(Resource):
             )
             if user:
                 return UserDTO.from_model(user), 200
-            return {"message": "User was not found"}, 404
+            return {"error": f"User {user_id} was not found"}, 404
         users = db.session.query(User).all()
         return UserDTO.from_model_list(users), 200
 
@@ -60,14 +61,17 @@ class LoginResource(Resource):
     )
 
     def post(self, user_id: str) -> tuple[dict, int]:
-        # Parse the `event_id` argument from the query string
+        # Parse the `event_id` and `kiosk_id`arguments from the query string
         event_id = request.args.get("event_id", type=str)
+        kiosk_id = request.args.get("kiosk_id", type=str)
         # Parse the `password` argument from the POST body
         password = LoginResource.parser.parse_args()["password"]
 
         # Check if the user exists and is active
         if not (user := UserResource.authenticate(user_id, password)):
-            return {"message": "Invalid credentials"}, 401
+            return {
+                "error": f"Invalid credentials provided for user with ID {user_id}"
+            }, 401
 
         # Check if there exists an event with the given event_id
         if not (
@@ -77,12 +81,22 @@ class LoginResource(Resource):
                 .one_or_none()
             )
         ):
-            return {"message": "Event not found"}, 404
+            return {"error": f"Event {event_id} was not found"}, 404
+
+        # Check if there exist a kiosk in the event with the given kiosk_id
+        kiosk = (
+            db.session.query(Kiosk)
+            .filter(Kiosk.event_id == event_id, Kiosk.kiosk_id == kiosk_id)
+            .one_or_none()
+        )
 
         # For the user and event combination, return an access token to be used
         # for authentication in subsequent requests
         access_token = create_access_token(
             identity=user.user_id,
-            additional_claims={"event_id": event.event_id},
+            additional_claims={
+                "event_id": event.event_id,
+                "kiosk_id": kiosk.kiosk_id if kiosk else None,
+            },
         )
         return {"access_token": access_token}, 200

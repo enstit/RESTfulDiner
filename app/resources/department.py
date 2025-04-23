@@ -31,7 +31,9 @@ class DepartmentResource(ProtectedResource):
             )
             if department:
                 return DepartmentDTO.from_model(department), 200
-            return {"message": "Department was not found"}, 404
+            return {
+                "error": f"Department {department_id} was not found in the current event"
+            }, 404
 
         departments = (
             db.session.query(Department)
@@ -70,7 +72,7 @@ class DepartmentResource(ProtectedResource):
         )
         if not department:
             return {
-                "message": f"Department {department_id} was not found"
+                "error": f"Department {department_id} was not found in the current event"
             }, 404
         if new_name:
             department.name = new_name
@@ -85,7 +87,9 @@ class DepartmentResource(ProtectedResource):
                     .one_or_none()
                 )
             ):
-                return {"message": f"Printer {new_printer_id} not found"}, 404
+                return {
+                    "error": f"Printer {new_printer_id} was not found in the current event"
+                }, 404
             department.printer = printer if printer else None
         db.session.commit()
         return DepartmentDTO.from_model(department), 200
@@ -105,21 +109,23 @@ class DepartmentResource(ProtectedResource):
         )
         if not department:
             return {
-                "message": f"Department {department_id} was not found"
+                "error": f"Department {department_id} was not found in the current event"
             }, 404
-        if "name" in data and data["name"]:
-            department.name = data["name"]
-        if "printer_id" in data and data["printer_id"]:
+        if new_name := data.get("name"):
+            department.name = new_name
+        if new_printer_id := data.get("printer_id"):
             printer = (
                 db.session.query(Printer)
                 .filter(
                     Printer.event_id == msg.get("event_id"),
-                    Printer.printer_id == data["printer_id"],
+                    Printer.printer_id == new_printer_id,
                 )
                 .one_or_none()
             )
             if not printer:
-                return {"message": "Printer not found"}, 404
+                return {
+                    "error": f"Printer {new_printer_id} was not found in the current event"
+                }, 404
             department.printer = printer
 
         db.session.commit()

@@ -15,7 +15,7 @@ class DeliveryStationResource(ProtectedResource):
 
     def get(
         self, *, delivery_station_id: str | None = None
-    ) -> tuple[dict, int]:
+    ) -> tuple[dict | list[dict], int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
@@ -30,7 +30,9 @@ class DeliveryStationResource(ProtectedResource):
             )
             if delivery_station:
                 return DeliveryStationDTO.from_model(delivery_station), 200
-            return {"message": "DeliveryStation was not found"}, 404
+            return {
+                "error": f"DeliveryStation {delivery_station_id} was not found in the current event"
+            }, 404
 
         delivery_stations = (
             db.session.query(DeliveryStation)
@@ -68,7 +70,7 @@ class DeliveryStationResource(ProtectedResource):
         )
         if not delivery_station:
             return {
-                "message": f"DeliveryStation {delivery_station_id} was not found"
+                "error": f"DeliveryStation {delivery_station_id} was not found in the current event"
             }, 404
         delivery_station.name = data["name"]
         delivery_station.active_flag = data["active_flag"]
@@ -91,7 +93,7 @@ class DeliveryStationResource(ProtectedResource):
         )
         if not delivery_station:
             return {
-                "message": f"DeliveryStation {delivery_station_id} was not found"
+                "error": f"DeliveryStation {delivery_station_id} was not found in the current event"
             }, 404
         if "name" in data and data["name"]:
             delivery_station.name = data["name"]

@@ -14,7 +14,9 @@ class PrinterResource(ProtectedResource):
     parser.add_argument("mac_address", type=str)
     parser.add_argument("ip_address", type=str)
 
-    def get(self, *, printer_id: str | None = None) -> tuple[dict, int]:
+    def get(
+        self, *, printer_id: str | None = None
+    ) -> tuple[dict | list[dict], int]:
         msg, code = super().authenticate(admin_only=False)
         if code != 200:
             return msg, code
@@ -29,7 +31,9 @@ class PrinterResource(ProtectedResource):
             )
             if printer:
                 return PrinterDTO.from_model(printer), 200
-            return {"message": "Printer was not found"}, 404
+            return {
+                "error": f"Printer {printer_id} was not found in the current event"
+            }, 404
         printers = (
             db.session.query(Printer)
             .filter(Printer.event_id == msg.get("event_id"))
