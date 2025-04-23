@@ -8,7 +8,6 @@ from app.models.kiosk import Kiosk
 
 
 class KioskDTO:
-
     CONTEXT = {
         "@context": {
             "schema": "https://schema.org/",
@@ -22,17 +21,18 @@ class KioskDTO:
     }
 
     def __init__(self, kiosk: Kiosk):
-        self.id = str(kiosk.id)
+        self.event_id = str(kiosk.event_id)
+        self.kiosk_id = str(kiosk.kiosk_id)
         self.name = kiosk.name
         self.printer = kiosk.printer if kiosk.printer else None
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/kiosks/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/kiosks/{self.kiosk_id}",
             "type": "schema:Place",
             "name": self.name,
             "printer": (
-                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer.id}"
+                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer.printer_id}"
                 if self.printer
                 else None
             ),

@@ -2,7 +2,7 @@
 
 from typing import List
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKeyConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
@@ -13,15 +13,20 @@ from app.models._types import OrderStatusType
 
 
 class DepartmentOrder(BaseModel):
-    department__id: Mapped[UUIDType] = mapped_column(
+    event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        ForeignKey("department.id"),
-        comment="Department identifier associated with the item order",
+        primary_key=True,
+        comment="Event identifier associated with the order in a specific Department",
     )
-    order__id: Mapped[UUIDType] = mapped_column(
+    order_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        ForeignKey("order.id"),
-        comment="Order identifier associated with the item order",
+        primary_key=True,
+        comment="Order identifier associated with the order in a specific Department",
+    )
+    department_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        primary_key=True,
+        comment="Department identifier associated with the order in a specific Department",
     )
     current_status: Mapped[OrderStatusType] = mapped_column(
         cd.CHOICE(OrderStatusType),
@@ -50,3 +55,15 @@ class DepartmentOrder(BaseModel):
                 for department_order_item in self.department_order_items
             ]
         )
+
+    __table_args__ = (
+        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint(
+            [event_id, order_id],
+            ["order.event_id", "order.order_id"],
+        ),
+        ForeignKeyConstraint(
+            [event_id, department_id],
+            ["department.event_id", "department.department_id"],
+        ),
+    )

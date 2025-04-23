@@ -22,12 +22,12 @@ class DeliveryStationResource(ProtectedResource):
         if _id or name:
             delivery_station = (
                 db.session.query(DeliveryStation)
+                .where(DeliveryStation.event_id == msg.get("event_id"))
                 .where(
-                    DeliveryStation.id == _id
+                    DeliveryStation.delivery_station_id == _id
                     if _id
                     else DeliveryStation.name == name
                 )
-                .where(DeliveryStation.event__id == msg.get("event_id"))
                 .one_or_none()
             )
             if delivery_station:
@@ -58,8 +58,8 @@ class DeliveryStationResource(ProtectedResource):
         data = DeliveryStationResource.parser.parse_args()
         delivery_station = (
             db.session.query(DeliveryStation)
-            .where(DeliveryStation.id == _id)
-            .where(DeliveryStation.event__id == msg.get("event_id"))
+            .where(DeliveryStation.event_id == msg.get("event_id"))
+            .where(DeliveryStation.delivery_station_id == _id)
             .one_or_none()
         )
         if not delivery_station:
@@ -77,8 +77,8 @@ class DeliveryStationResource(ProtectedResource):
         data = DeliveryStationResource.parser.parse_args()
         delivery_station = (
             db.session.query(DeliveryStation)
-            .where(DeliveryStation.id == _id)
-            .where(DeliveryStation.event__id == msg.get("event_id"))
+            .where(DeliveryStation.event_id == msg.get("event_id"))
+            .where(DeliveryStation.delivery_station_id == _id)
             .one_or_none()
         )
         if not delivery_station:

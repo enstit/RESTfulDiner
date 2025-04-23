@@ -14,6 +14,7 @@ from app.models.department_order_item import DepartmentOrderItem
 from app.models.event_day import EventDay
 from app.models.item import Item
 from app.models.order import Order, PaymentMethodType
+from app.models._types import OrderStatusType
 from app.resources.auth import ProtectedResource
 
 
@@ -43,8 +44,8 @@ class OrderResource(ProtectedResource):
         if _id:
             order = (
                 db.session.query(Order)
-                .where(Order.id == _id)
-                .where(Order.event_day.event__id == msg.get("event_id"))
+                .where(Order.event_id == msg.get("event_id"))
+                .where(Order.order_id == _id)
                 .one_or_none()
             )
             if order:
@@ -53,7 +54,7 @@ class OrderResource(ProtectedResource):
         orders = (
             db.session.query(Order)
             .join(EventDay)
-            .where(EventDay.event__id == msg.get("event_id"))
+            .where(EventDay.event_id == msg.get("event_id"))
             .all()
         )
         return OrderDTO.from_model_list(orders), 200
@@ -66,7 +67,7 @@ class OrderResource(ProtectedResource):
         # Get the EventDay from the current datetime
         event_day = (
             db.session.query(EventDay)
-            .where(EventDay.event__id == msg.get("event_id"))
+            .where(EventDay.event_id == msg.get("event_id"))
             .where(EventDay.start_datetime <= datetime.now())
             .where(EventDay.end_datetime > datetime.now())
             .one_or_none()
@@ -76,18 +77,18 @@ class OrderResource(ProtectedResource):
         # Create a new empty order, to which we will add DepartmentsOrders
         new_order = Order(
             payment_method=PaymentMethodType[data["payment_method"]],
-            event_day__id=event_day.id,
+            event_day=event_day,
             total_paid=data["total_paid"],
-            user__id=msg.get("user_id"),
-            kiosk__id=msg.get("kiosk_id"),
+            user_id=msg.get("user_id"),
+            kiosk_id=msg.get("kiosk_id"),
         )
         # Group items by department
         if data["items"] is not None:
             for item in data["items"]:
                 department = (
                     db.session.query(Item)
-                    .where(Item.department.event__id == msg.get("event_id"))
-                    .where(Item.id == item["item_id"])
+                    .where(Item.event_id == msg.get("event_id"))
+                    .where(Item.item_id == item["item_id"])
                     .one()
                     .department
                 )
@@ -98,7 +99,7 @@ class OrderResource(ProtectedResource):
                         DepartmentOrderItem(
                             item=(
                                 db.session.query(Item)
-                                .filter_by(id=item["item_id"])
+                                .where(Item.item_id == item["item_id"])
                                 .one_or_none()
                             ),
                             quantity=item["quantity"],
@@ -112,7 +113,7 @@ class OrderResource(ProtectedResource):
                                 DepartmentOrderItem(
                                     item=(
                                         db.session.query(Item)
-                                        .filter_by(id=item["item_id"])
+                                        .where(Item.item_id == item["item_id"])
                                         .one_or_none()
                                     ),
                                     quantity=item["quantity"],
@@ -126,6 +127,9 @@ class OrderResource(ProtectedResource):
 
 
 class DepartmentOrderResource(ProtectedResource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("current_status", type=str)
+
     def get(
         self, department_id: str, *, _id: str | None = None
     ) -> tuple[dict, int]:
@@ -136,10 +140,9 @@ class DepartmentOrderResource(ProtectedResource):
         if _id:
             department_order = (
                 db.session.query(DepartmentOrder)
-                .join(Department)
-                .where(DepartmentOrder.department__id == department_id)
-                .where(DepartmentOrder.id == _id)
-                .where(Department.event__id == msg.get("event_id"))
+                .where(DepartmentOrder.event_id == msg.get("event_id"))
+                .where(DepartmentOrder.department_id == department_id)
+                .where(DepartmentOrder.order_id == _id)
                 .one_or_none()
             )
             if department_order:
@@ -147,11 +150,35 @@ class DepartmentOrderResource(ProtectedResource):
             return {"message": "Department order was not found"}, 404
         department_orders = (
             db.session.query(DepartmentOrder)
-            .join(Department)
-            .where(DepartmentOrder.department__id == department_id)
-            .where(Department.event__id == msg.get("event_id"))
+            .where(DepartmentOrder.event_id == msg.get("event_id"))
+            .where(DepartmentOrder.department_id == department_id)
+            # Filter out cancelled and completed orders, to only keep
+            # the ones that are in progress or not started yet
+            .where(DepartmentOrder.current_status != OrderStatusType.CANCELLED)
+            .where(DepartmentOrder.current_status != OrderStatusType.COMPLETED)
             .all()
         )
         if department_orders:
             return DepartmentOrderDTO.from_model_list(department_orders), 200
         return {"message": "Department orders were not found"}, 404
+
+    def patch(self, department_id: str, _id: str) -> tuple[dict, int]:
+        msg, code = super().authenticate(admin_only=False)
+        if code != 200:
+            return msg, code
+        data = DepartmentOrderResource.parser.parse_args()
+        department_order = (
+            db.session.query(DepartmentOrder)
+            .where(DepartmentOrder.event_id == msg.get("event_id"))
+            .where(DepartmentOrder.department_id == department_id)
+            .where(DepartmentOrder.order_id == _id)
+            .one_or_none()
+        )
+        if not department_order:
+            return {"message": f"Department order {_id} was not found"}, 404
+        if "current_status" in data and data["current_status"]:
+            department_order.current_status = OrderStatusType[
+                data["current_status"]
+            ]
+        db.session.commit()
+        return DepartmentOrderDTO.from_model(department_order), 200

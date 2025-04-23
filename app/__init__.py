@@ -45,24 +45,24 @@ def create_app():
                 location="Via Planis, 93 - 33100 Udine UD",
                 days=[
                     first_day := EventDay(
-                        event_date=date(2025, 5, 1),
+                        event_day_date=date(2025, 5, 1),
                         start_datetime=datetime(2025, 5, 1, 10, 0),
                         end_datetime=datetime(2025, 5, 1, 23, 0),
                     ),
                     EventDay(
-                        event_date=date(2025, 5, 2),
+                        event_day_date=date(2025, 5, 2),
                         start_datetime=datetime(2025, 5, 2, 10, 0),
                         end_datetime=datetime(2025, 5, 2, 23, 0),
                     ),
                     EventDay(
-                        event_date=date(2025, 5, 3),
+                        event_day_date=date(2025, 5, 3),
                         start_datetime=datetime(2025, 5, 3, 10, 0),
                         end_datetime=datetime(2025, 5, 3, 23, 0),
                     ),
                     EventDay(
-                        event_date=date(2025, 4, 22),
-                        start_datetime=datetime(2025, 4, 22, 0, 0),
-                        end_datetime=datetime(2025, 4, 22, 23, 0),
+                        event_day_date=date(2025, 4, 23),
+                        start_datetime=datetime(2025, 4, 23, 0, 0),
+                        end_datetime=datetime(2025, 4, 24, 0, 0),
                     ),
                 ],
             )

@@ -30,8 +30,8 @@ class ItemResource(ProtectedResource):
         if _id or name:
             item = (
                 db.session.query(Item)
-                .where(Item.id == _id if _id else Item.name == name)
-                .where(Item.department.event__id == msg.get("event_id"))
+                .where(Item.event_id == msg.get("event_id"))
+                .where(Item.item_id == _id if _id else Item.name == name)
                 .one_or_none()
             )
             if item:
@@ -47,8 +47,8 @@ class ItemResource(ProtectedResource):
         data = ItemResource.parser.parse_args()
         department = (
             db.session.query(Department)
-            .where(Department.event__id == msg.get("event_id"))
-            .where(Department.id == data["department_id"])
+            .where(Department.event_id == msg.get("event_id"))
+            .where(Department.department_id == data["department_id"])
             .one_or_none()
         )
         new_item = Item(

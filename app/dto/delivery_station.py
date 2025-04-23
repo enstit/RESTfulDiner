@@ -22,13 +22,14 @@ class DeliveryStationDTO:
     }
 
     def __init__(self, delivery_station: DeliveryStation):
-        self.id = str(delivery_station.id)
+        self.event_id = str(delivery_station.event_id)
+        self.delivery_station_id = str(delivery_station.delivery_station_id)
         self.name = delivery_station.name
         self.is_active = delivery_station.active_flag
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.delivery_station_id}",
             "type": "schema:Place",
             "name": self.name,
             "is_active": self.is_active,

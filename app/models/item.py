@@ -3,7 +3,7 @@
 
 from typing import List, Optional
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import UniqueConstraint, ForeignKeyConstraint
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
@@ -12,11 +12,23 @@ from app.models._base import BaseModel
 from app.models._types import AllergenType, MenuSectionType, OrderStatusType
 from app.models._types import ColumnsDomains as cd
 
+from app.utils import uuid8
+
 
 class Item(BaseModel):
+    event_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        primary_key=True,
+        comment="Unique Event identifier to which the Item belongs",
+    )
+    item_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        default=lambda: uuid8(domain="Item"),
+        primary_key=True,
+        comment="Unique Item identifier for the event",
+    )
     name: Mapped[str] = mapped_column(
         cd.SHORT_NAME,
-        unique=True,
         comment="Unique name of the item",
     )
     description: Mapped[Optional[str]] = mapped_column(
@@ -24,9 +36,8 @@ class Item(BaseModel):
         nullable=True,
         comment="Description of the item",
     )
-    department__id: Mapped[UUIDType] = mapped_column(
+    department_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        ForeignKey("department.id"),
         nullable=False,
         comment="Department identifier associated with the item",
     )
@@ -81,4 +92,13 @@ class Item(BaseModel):
     )
     departments_orders_items: Mapped[List["DepartmentOrderItem"]] = (  # type: ignore # noqa: F821
         relationship("DepartmentOrderItem", back_populates="item")
+    )
+
+    __table_args__ = (
+        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint(
+            [event_id, department_id],
+            ["department.event_id", "department.department_id"],
+        ),
+        UniqueConstraint("event_id", "name"),
     )

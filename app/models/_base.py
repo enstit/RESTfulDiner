@@ -3,32 +3,25 @@
 
 import re
 
-from sqlalchemy.orm import (
-    DeclarativeBase,
-    Mapped,
-    declared_attr,
-    mapped_column,
-)
-from sqlalchemy_utils import UUIDType
+from sqlalchemy.orm import DeclarativeBase, declared_attr
+
 
 from app.models import metadata
-from app.models._types import ColumnsDomains as cd
-from app.utils import uuid8
 
 
 class BaseModel(DeclarativeBase):
     __abstract__ = True
     metadata = metadata
 
-    @declared_attr
-    def id(cls) -> Mapped[UUIDType]:
-        return mapped_column(
-            cd.ID,
-            default=lambda: uuid8(domain=cls.__name__),
-            primary_key=True,
-            comment=f"Unique {cls.__name__} instance identifier",
-            sort_order=-1,  # Ensure the id is the first column in the table
-        )
+    # @declared_attr
+    # def id(cls) -> Mapped[UUIDType]:
+    #     return mapped_column(
+    #         cd.ID,
+    #         default=lambda: uuid8(domain=cls.__name__),
+    #         primary_key=True,
+    #         comment=f"Unique {cls.__name__} instance identifier",
+    #         sort_order=-1,  # Ensure the id is the first column in the table
+    #     )
 
     # Automatically set the table name to the snake_case version of the
     # ClassName

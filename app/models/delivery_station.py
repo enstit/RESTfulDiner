@@ -3,28 +3,35 @@
 
 from typing import List
 
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import UniqueConstraint, ForeignKeyConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 
+from app.utils import uuid8
+
 
 class DeliveryStation(BaseModel):
-    event__id: Mapped[UUIDType] = mapped_column(
+    event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        ForeignKey("event.id"),
-        nullable=False,
-        comment="Event identifier",
+        primary_key=True,
+        comment="Unique Event identifier to which the Delivery Station belongs",
+    )
+    delivery_station_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        default=lambda: uuid8(domain="DeliveryStation"),
+        primary_key=True,
+        comment="Unique Delivery Station identifier for the event",
     )
     name: Mapped[str] = mapped_column(
-        cd.SHORT_NAME, comment="Unique delivery station name"
+        cd.SHORT_NAME, comment="Unique Delivery Station name for the event"
     )
     active_flag: Mapped[bool] = mapped_column(
         cd.FLAG,
         default=True,
-        comment="Whether the delivery station is active or not",
+        comment="Whether the Delivery Station is active or not",
     )
 
     event: Mapped["Event"] = relationship(  # type: ignore # noqa: F821
@@ -35,11 +42,6 @@ class DeliveryStation(BaseModel):
     )
 
     __table_args__ = (
-        UniqueConstraint(
-            "event__id", "name", name="uq_event_delivery_station"
-        ),
-        {
-            "comment": "Event Delivery Station",
-            "extend_existing": True,
-        },
+        UniqueConstraint("event_id", "name"),
+        ForeignKeyConstraint([event_id], ["event.event_id"]),
     )

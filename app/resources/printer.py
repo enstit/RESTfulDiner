@@ -23,14 +23,20 @@ class PrinterResource(ProtectedResource):
         if _id or name:
             printer = (
                 db.session.query(Printer)
-                .where(Printer.id == _id if _id else Printer.name == name)
-                .where(Printer.event__id == msg.get("event_id"))
+                .where(Printer.event_id == msg.get("event_id"))
+                .where(
+                    Printer.printer_id == _id if _id else Printer.name == name
+                )
                 .one_or_none()
             )
             if printer:
                 return PrinterDTO.from_model(printer), 200
             return {"message": "Printer was not found"}, 404
-        printers = db.session.query(Printer).all()
+        printers = (
+            db.session.query(Printer)
+            .where(Printer.event_id == msg.get("event_id"))
+            .all()
+        )
         return PrinterDTO.from_model_list(printers), 200
 
     def post(self):
@@ -39,7 +45,7 @@ class PrinterResource(ProtectedResource):
             return msg, code
         data = PrinterResource.parser.parse_args()
         new_printer = Printer(
-            event__id=msg.get("event_id"),
+            event_id=msg.get("event_id"),
             name=data["name"],
             mac_address=data["mac_address"],
             ip_address=data["ip_address"],

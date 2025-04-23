@@ -3,29 +3,36 @@
 
 from typing import Optional
 
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import UniqueConstraint, ForeignKeyConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 
+from app.utils import uuid8
+
 
 class Printer(BaseModel):
-    event__id: Mapped[UUIDType] = mapped_column(
+    event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        ForeignKey("event.id"),
-        nullable=False,
-        comment="Event identifier",
+        primary_key=True,
+        comment="Unique Event identifier to which the Printer belongs",
+    )
+    printer_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        default=lambda: uuid8(domain="Printer"),
+        primary_key=True,
+        comment="Unique Printer identifier for the event",
     )
     name: Mapped[str] = mapped_column(
-        cd.SHORT_NAME, unique=True, comment="Unique printer name"
+        cd.SHORT_NAME, comment="Unique printer name"
     )
     mac_address: Mapped[Optional[str]] = mapped_column(
-        cd.TEXT, unique=True, comment="Printer MAC address"
+        cd.TEXT, comment="Printer MAC address"
     )
     ip_address: Mapped[Optional[str]] = mapped_column(
-        cd.IP_ADDRESS, unique=True, comment="Printer IP address"
+        cd.IP_ADDRESS, comment="Printer IP address"
     )
 
     event: Mapped["Event"] = relationship(  # noqa: F821 # type: ignore
@@ -39,9 +46,8 @@ class Printer(BaseModel):
     )
 
     __table_args__ = (
-        UniqueConstraint("event__id", "name", name="uq_event_printer"),
-        {
-            "comment": "Event Printer for orders and reports printing",
-            "extend_existing": True,
-        },
+        UniqueConstraint("event_id", "name"),
+        UniqueConstraint("event_id", "mac_address"),
+        UniqueConstraint("event_id", "ip_address"),
+        ForeignKeyConstraint([event_id], ["event.event_id"]),
     )

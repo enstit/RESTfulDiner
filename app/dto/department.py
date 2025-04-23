@@ -8,7 +8,6 @@ from app.models.department import Department
 
 
 class DepartmentDTO:
-
     CONTEXT = {
         "@context": {
             "schema": "https://schema.org/",
@@ -22,17 +21,18 @@ class DepartmentDTO:
     }
 
     def __init__(self, department: Department):
-        self.id = str(department.id)
+        self.event_id = str(department.event_id)
+        self.department_id = str(department.department_id)
         self.name = department.name
         self.printer = department.printer if department.printer else None
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.department_id}",
             "type": "schema:Organization",
             "name": self.name,
             "printer": (
-                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer.id}"
+                f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer.printer_id}"
                 if self.printer
                 else None
             ),

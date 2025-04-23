@@ -8,7 +8,6 @@ from app.models.printer import Printer
 
 
 class PrinterDTO:
-
     CONTEXT = {
         "@context": {
             "schema": "https://schema.org/",
@@ -23,14 +22,15 @@ class PrinterDTO:
     }
 
     def __init__(self, printer: Printer):
-        self.id = str(printer.id)
+        self.event_id = str(printer.event_id)
+        self.printer_id = str(printer.printer_id)
         self.name = printer.name
         self.mac_address = printer.mac_address
         self.ip_address = str(printer.ip_address)
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/printers/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/printers/{self.printer_id}",
             "type": "Printer",
             "name": self.name,
             "mac_address": self.mac_address,

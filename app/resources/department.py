@@ -23,10 +23,12 @@ class DepartmentResource(ProtectedResource):
         if _id or name:
             department = (
                 db.session.query(Department)
+                .where(Department.event_id == msg.get("event_id"))
                 .where(
-                    Department.id == _id if _id else Department.name == name
+                    Department.department_id == _id
+                    if _id
+                    else Department.name == name
                 )
-                .where(Department.event__id == msg.get("event_id"))
                 .one_or_none()
             )
             if department:
@@ -55,8 +57,8 @@ class DepartmentResource(ProtectedResource):
         data = DepartmentResource.parser.parse_args()
         department = (
             db.session.query(Department)
-            .where(Department.id == _id)
-            .where(Department.event__id == msg.get("event_id"))
+            .where(Department.event_id == msg.get("event_id"))
+            .where(Department.department_id == _id)
             .one_or_none()
         )
         if not department:
@@ -64,7 +66,7 @@ class DepartmentResource(ProtectedResource):
         department.name = data["name"]
         printer = (
             db.session.query(Printer)
-            .filter_by(id=data["printer_id"])
+            .where(Printer.printer_id == data["printer_id"])
             .one_or_none()
         )
         department.printer = printer if printer else None
@@ -79,8 +81,8 @@ class DepartmentResource(ProtectedResource):
         data = DepartmentResource.parser.parse_args()
         department = (
             db.session.query(Department)
-            .where(Department.id == _id)
-            .where(Department.event__id == msg.get("event_id"))
+            .where(Department.event_id == msg.get("event_id"))
+            .where(Department.department_id == _id)
             .one_or_none()
         )
         if not department:
@@ -90,7 +92,7 @@ class DepartmentResource(ProtectedResource):
         if "printer_id" in data and data["printer_id"]:
             printer = (
                 db.session.query(Printer)
-                .filter_by(id=data["printer_id"])
+                .where(Printer.printer_id == data["printer_id"])
                 .one_or_none()
             )
             if not printer:

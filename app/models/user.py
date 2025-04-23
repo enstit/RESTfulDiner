@@ -4,13 +4,22 @@
 from typing import List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 from app.models._types import UserRoleType
 
+from app.utils import uuid8
+
 
 class User(BaseModel):
+    user_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        default=lambda: uuid8(domain="User"),
+        primary_key=True,
+        comment="Unique User identifier for the system",
+    )
     username: Mapped[str] = mapped_column(
         cd.SHORT_NAME, unique=True, comment="Unique username"
     )

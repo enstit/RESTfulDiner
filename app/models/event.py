@@ -4,26 +4,38 @@
 from typing import List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy_utils import UUIDType
 
 from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 from app.models._types import EventType
 
+from app.utils import uuid8
+
 
 class Event(BaseModel):
-    name: Mapped[str] = mapped_column(cd.SHORT_NAME, comment="Event name")
-    description: Mapped[str] = mapped_column(
-        cd.TEXT, comment="Event description"
+    event_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        default=lambda: uuid8(domain="Event"),
+        primary_key=True,
+        comment="Unique Event identifier",
     )
-    location: Mapped[str] = mapped_column(cd.TEXT, comment="Event location")
+    name: Mapped[str] = mapped_column(
+        cd.SHORT_NAME, unique=True, comment="Event name"
+    )
+    description: Mapped[str] = mapped_column(
+        cd.TEXT, nullable=True, comment="Event description"
+    )
+    location: Mapped[str] = mapped_column(
+        cd.TEXT, nullable=True, comment="Event location"
+    )
     event_type: Mapped[EventType] = mapped_column(
         cd.CHOICE(EventType),
-        nullable=False,
+        default=EventType.SAGRA,
         comment=(
             "Event type: one between "
             + ", ".join([eventtype.desc for eventtype in EventType])
         ),
-        default=EventType.SAGRA,
     )
 
     days: Mapped[List["EventDay"]] = relationship(  # type: ignore # noqa: F821

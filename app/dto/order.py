@@ -17,7 +17,7 @@ class OrderItemDTO:
     def to_dict(self) -> dict:
         return {
             "type": "schema:Order",
-            "item": f"{Config.APP_URL}{Config.API_URI}/items/{self.item.id}",
+            "item": f"{Config.APP_URL}{Config.API_URI}/items/{self.item.item_id}",
             "quantity": self.quantity,
         }
 
@@ -43,7 +43,8 @@ class OrderDTO:
     }
 
     def __init__(self, order: Order):
-        self.id = order.id
+        self.event_id = str(order.event_id)
+        self.order_id = str(order.order_id)
         self.created_datetime = order.created_datetime
         self.kiosk = order.kiosk
         self.user = order.user
@@ -60,11 +61,11 @@ class OrderDTO:
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/orders/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/orders/{self.order_id}",
             "type": "schema:Order",
             "created_datetime": self.created_datetime.isoformat(),
             "kiosk": (
-                f"{Config.APP_URL}{Config.API_URI}/kiosks/{self.kiosk.id}"
+                f"{Config.APP_URL}{Config.API_URI}/kiosks/{self.kiosk.kiosk_id}"
                 if self.kiosk
                 else None
             ),
@@ -74,7 +75,7 @@ class OrderDTO:
             "total_paid": self.total_paid,
             "total_charge": self.total_charge,
             "delivery_station": (
-                f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.delivery_station.id}"
+                f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.delivery_station.delivery_station_id}"
                 if self.delivery_station
                 else None
             ),
@@ -112,7 +113,8 @@ class DepartmentOrderDTO:
     }
 
     def __init__(self, department_order: DepartmentOrder):
-        self.id = department_order.id
+        self.event_id = str(department_order.event_id)
+        self.order_id = str(department_order.order_id)
         self.department = department_order.department
         self.current_status = department_order.current_status
         self.delivery_station = department_order.order.delivery_station
@@ -124,13 +126,13 @@ class DepartmentOrderDTO:
     def to_dict(self) -> dict:
         return {
             "type": "schema:Order",
-            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.id}/orders/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.department_id}/orders/{self.order_id}",
             "department": (
-                f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.id}"
+                f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.department_id}"
             ),
             "current_status": self.current_status.name,
             "delivery_station": (
-                f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.delivery_station.id}"
+                f"{Config.APP_URL}{Config.API_URI}/delivery_stations/{self.delivery_station.delivery_station_id}"
                 if self.delivery_station
                 else None
             ),

@@ -20,7 +20,9 @@ class UserResource(Resource):
         if _id or username:
             user = (
                 db.session.query(User)
-                .where(User.id == _id if _id else User.username == username)
+                .where(
+                    User.user_id == _id if _id else User.username == username
+                )
                 .one_or_none()
             )
             if user:
@@ -81,7 +83,7 @@ class LoginResource(Resource):
             return {"message": "Invalid credentials"}, 401
 
         access_token = create_access_token(
-            identity=user.id,
+            identity=user.user_id,
             additional_claims={
                 "event_id": data.get("event_id"),
                 "kiosk_id": data.get("kiosk_id"),

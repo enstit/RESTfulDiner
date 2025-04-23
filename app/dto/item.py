@@ -8,7 +8,6 @@ from app.models.item import Item
 
 
 class ItemDTO:
-
     CONTEXT = {
         "@context": {
             "schema": "https://schema.org/",
@@ -28,7 +27,8 @@ class ItemDTO:
     }
 
     def __init__(self, item: Item):
-        self.id = item.id
+        self.event_id = str(item.event_id)
+        self.item_id = str(item.item_id)
         self.name = item.name
         self.description = item.description
         self.department = item.department
@@ -40,12 +40,12 @@ class ItemDTO:
 
     def to_dict(self) -> dict:
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/items/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/items/{self.item_id}",
             "type": "schema:Product",
             "name": self.name,
             "description": self.description,
             "department": (
-                f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.id}"
+                f"{Config.APP_URL}{Config.API_URI}/departments/{self.department.department_id}"
                 if self.department
                 else None
             ),

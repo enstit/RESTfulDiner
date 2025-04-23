@@ -4,7 +4,7 @@
 from typing import Optional, List
 from datetime import datetime
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import UniqueConstraint, ForeignKeyConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
@@ -14,11 +14,23 @@ from app.models._base import BaseModel
 from app.models._types import ColumnsDomains as cd
 from app.models._types import PaymentMethodType
 
+from app.utils import uuid8
+
 
 class Order(BaseModel):
-    event_day__id: Mapped[UUIDType] = mapped_column(
+    event_id: Mapped[UUIDType] = mapped_column(
         cd.ID,
-        ForeignKey("event_day.id"),
+        primary_key=True,
+        comment="Event identifier associated with the order",
+    )
+    order_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
+        default=lambda: uuid8(domain="Kiosk"),
+        primary_key=True,
+        comment="Unique Order identifier for the event",
+    )
+    event_day_id: Mapped[UUIDType] = mapped_column(
+        cd.ID,
         nullable=False,
         comment="Event day identifier associated with the order",
     )
@@ -34,12 +46,10 @@ class Order(BaseModel):
     )
     user__id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
-        ForeignKey("user.id"),
         comment="User identifier associated with the order",
     )
     kiosk__id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
-        ForeignKey("kiosk.id"),
         comment="Kiosk identifier associated with the order",
     )
     deleted_flag: Mapped[bool] = mapped_column(
@@ -61,7 +71,6 @@ class Order(BaseModel):
     )
     delivery_station__id: Mapped[Optional[UUIDType]] = mapped_column(
         cd.ID,
-        ForeignKey("delivery_station.id"),
         nullable=True,
         comment="Delivery station identifier associated with the order",
     )
@@ -103,3 +112,27 @@ class Order(BaseModel):
             department_order.department
             for department_order in self.departments_orders
         ]
+
+    __table_args__ = (
+        UniqueConstraint(event_id, event_day_id, seq_no),
+        ForeignKeyConstraint([event_id], ["event.event_id"]),
+        ForeignKeyConstraint(
+            [event_id, event_day_id],
+            ["event_day.event_id", "event_day.event_day_id"],
+        ),
+        ForeignKeyConstraint(
+            [event_id, kiosk__id], ["kiosk.event_id", "kiosk.kiosk_id"]
+        ),
+        ForeignKeyConstraint(
+            [event_id, delivery_station__id],
+            [
+                "delivery_station.event_id",
+                "delivery_station.delivery_station_id",
+            ],
+        ),
+        ForeignKeyConstraint([user__id], ["user.user_id"]),
+        {
+            "comment": "Order for the event",
+            "extend_existing": True,
+        },
+    )

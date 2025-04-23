@@ -8,7 +8,6 @@ from app.models.user import User
 
 
 class UserDTO:
-
     CONTEXT = {
         "@context": {
             "schema": "https://schema.org/",
@@ -22,13 +21,13 @@ class UserDTO:
     }
 
     def __init__(self, user: User):
-        self.id = str(user.id)
+        self.user_id = str(user.user_id)
         self.username = user.username
         self.role = user.role
 
     def to_dict(self):
         return {
-            "self": f"{Config.APP_URL}{Config.API_URI}/users/{self.id}",
+            "self": f"{Config.APP_URL}{Config.API_URI}/users/{self.user_id}",
             "type": "schema:Person",
             "username": self.username,
             "role": self.role.name,
