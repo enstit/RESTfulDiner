@@ -35,13 +35,13 @@ class CfgPrinter(BaseModel):
         cd.IP_ADDRESS, comment="Printer IP address"
     )
 
-    event: Mapped["CfgEvent"] = relationship(  # noqa: F821 # type: ignore
+    event: Mapped["CfgEvent"] = relationship(  # noqa: F821
         "CfgEvent", back_populates="printers"
     )
-    kiosk: Mapped[Optional["CfgKiosk"]] = relationship(  # noqa: F821 # type: ignore
+    kiosk: Mapped[Optional["CfgKiosk"]] = relationship(  # noqa: F821
         "CfgKiosk", back_populates="printer"
     )
-    department: Mapped[Optional["CfgDepartment"]] = relationship(  # noqa: F821 # type: ignore
+    department: Mapped[Optional["CfgDepartment"]] = relationship(  # noqa: F821
         "CfgDepartment", back_populates="printer"
     )
 

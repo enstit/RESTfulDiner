@@ -1,9 +1,6 @@
 # app/models/__init__.py
 
-
 from sqlalchemy import MetaData
-
-metadata = MetaData()
 
 from app.models._base import BaseModel as Diner
 from app.models.cfg_delivery_station import CfgDeliveryStation
@@ -17,6 +14,8 @@ from app.models.cfg_kiosk import CfgKiosk
 from app.models.sys_order import SysOrder
 from app.models.cfg_printer import CfgPrinter
 from app.models.cfg_user import CfgUser
+
+metadata = MetaData()
 
 __all__ = [
     "Diner",

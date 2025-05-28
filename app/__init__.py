@@ -141,7 +141,7 @@ def create_app():
                         menu_section=MenuSectionType.DRINKS,
                         allergens=[AllergenType.GLUTEN],
                     ),
-                    wine_item := CfgItem(
+                    CfgItem(
                         name="Wine glass",
                         price=6.99,
                         deposit=1.51,

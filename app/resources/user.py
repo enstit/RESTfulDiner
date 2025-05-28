@@ -9,7 +9,6 @@ from app.dto.user import UserDTO
 from app.extensions import db
 from app.models.cfg_user import CfgUser, UserRoleType
 from app.models.cfg_event import CfgEvent
-from app.models.cfg_event_day import CfgEventDay
 from app.models.cfg_kiosk import CfgKiosk
 from app.models.sys_shift import SysShift
 from app.resources.auth import ProtectedResource
@@ -103,7 +102,7 @@ class LoginResource(Resource):
             .filter(
                 SysShift.event_id == event_id,
                 SysShift.user == user,
-                SysShift.logout_datetime == None,
+                SysShift.logout_datetime == None,  # noqa: E711
             )
             .one_or_none()
         ):
@@ -153,7 +152,7 @@ class LogoutResource(ProtectedResource):
             .filter(
                 SysShift.event_id == event_id,
                 SysShift.user == user,
-                SysShift.logout_datetime == None,
+                SysShift.logout_datetime == None,  # noqa: E711
             )
             .one_or_none()
         ):

@@ -40,8 +40,8 @@ class CfgKiosk(BaseModel):
     event: Mapped["CfgEvent"] = relationship(  # noqa: F821 # type: ignore
         "CfgEvent", back_populates="kiosks"
     )
-    orders: Mapped[List["SysOrder"]] = relationship(  # noqa: F821 # type: ignore
-        "SysOrder", back_populates="kiosk"
+    orders: Mapped[List["SysOrder"]] = (  # noqa: F821 # type: ignore
+        relationship("SysOrder", back_populates="kiosk")
     )
 
     __table_args__ = (
