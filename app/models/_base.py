@@ -3,10 +3,11 @@
 
 import re
 
+from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr
 
 
-from app.models import metadata
+metadata = MetaData()
 
 
 class BaseModel(DeclarativeBase):
